@@ -2,43 +2,62 @@
 
 **How to build software with coding agents — and build the agents
 themselves.** A book on agentic coding, spec-driven development, and
-AI-assisted software engineering: writing requirements coding agents can
-execute, verifying generated code you did not write, and orchestrating
-agent loops with Claude Code, OpenCode, and models from Opus to GLM.
+AI-assisted software engineering: writing requirements a coding agent
+can execute, verifying generated code you did not write, and
+orchestrating agent loops past the limits of a single context window.
 
-**Work in progress, written in the open.** Every chapter runs as an
-article first at [Mesh Intelligence](https://meshintelligence.substack.com?utm_source=github&utm_campaign=agentic-coding-book); the chapters here consolidate
-the live versions as they stabilize. Star or watch the repo to follow the
-drafts.
+The material comes from production runs rather than demos — 44,628 lines
+of Go generated across 31 pipeline runs, 123 Unix utilities regenerated
+from specification and verified against the GNU reference binaries by
+differential testing, and a $33.29 generation session accounted for
+token by token.
+
+**Work in progress, written in the open.** Part I is drafted. The
+remaining parts are outlines. Chapters also run as articles at
+[Mesh Intelligence](https://meshintelligence.substack.com?utm_source=github&utm_campaign=agentic-coding-book). Star or watch to follow the drafts.
 
 ## Contents
 
-| Chapter | State | Live articles |
+**[Introduction](01-introduction.md)**
+
+### [Part I — The Skill](02-part-i-what-is-clauding.md)
+
+| Chapter | State | Subject |
 |---|---|---|
-| [Introduction](01-introduction.md) | drafted | — |
-| [What Is Agentic Coding?](02-what-is-agentic-coding.md) | stub | [Autonomy levels](https://meshintelligence.substack.com/p/what-level-of-autonomy-is-your-ai?utm_source=github&utm_campaign=agentic-coding-book), [Five coding agents](https://meshintelligence.substack.com/p/what-five-coding-agents-taught-me?utm_source=github&utm_campaign=agentic-coding-book), [The loop is the easy part](https://meshintelligence.substack.com/p/the-loop-is-the-easy-part?utm_source=github&utm_campaign=agentic-coding-book) |
-| [Requirements](03-requirements.md) | stub | [Dude, where's my code?](https://meshintelligence.substack.com/p/dude-wheres-my-code?utm_source=github&utm_campaign=agentic-coding-book), [Architecture-first](https://meshintelligence.substack.com/p/the-architecture-first-approach?utm_source=github&utm_campaign=agentic-coding-book) |
-| [Verification](04-verification.md) | stub | [Staying on track with Opus 5](https://meshintelligence.substack.com/p/how-to-stay-on-track-with-opus-5?utm_source=github&utm_campaign=agentic-coding-book), [The drinking bird test](https://meshintelligence.substack.com/p/the-drinking-bird-test?utm_source=github&utm_campaign=agentic-coding-book) |
-| [Orchestration](05-orchestration.md) | stub | [Loop engineering](https://meshintelligence.substack.com/p/how-to-loop-engineering?utm_source=github&utm_campaign=agentic-coding-book), [GitHub as long-term memory](https://meshintelligence.substack.com/p/how-to-use-github-as-long-term-memory?utm_source=github&utm_campaign=agentic-coding-book), [Git worktrees](https://meshintelligence.substack.com/p/how-to-use-git-worktrees-with-coding?utm_source=github&utm_campaign=agentic-coding-book), [Three commands](https://meshintelligence.substack.com/p/three-commands-to-a-crude-orchestrator?utm_source=github&utm_campaign=agentic-coding-book), [GLM 5.2 on OpenCode](https://meshintelligence.substack.com/p/how-to-glm-52-on-opencode?utm_source=github&utm_campaign=agentic-coding-book) |
-| [Instrumentation](06-instrumentation.md) | stub | [$33 of code generation](https://meshintelligence.substack.com/p/what-does-33-of-ai-code-generation?utm_source=github&utm_campaign=agentic-coding-book), [Black box until you add logging](https://meshintelligence.substack.com/p/your-ai-will-be-a-black-box-until?utm_source=github&utm_campaign=agentic-coding-book) |
+| [What Is Clauding?](03-what-is-clauding.md) | drafted | Behavioral vs constructional intent; in-the-loop vs on-the-loop; the six autonomy levels; the verification stack |
+| [Layered Construction](04-layered-construction.md) | drafted | Inner and outer loops; tracer bullets; verification gates; why agents automate only one loop |
+| [How the Machine Works](05-how-the-machine-works.md) | drafted | Next-token prediction; tokens and context budgets; the interpolation model; the agentic loop; four failure modes |
+| [Language Selection](06-language-selection.md) | drafted | Language-model pairing; interpolation density; grammar complexity; the compiler in the inner loop |
+
+### Parts II–VI
+
+| Part | State | Subject |
+|---|---|---|
+| [II — Requirements](07-part-ii-requirements.md) | outline | Externalizing intent so agents execute it without guessing |
+| [III — Testing](08-part-iii-testing.md) | outline | Verifying code no human wrote; differential testing; the generated-test circularity problem |
+| [IV — Correctness](09-part-iv-correctness.md) | outline | What "correct" means when you did not write the code |
+| [V — Orchestration](10-part-v-orchestration.md) | outline | Agent roles, GitHub as coordination substrate, worktrees, failure and recovery |
+| [VI — Instrumentation](11-part-vi-instrumentation.md) | outline | Logging, cost analysis, failure diagnosis |
+
+`outline.yaml` holds the full chapter-level plan; `dictionary.yaml`
+holds the term definitions used across the book.
 
 ## The evidence base
 
-The claims trace to public repositories:
+Claims trace to public repositories:
 [go-unix-utils](https://github.com/petar-djukic/go-unix-utils) (123 Unix
-utilities generated from specification, verified against GNU binaries by
-differential testing),
+utilities generated from specification, verified against GNU binaries),
 [cobbler-scaffold](https://github.com/petar-djukic/cobbler-scaffold)
-(the specs and constitutions that govern the generation), and
+(the specifications and constitutions governing generation), and
 [coding-skills](https://github.com/petar-djukic/coding-skills) (the
-four-command GitHub loop the orchestration chapter describes).
+four-command GitHub loop Part V describes).
 
 ## Building the PDF
 
 Requires [mage](https://magefile.org/), pandoc, xelatex, and plantuml
-(for figures). The PDF renders through the
-[Eisvogel](https://github.com/Wandmalfarbe/pandoc-latex-template) pandoc
-template, vendored in `templates/`.
+for figures. The PDF renders through the vendored
+[Eisvogel](https://github.com/Wandmalfarbe/pandoc-latex-template)
+template.
 
 ```bash
 mage all      # figures + PDF into generated-files/
@@ -52,7 +71,7 @@ Petar Djukic — Principal AI Architect, 20+ years of production systems,
 [Declarative Agents](https://github.com/Nokia-Bell-Labs/declarative-agents),
 open-sourced by Nokia Bell Labs. A companion volume,
 [Agentic Applications](https://github.com/petar-djukic/agentic-applications-book),
-covers building applications from agents.
+covers building applications out of agents.
 
 ## License
 

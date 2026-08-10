@@ -1,4 +1,198 @@
-# CSL-YAML bibliography (pandoc --bibliography). Entries accumulate as
-# chapters cite sources; the article versions carry their own numbered
-# reference lists.
-references: []
+# CSL-YAML bibliography (pandoc --bibliography).
+# Entries transcribed from the reference lists the chapter drafts carried
+# inline. Entries marked `note: needs-verification` were cited without full
+# publication details in the source manuscript.
+references:
+
+- id: boehm1986
+  type: article-journal
+  author:
+  - {family: Boehm, given: Barry}
+  title: A Spiral Model of Software Development and Enhancement
+  container-title: ACM SIGSOFT Software Engineering Notes
+  volume: 11
+  issue: 4
+  page: 14-24
+  issued: {year: 1986}
+
+- id: hunt1999
+  type: book
+  author:
+  - {family: Hunt, given: Andrew}
+  - {family: Thomas, given: David}
+  title: "The Pragmatic Programmer: From Journeyman to Master"
+  publisher: Addison-Wesley
+  issued: {year: 1999}
+
+- id: larman2003
+  type: article-journal
+  author:
+  - {family: Larman, given: Craig}
+  - {family: Basili, given: Victor R.}
+  title: "Iterative and Incremental Development: A Brief History"
+  container-title: IEEE Computer
+  volume: 36
+  issue: 6
+  page: 47-56
+  issued: {year: 2003}
+
+- id: mcconnell1996
+  type: book
+  author:
+  - {family: McConnell, given: Steve}
+  title: "Rapid Development: Taming Wild Software Schedules"
+  publisher: Microsoft Press
+  issued: {year: 1996}
+
+- id: latentpatterns-harness
+  type: webpage
+  author:
+  - {literal: Latent Patterns}
+  title: Agent Harness
+  container-title: Glossary
+  URL: https://latentpatterns.com/glossary/agent-harness
+  note: needs-verification — no access date in the source manuscript
+
+- id: kocetkov2022
+  type: article
+  author:
+  - {family: Kocetkov, given: Denis}
+  - {literal: et al.}
+  title: "The Stack: 3 TB of Permissively Licensed Source Code"
+  publisher: arXiv
+  number: arXiv:2211.15533
+  issued: {year: 2022}
+
+- id: cassano2023
+  type: article-journal
+  author:
+  - {family: Cassano, given: Federico}
+  - {literal: et al.}
+  title: "MultiPL-E: A Scalable and Polyglot Approach to Benchmarking Neural Code Generation"
+  container-title: IEEE Transactions on Software Engineering
+  number: arXiv:2208.08227
+  issued: {year: 2023}
+
+- id: cassano2024-transfer
+  type: paper-conference
+  author:
+  - {family: Cassano, given: Federico}
+  - {literal: et al.}
+  title: Knowledge Transfer from High-Resource to Low-Resource Programming Languages for Code LLMs
+  container-title: OOPSLA 2024
+  number: arXiv:2308.09895
+  issued: {year: 2024}
+
+- id: codellama2023
+  type: article
+  author:
+  - {family: Rozière, given: Baptiste}
+  - {literal: et al.}
+  title: "Code Llama: Open Foundation Models for Code"
+  publisher: arXiv
+  number: arXiv:2308.12950
+  issued: {year: 2023}
+
+- id: willard2023
+  type: article
+  author:
+  - {family: Willard, given: Brandon T.}
+  - {family: Louf, given: Rémi}
+  title: Efficient Guided Generation for Large Language Models
+  publisher: arXiv
+  number: arXiv:2307.09702
+  issued: {year: 2023}
+
+- id: dong2024
+  type: paper-conference
+  author:
+  - {family: Dong, given: Yixin}
+  - {literal: et al.}
+  title: "XGrammar: Flexible and Efficient Structured Generation Engine for Large Language Models"
+  container-title: MLSys 2025
+  number: arXiv:2411.15100
+  issued: {year: 2024}
+
+- id: beurer-kellner2023
+  type: paper-conference
+  author:
+  - {family: Beurer-Kellner, given: Luca}
+  - {family: Fischer, given: Marc}
+  - {family: Vechev, given: Martin}
+  title: "Prompting Is Programming: A Query Language for Large Language Models"
+  container-title: PLDI 2023
+  number: arXiv:2212.06094
+  issued: {year: 2023}
+
+- id: park2024
+  type: paper-conference
+  author:
+  - {family: Park, given: Kanghee}
+  - {family: Wang, given: Hao}
+  - {family: Berg-Kirkpatrick, given: Taylor}
+  title: Grammar-Aligned Decoding
+  container-title: NeurIPS 2024
+  number: arXiv:2405.21047
+  issued: {year: 2024}
+
+- id: pan2024
+  type: paper-conference
+  author:
+  - {family: Pan, given: Rangeet}
+  - {literal: et al.}
+  title: "Lost in Translation: A Study of Bugs Introduced by Large Language Models while Translating Code"
+  container-title: ICSE 2024
+  number: arXiv:2308.03109
+  issued: {year: 2024}
+
+- id: sun2024
+  type: paper-conference
+  author:
+  - {family: Sun, given: Zhensu}
+  - {literal: et al.}
+  title: "AI Coders Are Among Us: Rethinking Programming Language Grammar towards Efficient Code Generation"
+  container-title: ISSTA 2024
+  number: arXiv:2404.16333
+  issued: {year: 2024}
+
+- id: wang2024
+  type: article
+  author:
+  - {family: Wang, given: Ziyao}
+  - {literal: et al.}
+  title: "LLM Hallucinations in Practical Code Generation: Phenomena, Mechanism, and Mitigation"
+  publisher: arXiv
+  number: arXiv:2409.20550
+  issued: {year: 2024}
+
+- id: metr2025
+  type: report
+  author:
+  - {literal: METR}
+  title: Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity
+  issued: {year: 2025}
+  note: needs-verification — no URL in the source manuscript
+
+- id: coderabbit2025
+  type: report
+  author:
+  - {literal: CodeRabbit}
+  title: AI vs Human Code Generation Report
+  issued: {year: 2025}
+  note: needs-verification — no URL in the source manuscript
+
+- id: stackoverflow2025
+  type: report
+  author:
+  - {literal: Stack Overflow}
+  title: Developer Survey 2025
+  issued: {year: 2025}
+  note: needs-verification — no URL in the source manuscript
+
+- id: runmat2024
+  type: post-weblog
+  author:
+  - {literal: RunMat}
+  title: Choosing Rust for LLM-Generated Code
+  issued: {year: 2024}
+  note: needs-verification — no URL in the source manuscript; blog post cited for a claim about corpus uniformity

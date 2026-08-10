@@ -1,0 +1,310 @@
+# Clauding for Programmers — Document Outline
+# This is the single source of truth for the book structure.
+
+title: "Clauding for Programmers"
+subtitle: "How to Build Software with Coding Agents — and Build the Agents Themselves"
+author: "Petar Djukic"
+
+parts:
+  - id: part-i
+    title: "What Is Clauding?"
+    directory: part-i-what-is-clauding
+    status: outline
+    description: >
+      Clauding is a new skill, distinct from coding. The programmer's job has
+      split: you still need to know how to program, but the day-to-day work
+      shifts from writing code to specifying, verifying, and orchestrating.
+
+      This part introduces the skill through the lens of autonomy levels —
+      from human-in-the-loop (L1-L2) where you instruct and review, to
+      human-on-the-loop (L3-L4) where you specify and verify at scale. The
+      autonomy levels frame the rest of the book: each subsequent part teaches
+      what you need to move up a level safely.
+
+      The key argument: coding agents are tools that generate code — including
+      code that makes them obsolete. The programmer who builds their own
+      tooling has a compounding advantage. This isn't about learning prompts.
+      It's about taking agency over your own development process.
+    chapters:
+      - title: "What is clauding?"
+        description: >
+          Defines clauding as a distinct skill, not just "prompting well."
+          What changes in how you work. Introduces the levels of autonomy
+          (L0-L5) as the framing device for the book. Human in the loop
+          (L1-L2): you instruct, review, and correct — you are the
+          verification layer, it doesn't scale. Human on the loop (L3-L4):
+          you externalize intent into specs and constitutions, build
+          verification infrastructure, and let agents work autonomously —
+          scales but carries the black box risk. Maps each subsequent part
+          of the book to what's needed to move up a level safely.
+      - title: "The agency argument"
+        description: >
+          Why programmers should build their own tools, not wait for vendors.
+          The meta-loop: using Claude to build better Claude tooling.
+      - title: "The repositories"
+        status: tentative  # May change — not sure about "lab" framing
+        description: >
+          Introduction to cobbler-scaffold and go-unix-utils. What they are,
+          why they exist. Framing TBD.
+
+  - id: part-ii
+    title: "Requirements"
+    directory: part-ii-requirements
+    status: outline
+    description: >
+      The spec is the source code now. When you work with coding agents, the
+      quality of the output is determined by the quality of the requirements
+      you give them. Bad specs produce bad code, and the failure modes are
+      specific and traceable.
+
+      This part covers where requirements come from, how to write them so
+      agents can execute them reliably, and what goes wrong when you don't.
+      It draws on the PRD structure used in go-unix-utils, where every
+      utility is specified in a YAML requirements document before any code
+      is generated.
+
+      The deeper point: requirements engineering is the skill that separates
+      programmers who use agents effectively from those who fight them. Most
+      programmers have never written a formal spec because they carried the
+      requirements in their head while they coded. That doesn't work when
+      someone (something) else is doing the coding.
+    chapters:
+      - title: "Where requirements come from"
+        description: >
+          Standards (POSIX), reference implementations (GNU coreutils), RFCs,
+          existing codebases, domain knowledge. How to extract behavior specs
+          from working software.
+      - title: "Writing specs for agents"
+        description: >
+          Anatomy of a good PRD. Requirement IDs, acceptance criteria,
+          self-contained context. Why cross-references fail (the agent can't
+          read the other document). Go function signatures, struct fields, and
+          format strings inline. (go-unix-utils #31, #2608)
+      - title: "The constitution"
+        description: >
+          Execution rules as machine-readable constraints. Line limits, DRY
+          thresholds, coding standards. Why soft guidance doesn't work and
+          hard gates do. (go-unix-utils #2610)
+      - title: "Spec defects"
+        description: >
+          Common failure modes: ambiguous behavior, missing edge cases,
+          contradictory rules, under-specified prompts. How to trace a
+          generated code defect back to the spec that caused it.
+      - title: "Task decomposition"
+        description: >
+          Scoping work for agents. One requirement per task. What happens when
+          tasks are too big (sort R4: 104 turns) or too small (overhead per
+          task). The calibration problem. (go-unix-utils #167, #45)
+    background_needed:
+      - Example PRDs from go-unix-utils (good and bad)
+      - The execution constitution YAML
+      - Examples of spec defects and their downstream effects
+
+  - id: part-iii
+    title: "Testing"
+    directory: part-iii-testing
+    status: outline
+    description: >
+      How do you test code you didn't write? This part covers the testing
+      approaches available when agents generate the code — from differential
+      testing to generated test suites to property-based testing and beyond.
+
+      The central tension: if you use an agent to generate the code, can you
+      trust an agent to generate the tests? If not, who writes them? If yes,
+      how do you verify the tests themselves? This part works through the
+      options.
+    chapters:
+      - title: "Differential testing"
+        description: >
+          Same input, two implementations, compare output. Using the original
+          software as the test oracle. Why this is the gold standard for
+          migrations and reimplementations. (go-unix-utils approach: GNU
+          coreutils as reference)
+      - title: "Generated tests"
+        description: >
+          Using Claude to write test suites. When this works (clear specs,
+          well-defined behavior) and when it doesn't (the tests encode the
+          same misunderstanding as the code). Translated tests vs.
+          independently generated tests.
+      - title: "Test infrastructure"
+        description: >
+          Building harnesses that automate comparison across flag
+          combinations, edge cases, and input ranges. Using agents to build
+          the test infrastructure itself.
+      - title: "Property-based and fuzz testing"
+        description: >
+          When you can define invariants but not enumerate cases. Using
+          properties ("sort output must be sorted", "cp output must be
+          byte-identical to input") as verification.
+      - title: "Coverage and confidence"
+        description: >
+          What testing catches and what it misses. When to stop testing.
+          How much coverage is enough for generated code.
+    background_needed:
+      - go-unix-utils test suite examples
+      - Differential test harness code
+      - Examples of generated tests that were wrong
+      - Any property-based or fuzz testing work from the repos
+
+  - id: part-iv
+    title: "How Do You Know Your Code Is Correct?"
+    directory: part-iv-correctness
+    status: outline
+    description: >
+      This is the philosophical center of the book. Testing tells you whether
+      specific inputs produce expected outputs. Correctness is a stronger
+      claim. When you didn't write the code and can't read all of it, how do
+      you build confidence that it does what it should?
+
+      This part sits between testing (Part III) and orchestration (Part V)
+      because the answer to "how do you know?" shapes how you design the
+      pipeline, what gates you enforce, and how much autonomy you give the
+      agents.
+    chapters:
+      - title: "The trust problem"
+        description: >
+          You can't read 44,628 lines. You can't review every function. What
+          does "correct" mean when the programmer didn't write the code?
+      - title: "Mechanical verification"
+        description: >
+          Compiler, linter, test suite, differential tests: the stack of
+          automated checks. Why each layer catches different classes of
+          defects. Hard gates vs. soft guidance.
+      - title: "Code inspections at scale"
+        description: >
+          What code inspection looks like when the volume exceeds human review
+          capacity. Using agents to review agent output. The reviewer problem:
+          who reviews the reviewer?
+      - title: "Correctness by construction"
+        description: >
+          Writing specs so tight that correct code is the only possible
+          output. The relationship between spec precision and output quality.
+          When this works (formal specs like POSIX) and when it doesn't
+          (ambiguous domains).
+      - title: "Confidence, not proof"
+        description: >
+          In practice, you're building confidence through layers of evidence,
+          not proving correctness. The churn metric (3.7% in Run 31). When to
+          ship and when to hold.
+    background_needed:
+      - Examples of code that passed all tests but was still wrong
+      - Examples of spec-level fixes that prevented entire classes of defects
+      - The churn data and what it tells you about quality
+      - Any code inspection tooling or agent-reviews-agent patterns
+
+  - id: part-v
+    title: "Agent Orchestration"
+    directory: part-v-orchestration
+    status: outline
+    description: >
+      When one Claude session isn't enough, you need orchestration: multiple
+      agents with different roles, coordinated through shared state, producing
+      code at a scale that a single conversation can't handle. This part
+      covers the architecture and mechanics of multi-agent code generation.
+
+      This is the most technically dense part of the book. It draws directly
+      from cobbler-scaffold's design: the measure/stitch cycle, GitHub issues
+      as coordination infrastructure, beads as execution units, gastowns as
+      agent configurations. The reader should come away understanding not just
+      how cobbler-scaffold works, but how to build their own orchestration
+      layer.
+    chapters:
+      - title: "Why orchestrate"
+        description: >
+          The limits of single-session generation. Context windows, task
+          scope, sustained execution. When you need more than one agent.
+      - title: "The measure/stitch pattern"
+        description: >
+          Two agent types with different jobs: one plans, one executes. Why
+          planning costs more than execution. The orchestration loop: measure
+          proposes, stitch implements, repeat.
+      - title: "GitHub as coordination layer"
+        description: >
+          Issues as task queues, labels as state machine, comments as handoff.
+          Why a project tracker becomes infrastructure when agents are the
+          workers. (cobbler-scaffold #1475, #1467)
+      - title: "Beads"
+        description: >
+          [Need background materials] Execution units in cobbler-scaffold.
+          How work is packaged and tracked.
+      - title: "Gastowns"
+        description: >
+          [Need background materials] Agent type configurations. How different
+          agents get different prompts, tools, and constraints.
+      - title: "State management"
+        description: >
+          requirements.yaml, road-map.yaml, the consistency problem. What
+          happens when state isn't committed (#1385), when status isn't
+          reverted (#1469), when progress is lost on restart (#1389).
+      - title: "Failure modes"
+        description: >
+          Race conditions with GitHub API (#1475), stale branches causing
+          infinite retries (#1561), no backoff on failures (#1562), premature
+          stops (#1361). Distributed systems problems in agent orchestration.
+      - title: "Building your own"
+        description: >
+          Why building the orchestrator yourself is the point. CLI vs. SDK
+          (#687). The 31-tries iteration story.
+    background_needed:
+      - "Beads: what they are, how they work in cobbler-scaffold"
+      - "Gastowns: what they are, how agent types are configured"
+      - cobbler-scaffold architecture diagram or walkthrough
+      - Examples of coordination failures and their fixes
+
+  - id: part-vi
+    title: "Instrumentation"
+    directory: part-vi-instrumentation
+    status: outline
+    description: >
+      Claude is a black box until you instrument it. This part covers how to
+      observe, measure, and diagnose what agents are doing — and how
+      instrumentation changes your relationship with the tools from guessing
+      to understanding.
+
+      The turning point in cobbler-scaffold wasn't a prompt fix or a
+      redesign — it was adding logging. Before that, you'd kick off a run,
+      come back, and either it worked or it didn't. After logging turn counts,
+      cost per task, tool usage, and failure modes, you could see what was
+      happening and make informed decisions about what to optimize. This part
+      teaches that skill.
+    chapters:
+      - title: "The black box problem"
+        description: >
+          Before instrumentation: no visibility into what Claude is doing,
+          why tasks fail, or where the money goes.
+      - title: "What to log"
+        description: >
+          Turn counts, cost per task, tool usage patterns, failure modes,
+          rate limit events, context size, token counts. What each metric
+          tells you.
+      - title: "Reading the logs"
+        description: >
+          Spotting thrashing (40+ turn tasks), waste patterns (edit-match-fail
+          loops, redundant comparisons, compile-fix cycles), context
+          degradation. (#1453 three waste patterns)
+      - title: "The economics"
+        description: >
+          Reading the receipt. $139.24 for 44,628 lines. Where the money goes.
+          Cost trends across runs. The floor. What cost per line means and
+          doesn't mean.
+      - title: "Building intuition"
+        description: >
+          After enough instrumented runs, you start predicting which tasks
+          will be expensive before they run. Compound scope, behavior
+          interactions, byte-level matching. This intuition feeds back into
+          how you write requirements.
+      - title: "Non-determinism"
+        description: >
+          Same prompt, different results. Thinking token variance cascading
+          through pipeline stages. Why reproducibility is hard and what you
+          can do about it. (#5, #7)
+      - title: "Stats and post-run analysis"
+        description: >
+          The generation report. Stats inaccuracies and how to fix them
+          (#1445, #1449, #1450). The cleanup checklist (#2627). Treating
+          generation as a manufacturing process with quality control.
+    background_needed:
+      - cobbler-scaffold logging output examples
+      - Generation run reports (run 28, run 31)
+      - Examples of stats before/after instrumentation improvements
+      - The sort R4 turn-by-turn analysis as a debugging walkthrough
