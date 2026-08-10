@@ -52,6 +52,18 @@ utilities generated from specification, verified against GNU binaries),
 [coding-skills](https://github.com/petar-djukic/coding-skills) (the
 four-command GitHub loop Part V describes).
 
+## Sources and research notes
+
+Every claim in a drafted chapter cites its source; `references.yaml` is the
+bibliography, and `mage all` resolves it.
+
+The drafting notes and literature surveys behind the chapters are kept in a
+private working tree rather than published here. Two reasons, both boring:
+they contain third-party source texts that are not mine to redistribute, and
+material from my day job that is not public. What survives review moves into
+the chapters, with the source cited. If a claim here lacks a citation you can
+follow, that is a defect — open an issue.
+
 ## Building the PDF
 
 Requires [mage](https://magefile.org/), pandoc, xelatex, and plantuml
