@@ -13,4 +13,5 @@ tags:
   - coding-agents
   - spec-driven-development
   - ai-assisted-development
+  - llm-code-generation
 ---

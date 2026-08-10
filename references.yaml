@@ -1,4 +1,361 @@
-# CSL-YAML bibliography (pandoc --bibliography). Entries accumulate as
-# chapters cite sources; the article versions carry their own numbered
-# reference lists.
-references: []
+# CSL-YAML bibliography (pandoc --bibliography).
+# Entries transcribed from the reference lists the chapter drafts carried
+# inline. Entries marked `note: needs-verification` were cited without full
+# publication details in the source manuscript.
+references:
+
+- id: boehm1986
+  type: article-journal
+  author:
+  - {family: Boehm, given: Barry}
+  title: A Spiral Model of Software Development and Enhancement
+  container-title: ACM SIGSOFT Software Engineering Notes
+  volume: 11
+  issue: 4
+  page: 14-24
+  issued: {year: 1986}
+
+- id: hunt1999
+  type: book
+  author:
+  - {family: Hunt, given: Andrew}
+  - {family: Thomas, given: David}
+  title: "The Pragmatic Programmer: From Journeyman to Master"
+  publisher: Addison-Wesley
+  issued: {year: 1999}
+
+- id: larman2003
+  type: article-journal
+  author:
+  - {family: Larman, given: Craig}
+  - {family: Basili, given: Victor R.}
+  title: "Iterative and Incremental Development: A Brief History"
+  container-title: IEEE Computer
+  volume: 36
+  issue: 6
+  page: 47-56
+  issued: {year: 2003}
+
+- id: mcconnell1996
+  type: book
+  author:
+  - {family: McConnell, given: Steve}
+  title: "Rapid Development: Taming Wild Software Schedules"
+  publisher: Microsoft Press
+  issued: {year: 1996}
+
+- id: latentpatterns-harness
+  type: webpage
+  author:
+  - {literal: Latent Patterns}
+  title: Agent Harness
+  container-title: Glossary
+  URL: https://latentpatterns.com/glossary/agent-harness
+  note: needs-verification — no access date in the source manuscript
+
+- id: kocetkov2022
+  type: article
+  author:
+  - {family: Kocetkov, given: Denis}
+  - {literal: et al.}
+  title: "The Stack: 3 TB of Permissively Licensed Source Code"
+  publisher: arXiv
+  number: arXiv:2211.15533
+  issued: {year: 2022}
+
+- id: cassano2023
+  type: article-journal
+  author:
+  - {family: Cassano, given: Federico}
+  - {literal: et al.}
+  title: "MultiPL-E: A Scalable and Polyglot Approach to Benchmarking Neural Code Generation"
+  container-title: IEEE Transactions on Software Engineering
+  number: arXiv:2208.08227
+  issued: {year: 2023}
+
+- id: cassano2024-transfer
+  type: paper-conference
+  author:
+  - {family: Cassano, given: Federico}
+  - {literal: et al.}
+  title: Knowledge Transfer from High-Resource to Low-Resource Programming Languages for Code LLMs
+  container-title: OOPSLA 2024
+  number: arXiv:2308.09895
+  issued: {year: 2024}
+
+- id: codellama2023
+  type: article
+  author:
+  - {family: Rozière, given: Baptiste}
+  - {literal: et al.}
+  title: "Code Llama: Open Foundation Models for Code"
+  publisher: arXiv
+  number: arXiv:2308.12950
+  issued: {year: 2023}
+
+- id: willard2023
+  type: article
+  author:
+  - {family: Willard, given: Brandon T.}
+  - {family: Louf, given: Rémi}
+  title: Efficient Guided Generation for Large Language Models
+  publisher: arXiv
+  number: arXiv:2307.09702
+  issued: {year: 2023}
+
+- id: dong2024
+  type: paper-conference
+  author:
+  - {family: Dong, given: Yixin}
+  - {literal: et al.}
+  title: "XGrammar: Flexible and Efficient Structured Generation Engine for Large Language Models"
+  container-title: MLSys 2025
+  number: arXiv:2411.15100
+  issued: {year: 2024}
+
+- id: beurer-kellner2023
+  type: paper-conference
+  author:
+  - {family: Beurer-Kellner, given: Luca}
+  - {family: Fischer, given: Marc}
+  - {family: Vechev, given: Martin}
+  title: "Prompting Is Programming: A Query Language for Large Language Models"
+  container-title: PLDI 2023
+  number: arXiv:2212.06094
+  issued: {year: 2023}
+
+- id: park2024
+  type: paper-conference
+  author:
+  - {family: Park, given: Kanghee}
+  - {family: Wang, given: Hao}
+  - {family: Berg-Kirkpatrick, given: Taylor}
+  title: Grammar-Aligned Decoding
+  container-title: NeurIPS 2024
+  number: arXiv:2405.21047
+  issued: {year: 2024}
+
+- id: pan2024
+  type: paper-conference
+  author:
+  - {family: Pan, given: Rangeet}
+  - {literal: et al.}
+  title: "Lost in Translation: A Study of Bugs Introduced by Large Language Models while Translating Code"
+  container-title: ICSE 2024
+  number: arXiv:2308.03109
+  issued: {year: 2024}
+
+- id: sun2024
+  type: paper-conference
+  author:
+  - {family: Sun, given: Zhensu}
+  - {literal: et al.}
+  title: "AI Coders Are Among Us: Rethinking Programming Language Grammar towards Efficient Code Generation"
+  container-title: ISSTA 2024
+  number: arXiv:2404.16333
+  issued: {year: 2024}
+
+- id: wang2024
+  type: article
+  author:
+  - {family: Wang, given: Ziyao}
+  - {literal: et al.}
+  title: "LLM Hallucinations in Practical Code Generation: Phenomena, Mechanism, and Mitigation"
+  publisher: arXiv
+  number: arXiv:2409.20550
+  issued: {year: 2024}
+
+- id: metr2025
+  type: report
+  author:
+  - {literal: METR}
+  title: Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity
+  issued: {year: 2025}
+  note: needs-verification — no URL in the source manuscript
+
+- id: coderabbit2025
+  type: report
+  author:
+  - {literal: CodeRabbit}
+  title: AI vs Human Code Generation Report
+  issued: {year: 2025}
+  note: needs-verification — no URL in the source manuscript
+
+- id: stackoverflow2025
+  type: report
+  author:
+  - {literal: Stack Overflow}
+  title: Developer Survey 2025
+  issued: {year: 2025}
+  note: needs-verification — no URL in the source manuscript
+
+- id: runmat2024
+  type: post-weblog
+  author:
+  - {literal: RunMat}
+  title: Choosing Rust for LLM-Generated Code
+  issued: {year: 2024}
+  note: needs-verification — no URL in the source manuscript; blog post cited for a claim about corpus uniformity
+
+# --- Verified 2026-08-10 against arXiv/DBLP/ACL/PMLR/OpenReview; these nine
+# were cited in the drafts with no bibliography entry anywhere.
+
+- id: vaswani2017
+  type: paper-conference
+  title: Attention Is All You Need
+  author:
+  - {family: Vaswani, given: Ashish}
+  - {family: Shazeer, given: Noam}
+  - {family: Parmar, given: Niki}
+  - {family: Uszkoreit, given: Jakob}
+  - {family: Jones, given: Llion}
+  - {family: Gomez, given: Aidan N.}
+  - {family: Kaiser, given: Łukasz}
+  - {family: Polosukhin, given: Illia}
+  container-title: Advances in Neural Information Processing Systems 30 (NIPS 2017)
+  publisher: Curran Associates, Inc.
+  page: 5998-6008
+  issued: {year: 2017}
+  DOI: 10.48550/arXiv.1706.03762
+  URL: https://arxiv.org/abs/1706.03762
+
+- id: liu2023
+  type: article-journal
+  title: "Lost in the Middle: How Language Models Use Long Contexts"
+  author:
+  - {family: Liu, given: Nelson F.}
+  - {family: Lin, given: Kevin}
+  - {family: Hewitt, given: John}
+  - {family: Paranjape, given: Ashwin}
+  - {family: Bevilacqua, given: Michele}
+  - {family: Petroni, given: Fabio}
+  - {family: Liang, given: Percy}
+  container-title: Transactions of the Association for Computational Linguistics
+  publisher: MIT Press
+  volume: 12
+  page: 157-173
+  issued: {year: 2024}
+  DOI: 10.1162/tacl_a_00638
+  URL: https://aclanthology.org/2024.tacl-1.9/
+  note: Preprint arXiv:2307.03172 (2023), the year the citation key refers to.
+
+- id: olsson2022
+  type: article-journal
+  title: In-context Learning and Induction Heads
+  author:
+  - {family: Olsson, given: Catherine}
+  - {family: Elhage, given: Nelson}
+  - {family: Nanda, given: Neel}
+  - {family: Joseph, given: Nicholas}
+  - {family: DasSarma, given: Nova}
+  - {family: Henighan, given: Tom}
+  - {literal: et al.}
+  container-title: Transformer Circuits Thread
+  issued: {year: 2022, month: 9, day: 20}
+  URL: https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html
+  note: 26 authors; also arXiv:2209.11895.
+
+- id: akyurek2022
+  type: paper-conference
+  title: "What Learning Algorithm Is In-Context Learning? Investigations with Linear Models"
+  author:
+  - {family: Akyürek, given: Ekin}
+  - {family: Schuurmans, given: Dale}
+  - {family: Andreas, given: Jacob}
+  - {family: Ma, given: Tengyu}
+  - {family: Zhou, given: Denny}
+  container-title: International Conference on Learning Representations (ICLR 2023)
+  issued: {year: 2023}
+  URL: https://openreview.net/forum?id=0g0X4H8yN4I
+  note: Preprint arXiv:2211.15661 (2022), the year the citation key refers to.
+
+- id: vonoswald2023
+  type: paper-conference
+  title: Transformers Learn In-Context by Gradient Descent
+  author:
+  - {family: von Oswald, given: Johannes}
+  - {family: Niklasson, given: Eyvind}
+  - {family: Randazzo, given: Ettore}
+  - {family: Sacramento, given: João}
+  - {family: Mordvintsev, given: Alexander}
+  - {family: Zhmoginov, given: Andrey}
+  - {family: Vladymyrov, given: Max}
+  container-title: Proceedings of the 40th International Conference on Machine Learning
+  collection-title: Proceedings of Machine Learning Research
+  volume: 202
+  page: 35151-35174
+  issued: {year: 2023}
+  URL: https://proceedings.mlr.press/v202/von-oswald23a.html
+
+- id: xie2021
+  type: paper-conference
+  title: An Explanation of In-context Learning as Implicit Bayesian Inference
+  author:
+  - {family: Xie, given: Sang Michael}
+  - {family: Raghunathan, given: Aditi}
+  - {family: Liang, given: Percy}
+  - {family: Ma, given: Tengyu}
+  container-title: International Conference on Learning Representations (ICLR 2022)
+  issued: {year: 2022}
+  URL: https://openreview.net/forum?id=RdJVFCHjUMI
+  note: Preprint arXiv:2111.02080 (2021), the year the citation key refers to.
+
+- id: gof1994
+  type: book
+  title: "Design Patterns: Elements of Reusable Object-Oriented Software"
+  author:
+  - {family: Gamma, given: Erich}
+  - {family: Helm, given: Richard}
+  - {family: Johnson, given: Ralph}
+  - {family: Vlissides, given: John}
+  publisher: Addison-Wesley
+  issued: {year: 1994}
+  ISBN: 0-201-63361-2
+  note: Strategy pattern, pp. 315-323.
+
+- id: box1976
+  type: article-journal
+  title: Science and Statistics
+  author:
+  - {family: Box, given: George E. P.}
+  container-title: Journal of the American Statistical Association
+  volume: 71
+  issue: 356
+  page: 791-799
+  issued: {year: 1976, month: 12}
+  DOI: 10.1080/01621459.1976.10480949
+  note: >-
+    Contains "Since all models are wrong the scientist cannot obtain a
+    'correct' one by excessive elaboration" (§2.3) and "Since all models are
+    wrong the scientist must be alert to what is importantly wrong" (§2.4).
+    It does NOT contain the aphorism as usually quoted — cite boxdraper1987
+    for that sentence.
+
+- id: boxdraper1987
+  type: book
+  title: Empirical Model-Building and Response Surfaces
+  author:
+  - {family: Box, given: George E. P.}
+  - {family: Draper, given: Norman R.}
+  publisher: Wiley
+  issued: {year: 1987}
+  note: >-
+    "Essentially, all models are wrong, but some are useful" appears on p. 424.
+    Publisher location and ISBN not independently verified.
+
+- id: tmforum-ig1218
+  type: report
+  title: "IG1218: Autonomous Networks Business Requirements & Architecture"
+  author:
+  - {literal: TM Forum}
+  publisher: TM Forum
+  genre: Introductory Guide
+  issued: {year: 2020, month: 7}
+  URL: https://www.tmforum.org/resources/introductory-guide/ig1218-autonomous-networks-business-requirements-and-framework-v2-2-0/
+  note: >-
+    Retitled "Business Requirements and Framework" from v2.0.0; current v2.2.0.
+    Member sign-in required. The six levels were first published in IG1193,
+    Cross-Industry Autonomous Networks: Vision and Roadmap v1.0 (Oct 2019);
+    IG1252 operationalizes them into a scored evaluation methodology. Date and
+    version confirmed indirectly via ETSI White Paper No. 40, not the TM Forum
+    resource page.

@@ -1,31 +1,54 @@
 # Introduction
 
-Ask a coding agent for a feature and you get code that compiles and a
-structure you did not choose. The agent filled every gap in your request
-with a guess, and the guesses are where projects die. This book is about
-closing those gaps before generation starts: writing requirements an agent
-can execute, building verification the agent cannot grade itself on, and
-running the loop so the human stays in charge of what ships.
+Coding agents write more code in a day than most engineers write in a
+month. More code is not the point. The point is that the relationship
+between a programmer and their code has changed: you are no longer the
+one typing, you are the one specifying, verifying, and orchestrating.
 
-The material comes from a measured practice, not a framework pitch. The
-numbers behind the chapters are public: 123 Unix utilities regenerated in
-Go from specifications and verified against the GNU reference binaries by
-differential testing; a $33.29 generation session accounted for token by
-token; 320,000 generated lines deleted on purpose because the
-specification, not the code, is the artifact worth keeping.
+This book teaches experienced programmers how to work across the full
+range of that shift — from a single interactive session to autonomous
+pipelines running hundreds of tasks. The material draws on production
+runs rather than demos: 44,628 lines of Go generated across 31 pipeline
+runs, 123 Unix utilities regenerated from specification and verified
+against the GNU reference binaries by differential testing, and a
+$33.29 generation session accounted for token by token. Two open
+repositories — [cobbler-scaffold](https://github.com/petar-djukic/cobbler-scaffold)
+and [go-unix-utils](https://github.com/petar-djukic/go-unix-utils) —
+serve as both the subject and the laboratory.
 
-Each chapter runs as an article first. The live versions are at
-[Mesh Intelligence](https://meshintelligence.substack.com?utm_source=github&utm_campaign=agentic-coding-book), and the chapters here consolidate them as they
-stabilize. The book is written in the open; expect stubs, seams, and
-revisions.
+The argument underneath it: coding agents generate code, including the
+code that makes them obsolete. The programmer who builds, instruments,
+and improves their own generation pipeline compounds an advantage over
+the one who waits for a vendor to ship one.
 
-## The argument in one paragraph
+## Who this is for
 
-Coding agents split the programmer's job. You still need to know how to
-program — the agent's mistakes are invisible to someone who cannot read
-the code — but the day-to-day work moves from writing code to specifying,
-verifying, and orchestrating. The programmer who treats the agent as a
-faster typist stays at the autonomy level of an autocomplete. The
-programmer who externalizes intent into specifications and builds
-verification around the agent scales past a single context window. The
-levels between those two points structure this book.
+Programmers who can already write production code. The book assumes you
+can read the generated output and judge it — the agent's mistakes are
+invisible to someone who cannot. It does not assume any prior experience
+with agent orchestration.
+
+## How the book is arranged
+
+Each part covers what is required to work at one level of autonomy
+safely.
+
+| Part | Subject |
+|---|---|
+| I | What the skill is, how construction is layered, how the machine works, and which language to use |
+| II | Requirements: externalizing intent so agents can execute it |
+| III | Testing: verifying code no human wrote |
+| IV | Correctness: what "correct" means when you did not write the code |
+| V | Orchestration: the machinery that runs the loop across hundreds of tasks |
+| VI | Instrumentation: observing what the agents actually did |
+
+**Work in progress, written in the open.** Part I is drafted; the
+remaining parts are outlines and notes. Chapters also run as articles at
+[Mesh Intelligence](https://meshintelligence.substack.com?utm_source=github&utm_campaign=agentic-coding-book). Expect stubs and seams.
+
+## A note on the term
+
+Part I uses the term **clauding** for the practice this book teaches.
+The word is a coinage, tied to the tool the author uses most, and it
+predates the book's current title. Read it as a synonym for agentic
+coding wherever it appears.
