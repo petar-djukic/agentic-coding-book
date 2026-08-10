@@ -196,3 +196,166 @@ references:
   title: Choosing Rust for LLM-Generated Code
   issued: {year: 2024}
   note: needs-verification — no URL in the source manuscript; blog post cited for a claim about corpus uniformity
+
+# --- Verified 2026-08-10 against arXiv/DBLP/ACL/PMLR/OpenReview; these nine
+# were cited in the drafts with no bibliography entry anywhere.
+
+- id: vaswani2017
+  type: paper-conference
+  title: Attention Is All You Need
+  author:
+  - {family: Vaswani, given: Ashish}
+  - {family: Shazeer, given: Noam}
+  - {family: Parmar, given: Niki}
+  - {family: Uszkoreit, given: Jakob}
+  - {family: Jones, given: Llion}
+  - {family: Gomez, given: Aidan N.}
+  - {family: Kaiser, given: Łukasz}
+  - {family: Polosukhin, given: Illia}
+  container-title: Advances in Neural Information Processing Systems 30 (NIPS 2017)
+  publisher: Curran Associates, Inc.
+  page: 5998-6008
+  issued: {year: 2017}
+  DOI: 10.48550/arXiv.1706.03762
+  URL: https://arxiv.org/abs/1706.03762
+
+- id: liu2023
+  type: article-journal
+  title: "Lost in the Middle: How Language Models Use Long Contexts"
+  author:
+  - {family: Liu, given: Nelson F.}
+  - {family: Lin, given: Kevin}
+  - {family: Hewitt, given: John}
+  - {family: Paranjape, given: Ashwin}
+  - {family: Bevilacqua, given: Michele}
+  - {family: Petroni, given: Fabio}
+  - {family: Liang, given: Percy}
+  container-title: Transactions of the Association for Computational Linguistics
+  publisher: MIT Press
+  volume: 12
+  page: 157-173
+  issued: {year: 2024}
+  DOI: 10.1162/tacl_a_00638
+  URL: https://aclanthology.org/2024.tacl-1.9/
+  note: Preprint arXiv:2307.03172 (2023), the year the citation key refers to.
+
+- id: olsson2022
+  type: article-journal
+  title: In-context Learning and Induction Heads
+  author:
+  - {family: Olsson, given: Catherine}
+  - {family: Elhage, given: Nelson}
+  - {family: Nanda, given: Neel}
+  - {family: Joseph, given: Nicholas}
+  - {family: DasSarma, given: Nova}
+  - {family: Henighan, given: Tom}
+  - {literal: et al.}
+  container-title: Transformer Circuits Thread
+  issued: {year: 2022, month: 9, day: 20}
+  URL: https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html
+  note: 26 authors; also arXiv:2209.11895.
+
+- id: akyurek2022
+  type: paper-conference
+  title: "What Learning Algorithm Is In-Context Learning? Investigations with Linear Models"
+  author:
+  - {family: Akyürek, given: Ekin}
+  - {family: Schuurmans, given: Dale}
+  - {family: Andreas, given: Jacob}
+  - {family: Ma, given: Tengyu}
+  - {family: Zhou, given: Denny}
+  container-title: International Conference on Learning Representations (ICLR 2023)
+  issued: {year: 2023}
+  URL: https://openreview.net/forum?id=0g0X4H8yN4I
+  note: Preprint arXiv:2211.15661 (2022), the year the citation key refers to.
+
+- id: vonoswald2023
+  type: paper-conference
+  title: Transformers Learn In-Context by Gradient Descent
+  author:
+  - {family: von Oswald, given: Johannes}
+  - {family: Niklasson, given: Eyvind}
+  - {family: Randazzo, given: Ettore}
+  - {family: Sacramento, given: João}
+  - {family: Mordvintsev, given: Alexander}
+  - {family: Zhmoginov, given: Andrey}
+  - {family: Vladymyrov, given: Max}
+  container-title: Proceedings of the 40th International Conference on Machine Learning
+  collection-title: Proceedings of Machine Learning Research
+  volume: 202
+  page: 35151-35174
+  issued: {year: 2023}
+  URL: https://proceedings.mlr.press/v202/von-oswald23a.html
+
+- id: xie2021
+  type: paper-conference
+  title: An Explanation of In-context Learning as Implicit Bayesian Inference
+  author:
+  - {family: Xie, given: Sang Michael}
+  - {family: Raghunathan, given: Aditi}
+  - {family: Liang, given: Percy}
+  - {family: Ma, given: Tengyu}
+  container-title: International Conference on Learning Representations (ICLR 2022)
+  issued: {year: 2022}
+  URL: https://openreview.net/forum?id=RdJVFCHjUMI
+  note: Preprint arXiv:2111.02080 (2021), the year the citation key refers to.
+
+- id: gof1994
+  type: book
+  title: "Design Patterns: Elements of Reusable Object-Oriented Software"
+  author:
+  - {family: Gamma, given: Erich}
+  - {family: Helm, given: Richard}
+  - {family: Johnson, given: Ralph}
+  - {family: Vlissides, given: John}
+  publisher: Addison-Wesley
+  issued: {year: 1994}
+  ISBN: 0-201-63361-2
+  note: Strategy pattern, pp. 315-323.
+
+- id: box1976
+  type: article-journal
+  title: Science and Statistics
+  author:
+  - {family: Box, given: George E. P.}
+  container-title: Journal of the American Statistical Association
+  volume: 71
+  issue: 356
+  page: 791-799
+  issued: {year: 1976, month: 12}
+  DOI: 10.1080/01621459.1976.10480949
+  note: >-
+    Contains "Since all models are wrong the scientist cannot obtain a
+    'correct' one by excessive elaboration" (§2.3) and "Since all models are
+    wrong the scientist must be alert to what is importantly wrong" (§2.4).
+    It does NOT contain the aphorism as usually quoted — cite boxdraper1987
+    for that sentence.
+
+- id: boxdraper1987
+  type: book
+  title: Empirical Model-Building and Response Surfaces
+  author:
+  - {family: Box, given: George E. P.}
+  - {family: Draper, given: Norman R.}
+  publisher: Wiley
+  issued: {year: 1987}
+  note: >-
+    "Essentially, all models are wrong, but some are useful" appears on p. 424.
+    Publisher location and ISBN not independently verified.
+
+- id: tmforum-ig1218
+  type: report
+  title: "IG1218: Autonomous Networks Business Requirements & Architecture"
+  author:
+  - {literal: TM Forum}
+  publisher: TM Forum
+  genre: Introductory Guide
+  issued: {year: 2020, month: 7}
+  URL: https://www.tmforum.org/resources/introductory-guide/ig1218-autonomous-networks-business-requirements-and-framework-v2-2-0/
+  note: >-
+    Retitled "Business Requirements and Framework" from v2.0.0; current v2.2.0.
+    Member sign-in required. The six levels were first published in IG1193,
+    Cross-Industry Autonomous Networks: Vision and Roadmap v1.0 (Oct 2019);
+    IG1252 operationalizes them into a scored evaluation methodology. Date and
+    version confirmed indirectly via ETSI White Paper No. 40, not the TM Forum
+    resource page.
