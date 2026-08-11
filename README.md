@@ -86,6 +86,7 @@ template.
 ```bash
 mage all      # figures + PDF into generated-files/
 mage outline  # outline PDF from docs/srd/ into generated-files/
+mage critic   # LLM critic over a drafted chapter (see below)
 mage clean    # remove generated artifacts
 ```
 
@@ -96,6 +97,24 @@ chapter order, `docs/road-map.yaml` for per-chapter status, and every
 spine, figures, and gaps. Chapters with no SRD are listed with their status,
 so the outline doubles as a coverage report. It needs at least one SRD and
 fails with a message naming the directory otherwise.
+
+`mage critic <chapter>` reads a drafted chapter, the binding rule sets under
+`docs/constitutions/`, and the chapter's SRD when one can be paired, then asks
+the model for findings: a constitution rule id, a line anchor, the text being
+objected to, and what is wrong. Pass `all` to critique every drafted chapter.
+It exits non-zero when any finding is blocking, and it never edits the prose —
+revision is a separate step.
+
+```bash
+mage critic all                          # every drafted chapter
+mage critic 05-how-the-machine-works.md  # one chapter
+```
+
+The model call is gated on `ANTHROPIC_API_KEY`. Without it the target reports
+that it is skipping and exits zero, so a CI run with no credentials does not
+fail the build. Chapters are paired to their SRD by title; when no SRD matches,
+the chapter is checked against the constitutions alone and the mismatch is
+reported. Pass `-srd` to `cmd/critic` to pair one explicitly.
 
 ## Author
 
