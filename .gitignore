@@ -6,3 +6,6 @@ generated-files/
 # writing-skills; absolute local paths, not portable). Never committed.
 .claude/commands/
 .claude/skills/
+
+# Compiled helper binaries (built by `go build ./cmd/...`).
+/genoutline

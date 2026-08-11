@@ -85,8 +85,17 @@ template.
 
 ```bash
 mage all      # figures + PDF into generated-files/
+mage outline  # outline PDF from docs/srd/ into generated-files/
 mage clean    # remove generated artifacts
 ```
+
+`mage outline` renders the book's structure from the specification rather
+than from the chapters: it reads `docs/ARCHITECTURE.yaml` for the part and
+chapter order, `docs/road-map.yaml` for per-chapter status, and every
+`docs/srd/*.yaml` for that chapter's goal, objective, subgoals, content
+spine, figures, and gaps. Chapters with no SRD are listed with their status,
+so the outline doubles as a coverage report. It needs at least one SRD and
+fails with a message naming the directory otherwise.
 
 ## Author
 

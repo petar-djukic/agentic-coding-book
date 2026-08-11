@@ -99,6 +99,43 @@ func PDF() error {
 	return nil
 }
 
+// Outline renders the book's outline from docs/srd/ to a PDF, so the
+// structure is reviewable before any chapter is drafted.
+func Outline() error {
+	if err := os.MkdirAll(outputDir, 0o755); err != nil {
+		return fmt.Errorf("mkdir %s: %w", outputDir, err)
+	}
+
+	md, err := sh.Output("go", "run", "./cmd/genoutline")
+	if err != nil {
+		return fmt.Errorf("genoutline: %w", err)
+	}
+
+	date := time.Now().Format("2006-01-02")
+	src := filepath.Join(outputDir, fmt.Sprintf("%s-outline-%s.md", bookSlug, date))
+	out := filepath.Join(outputDir, fmt.Sprintf("%s-outline-%s.pdf", bookSlug, date))
+
+	if err := os.WriteFile(src, []byte(md), 0o644); err != nil {
+		return fmt.Errorf("write %s: %w", src, err)
+	}
+
+	// The outline quotes citation ids as literal text rather than pandoc
+	// [@key] markers, so it needs no bibliography pass.
+	args := []string{
+		"--template=" + template,
+		"--from", "markdown",
+		"--pdf-engine=xelatex",
+		"--listings",
+		src, "-o", out,
+	}
+
+	fmt.Printf("generating %s\n", out)
+	if err := sh.Run("pandoc", args...); err != nil {
+		return fmt.Errorf("pandoc: %w", err)
+	}
+	return nil
+}
+
 // Clean removes generated PNGs and PDFs.
 func Clean() error {
 	pngs, _ := filepath.Glob(filepath.Join(figuresDir, "*.png"))
