@@ -1,57 +1,91 @@
-# Clauding for Programmers — Document Outline
+# Agentic Coding — Document Outline
 # This is the single source of truth for the book structure.
 
-title: "Clauding for Programmers"
+title: "Agentic Coding"
 subtitle: "How to Build Software with Coding Agents — and Build the Agents Themselves"
 author: "Petar Djukic"
 
 parts:
   - id: part-i
-    title: "What Is Clauding?"
-    directory: part-i-what-is-clauding
+    title: "Agents and Harnesses"
+    directory: part-i-agents-and-harnesses
     status: outline
     description: >
-      Clauding is a new skill, distinct from coding. The programmer's job has
-      split: you still need to know how to program, but the day-to-day work
-      shifts from writing code to specifying, verifying, and orchestrating.
+      Part I is mechanism, not practice. It establishes what an agent is, what
+      a harness is, how a harness actually manipulates the file system, where
+      the underlying model breaks, and where state lives between sessions —
+      before the book prescribes anything.
 
-      This part introduces the skill through the lens of autonomy levels —
-      from human-in-the-loop (L1-L2) where you instruct and review, to
-      human-on-the-loop (L3-L4) where you specify and verify at scale. The
-      autonomy levels frame the rest of the book: each subsequent part teaches
-      what you need to move up a level safely.
+      The harness is the protagonist. The LLM never touches the file system;
+      the harness does. The reader's job across the rest of the book is
+      shaping how that harness behaves.
 
-      The key argument: coding agents are tools that generate code — including
-      code that makes them obsolete. The programmer who builds their own
-      tooling has a compounding advantage. This isn't about learning prompts.
-      It's about taking agency over your own development process.
+      The payoff is structural: every "do it this way" in Parts II–VI is
+      justified by a Part I fact — because the harness reads the whole file
+      into context, because the model cannot grade its own output, because
+      memory has to live somewhere the harness can reach.
     chapters:
-      - title: "What is clauding?"
+      - title: "What is an agent?"
+        status: outline
         description: >
-          Defines clauding as a distinct skill, not just "prompting well."
-          What changes in how you work. Introduces the levels of autonomy
-          (L0-L5) as the framing device for the book. Human in the loop
-          (L1-L2): you instruct, review, and correct — you are the
-          verification layer, it doesn't scale. Human on the loop (L3-L4):
-          you externalize intent into specs and constitutions, build
-          verification infrastructure, and let agents work autonomously —
-          scales but carries the black box risk. Maps each subsequent part
-          of the book to what's needed to move up a level safely.
-      - title: "The agency argument"
+          The clean model: a state machine plus a set of tools. Declarative
+          agents as the reference lens — the version where the skeleton is
+          still visible. Cross-references the Agentic Applications volume,
+          which builds agents this way rather than borrowing the model.
+      - title: "The agents you already use"
+        status: outline
         description: >
-          Why programmers should build their own tools, not wait for vendors.
-          The meta-loop: using Claude to build better Claude tooling.
-      - title: "The repositories"
-        status: tentative  # May change — not sure about "lab" framing
+          OpenCode, Claude Code, and LangGraph-flavored agents surveyed
+          against that model. The same skeleton in different clothes, and
+          what each one hides.
+      - title: "What is a harness?"
+        status: outline
         description: >
-          Introduction to cobbler-scaffold and go-unix-utils. What they are,
-          why they exist. Framing TBD.
+          Coding with an agent is using a harness. The software wrapped
+          around the model: tool execution, file-system access, loop control,
+          and policy.
+      - title: "How a harness touches your code"
+        status: outline
+        description: >
+          The harness ↔ file system ↔ compiler sequence diagram, and the
+          generate → verify → feed-back loop as the harness's heartbeat.
+          The LLM never touches the file system; the harness does.
+      - title: "How the LLM works, and fails"
+        status: partial  # split from the drafted 05-how-the-machine-works.md
+        description: >
+          Next-token prediction, tokens and context budgets, the
+          interpolation model, and the four failure modes. The part inside
+          the harness that makes the mistakes the rest of the harness exists
+          to catch.
+      - title: "Externalizing memory"
+        status: outline
+        description: >
+          The harness feature that carries state across sessions, and the
+          exact moment the human leaves the loop. The hinge out of mechanism
+          and into the practice of Parts II–VI.
+    notes:
+      relocated: >
+        "Layered construction" and "Language selection" left Part I for
+        Part II — they are construction and decision practices, not
+        machine mechanics. Issue #12 moves the files and renumbers them.
+      retired: >
+        Two never-drafted Part I outline chapters were dropped in the
+        restructure: "The agency argument" (build your own tooling — the
+        argument survives in the introduction and Part V's "Building your
+        own") and "The repositories" (the cobbler-scaffold and
+        go-unix-utils tour, whose framing was never settled; the evidence
+        base is introduced where it is first used instead).
 
   - id: part-ii
-    title: "Requirements"
-    directory: part-ii-requirements
+    title: "Construction and Requirements"
+    directory: part-ii-requirements  # path unchanged to avoid churn; #12 revisits
     status: outline
     description: >
+      Part I established the mechanism. This part starts the practice with the
+      two decisions that precede any spec — how construction is ordered, and
+      what language the model will be writing — and then turns to the spec
+      itself.
+
       The spec is the source code now. When you work with coding agents, the
       quality of the output is determined by the quality of the requirements
       you give them. Bad specs produce bad code, and the failure modes are
@@ -69,6 +103,18 @@ parts:
       requirements in their head while they coded. That doesn't work when
       someone (something) else is doing the coding.
     chapters:
+      - title: "Layered construction"
+        status: drafted  # relocated from Part I; file move tracked in #12
+        description: >
+          Inner and outer loops; tracer bullets; verification gates; why
+          agents automate only one loop. Sets the increment order that the
+          requirements chapters then specify against.
+      - title: "Language selection"
+        status: drafted  # relocated from Part I; file move tracked in #12
+        description: >
+          Language-model pairing; interpolation density; grammar complexity;
+          the compiler in the inner loop. The substrate decision every
+          project makes before the first spec is written.
       - title: "Where requirements come from"
         description: >
           Standards (POSIX), reference implementations (GNU coreutils), RFCs,

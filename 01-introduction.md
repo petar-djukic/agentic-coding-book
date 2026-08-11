@@ -35,15 +35,16 @@ safely.
 
 | Part | Subject |
 |---|---|
-| I | What the skill is, how construction is layered, how the machine works, and which language to use |
-| II | Requirements: externalizing intent so agents can execute it |
+| I | What an agent is, what a harness is, how a harness touches your code, how the model fails, and where memory lives |
+| II | Construction and requirements: layering construction, choosing the language, and externalizing intent so agents can execute it |
 | III | Testing: verifying code no human wrote |
 | IV | Correctness: what "correct" means when you did not write the code |
 | V | Orchestration: the machinery that runs the loop across hundreds of tasks |
 | VI | Instrumentation: observing what the agents actually did |
 
-**Work in progress, written in the open.** Part I is drafted; the
-remaining parts are outlines and notes. Chapters also run as articles at
+**Work in progress, written in the open.** Part I is being re-cut
+mechanism-first; the remaining parts are outlines and notes. Chapters
+also run as articles at
 [Mesh Intelligence](https://meshintelligence.substack.com?utm_source=github&utm_campaign=agentic-coding-book). Expect stubs and seams.
 
 ## A note on the term
