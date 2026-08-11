@@ -1,0 +1,119 @@
+# argument.yaml -- constitution for the book's argument: what it claims, in
+# what order it earns the claims, and what counts as evidence (GH-16).
+# Governs: the repository's numbered chapters.
+#
+# The thesis is stated once in VISION.yaml; this file binds it to a
+# derivation chain and to per-part obligations. The SRDs (GH-17) name the
+# chain links their section owns.
+
+meta:
+  book: "Agentic Coding"
+  governs: "NN-slug.md at the repository root"
+  version: 1
+
+thesis:
+  statement: >
+    The harness is the protagonist, not the model. A coding agent is a state
+    machine plus tools, and the software around the model -- tool execution,
+    file-system access, loop control, policy -- is what touches the code. The
+    model never writes a file. That mechanism determines the practice:
+    specifications must be self-contained because the harness reads whole
+    files into context; verification must be mechanical because the model
+    cannot grade its own output; intent must be written down because memory
+    has to live where the harness can reach it.
+  direction: >
+    The reasoning runs mechanism-first. Part I establishes what the machine
+    is and how it fails; Parts II-VI derive practice from those facts. No
+    practice is prescribed before the fact that justifies it has been
+    established, and no practice part introduces mechanism of its own. The
+    inverse order -- prescribe the habit, justify it later, or never -- is
+    the failure this structure exists to prevent.
+
+derivation_chain:
+  - id: Q1
+    question: "What is the thing that writes the code?"
+    answer: "An agent is a state machine plus tools. Real coding agents are that skeleton in different clothes; the differences are packaging, not kind."
+    owners: [C1.1, C1.2]
+  - id: Q2
+    question: "What sits between the model and the file system?"
+    answer: "A harness: tool execution, file-system access, loop control, and policy. Coding with an agent is using a harness, whether or not the user thinks of it that way."
+    owners: [C1.3]
+  - id: Q3
+    question: "What does the harness actually do to a codebase?"
+    answer: "It reads files into context, submits them to the model, applies the returned edits, runs the verifier, and feeds the result back. The generate-verify-feed-back loop is the harness's heartbeat, and every constraint on specifications follows from how it reads and writes."
+    owners: [C1.4]
+  - id: Q4
+    question: "Where does the part inside the harness fail?"
+    answer: "The model interpolates from training patterns and emits fluent output whether or not the interpolation is correct. There is no internal uncertainty signal, so surface inspection cannot catch the failures."
+    owners: [C1.5]
+  - id: Q5
+    question: "What has to be written down, and where?"
+    answer: "Everything that must survive a session: intent as specification, constraints as constitution, state where the harness can read it back. This is also where the human leaves the loop."
+    owners: [C1.6, C2.3, C2.4, C2.5, C2.6, C2.7]
+  - id: Q6
+    question: "How do you verify code you did not write and cannot read in full?"
+    answer: "In layers, each catching a different class of defect, none sufficient alone -- and mechanically, because Q4 rules out review by eye at volume."
+    owners: [C3.1, C3.2, C3.3, C3.4, C3.5, C4.1, C4.2, C4.3, C4.4, C4.5]
+  - id: Q7
+    question: "How does this run past one context window?"
+    answer: "Multiple agents coordinated through shared state the harness can reach, which turns the work into a distributed system and imports its failure modes."
+    owners: [C5.1, C5.2, C5.3, C5.6, C5.7, C5.8]
+  - id: Q8
+    question: "How do you know what the agents did?"
+    answer: "By instrumenting the loop. Without measurement the pipeline is changed on guesswork; with it, on evidence."
+    owners: [C6.1, C6.2, C6.3, C6.4, C6.5, C6.6, C6.7]
+
+claims_register:
+  evidence_types:
+    mechanism: "Follows from how the harness or the model works, established in Part I."
+    derived: "Follows from a named link of the derivation chain."
+    run_data: "Measured in an instrumented generation run in the evidence base; the run is identified."
+    repository: "Observable in a public repository named in VISION.yaml (inputs.evidence_base); the reader can go look."
+    literature: "Supported by a citation resolving in references.yaml."
+    experience: "The author's own practice, marked as such and confined to a 'From the Field' sidebar."
+  rules:
+    - id: A-C1
+      rule: "Every load-bearing claim carries one of the evidence types above. A claim that carries none is a defect, not a stylistic matter."
+    - id: A-C2
+      rule: "A claim about cost, turn counts, or volume names the run it came from. An unattributed number is treated as missing."
+    - id: A-C3
+      rule: "Where practice and literature agree, the field observation is stated first and the citation follows (voice.yaml: V-V3). The literature confirms; it does not lead."
+    - id: A-C4
+      rule: "A prescription in Parts II-VI names the Part I fact it rests on, explicitly or by cross-reference. A prescription that cannot name one is either unjustified or belongs in Part I."
+    - id: A-C5
+      rule: "Claims about a tool's behavior are dated or versioned. Harness behavior changes; an undated claim about a shipping product decays silently."
+    - id: A-C6
+      rule: "No claim of generality beyond the evidence. Results from one language, one model, or one codebase are stated as such."
+
+part_obligations:
+  note: >
+    What each part owes the argument. The SRDs bind these per section and
+    name the chain links the section answers; this file states the part-level
+    obligation the SRDs must satisfy.
+  parts:
+    - id: P1
+      owes: "Establishes Q1-Q5 as fact, with no prescription. Every mechanism the rest of the book invokes is defined here, and any fact a later part needs but Part I omits is a gap in Part I."
+    - id: P2
+      owes: "Derives the construction order and the specification from Q3 and Q5. Shows a spec defect traced to the generated code it caused."
+    - id: P3
+      owes: "Derives verification from Q4. States the circularity problem when the tests are generated too, rather than assuming it away."
+    - id: P4
+      owes: "Separates correctness from testing, and states plainly what the layered evidence does not establish."
+    - id: P5
+      owes: "Derives orchestration from the context-window limit, and reports the failure modes as observed, including the ones that cost the author time."
+    - id: P6
+      owes: "Shows the before-and-after of instrumentation on a real run, including what the author got wrong before measuring."
+
+anti_patterns:
+  - id: A-X1
+    pattern: "Prescription before mechanism -- a practice stated in Parts II-VI whose justifying fact appears nowhere in Part I."
+    detection: "The prescription cannot name a Part I fact (A-C4)."
+  - id: A-X2
+    pattern: "Tool advocacy -- a section that reads as a case for adopting a product rather than an account of a mechanism."
+    detection: "Remove the product name; if the passage loses its content, it was advocacy (venue.yaml: VN-4)."
+  - id: A-X3
+    pattern: "Survey drift -- citations accumulating into the argument rather than supporting claims made from practice."
+    detection: "A paragraph whose claims are all `literature` with no `mechanism`, `run_data`, or `repository` evidence."
+  - id: A-X4
+    pattern: "Unfalsifiable framing -- a claim written so no observation could contradict it."
+    detection: "The claim has no stated failure condition."

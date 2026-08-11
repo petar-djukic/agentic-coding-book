@@ -1,0 +1,174 @@
+# voice.yaml -- constitution for how the book sounds and how a chapter is
+# built. Governs: the repository's numbered chapters (GH-16).
+#
+# Distillation source: idea-factory .claude/rules/book-voice.md, ported here
+# as checkable rules. Rules are distilled, not invented; each names its
+# source. The register combines three models named in VISION.yaml (exemplar):
+# Deitel & Deitel for the chapter apparatus, Fowler for precision, and the
+# author's results-without-advocacy tone.
+
+meta:
+  book: "Agentic Coding"
+  governs: "NN-slug.md at the repository root"
+  version: 1
+
+# Rules governing how a chapter is assembled. Each carries a `check` a
+# reviewer or mage critic (GH-19) can apply without reading for taste.
+structure_rules:
+  - id: V-S1
+    name: learning_objectives
+    rule: "Every chapter opens with a numbered list of what the reader will be able to do after reading it -- not what the chapter covers."
+    check: "First heading after the title is 'Learning Objectives'; every entry starts with a capability verb (explain, identify, distinguish, evaluate, given X do Y), not 'understand' or 'learn about'."
+    source: "book-voice.md rule 1"
+  - id: V-S2
+    name: section_opens_with_problem
+    rule: "Every section opens with the problem it solves, stated before the method."
+    check: "No section begins 'This section discusses/covers/introduces'. The first sentence names a failure, a cost, or a question."
+    source: "book-voice.md rule 2"
+  - id: V-S3
+    name: explicit_decomposition
+    rule: "Complex topics are broken into exactly two or three parts, the decomposition stated before it is solved, then each part solved in order."
+    check: "Where a topic is decomposed, a sentence names the count and the parts before the first is addressed."
+    source: "book-voice.md rule 3"
+  - id: V-S4
+    name: definitions_before_use
+    rule: "Every new term gets a bold or boxed definition at first appearance, precise enough that two readers would understand it identically. A term is never used informally and defined later."
+    check: "Every term in docs/definitions.yaml that a chapter uses is either defined in that chapter on first use or cited to the chapter that defines it (road-map.yaml: the `introduced` field)."
+    source: "book-voice.md rule 4"
+  - id: V-S5
+    name: example_within_two_pages
+    rule: "No concept stands as theory for more than two pages without a concrete example -- code, output, data, or a worked scenario from the evidence base."
+    check: "Between any concept introduction and the next code block, table, figure, or worked scenario there are fewer than roughly 900 words."
+    source: "book-voice.md rule 5"
+  - id: V-S6
+    name: summary_and_key_terms
+    rule: "Every chapter ends with a summary restating what the reader can now do, matching the learning objectives, and a key-terms table with one-line definitions."
+    check: "Final two sections are 'Summary' and a key-terms table; every term defined in the chapter appears in the table, and the summary covers each learning objective."
+    source: "book-voice.md rule 6"
+
+prose_rules:
+  - id: V-P1
+    name: declarative_claims
+    rule: "Technical claims are stated as facts. Qualification comes from data, not from hedges."
+    check: "No 'interestingly', 'notably', 'it is worth noting', 'we believe' before a technical claim."
+    source: "book-voice.md rule 7"
+  - id: V-P2
+    name: results_without_advocacy
+    rule: "Data is presented without amplification; the reader draws the conclusion."
+    check: "No 'excellent', 'impressive', 'powerful', 'dramatic' attached to a result."
+    source: "book-voice.md rule 8"
+  - id: V-P3
+    name: short_sentences_anchor
+    rule: "After a complex analytical passage, a short declarative sentence of five to ten words anchors the point."
+    check: "Each long analytical passage is followed within a paragraph by a sentence under about twelve words."
+    source: "book-voice.md rule 9"
+  - id: V-P4
+    name: no_hedging_on_the_known
+    rule: "What is known is stated. What is not known is stated as unknown, with the reason. Uncertainty is never disguised as politeness."
+    check: "No 'it seems that', 'one might argue', 'it could be the case', 'arguably'."
+    source: "book-voice.md rule 10"
+  - id: V-P5
+    name: active_voice_third_person
+    rule: "The technical body uses the active voice in the third person -- the pipeline generates, the harness executes, the suite verifies. First person is reserved for chapter introductions, sidebars, and passages where the author's own experience is the evidence."
+    check: "First-person pronouns appear only inside a 'From the Field' sidebar, a chapter introduction, or an explicitly attributed passage."
+    source: "book-voice.md rule 11"
+
+voice_rules:
+  - id: V-V1
+    name: problem_first
+    rule: "A tool, technique, or concept is introduced by the problem it solves, never by what it is."
+    check: "The first mention of any named tool is preceded by the problem statement it answers."
+    source: "book-voice.md rule 12"
+  - id: V-V2
+    name: concepts_through_need
+    rule: "Vocabulary and frameworks arrive because the narrative requires them; the reader watches the problem demand the concept."
+    check: "No concept is introduced in a section whose problem statement does not require it."
+    source: "book-voice.md rule 13"
+  - id: V-V3
+    name: research_confirms_practice
+    rule: "Field observation comes first, literature second. Citations use pandoc [@key] markers; author names are not written inline."
+    check: "No sentence opens with a citation as its subject; no inline 'Smith et al. showed'; every [@key] resolves in references.yaml."
+    source: "book-voice.md rule 14"
+  - id: V-V4
+    name: advisory_as_observation
+    rule: "The reader is not told what to do. What was observed, what worked, and what failed are described; the reader draws the rule."
+    check: "No second-person imperative stating a practice ('you should', 'always', 'never') outside a sidebar."
+    source: "book-voice.md rule 15"
+  - id: V-V5
+    name: deflation_after_strong_claims
+    rule: "A result that sounds impressive is immediately followed by the context that makes it honest."
+    check: "Every headline number is followed within the same paragraph by its qualification."
+    source: "book-voice.md rule 16"
+
+forbidden_terms:
+  source: "book-voice.md, 'What This Voice Is Not'"
+  terms: [powerful, exciting, revolutionary, seamless, robust, cutting-edge, game-changing, effortless, magical, simply, just, obviously, clearly]
+  note: >
+    'Simply', 'just', 'obviously', and 'clearly' are barred because they
+    assert the reader's experience rather than describe the mechanism. A
+    term of art that trips this list stays; the exception is recorded in the
+    chapter's completion note rather than the sentence being damaged to
+    satisfy a grep.
+
+sidebars:
+  rule: "Four recurring types, adapted from Deitel. A sidebar carries the human voice; the technical body carries the argument."
+  check: "Every sidebar uses one of the four labels verbatim and is one paragraph."
+  types:
+    - id: V-B1
+      label: "Common Error"
+      contains: "A specific mistake with a specific consequence."
+      former_label: "Common Clauding Error"
+    - id: V-B2
+      label: "Good Practice"
+      contains: "A pattern that works, stated as observation rather than instruction."
+      former_label: "Good Clauding Practice"
+    - id: V-B3
+      label: "Performance Observation"
+      contains: "A data point about cost, time, or efficiency."
+    - id: V-B4
+      label: "From the Field"
+      contains: "A short first-person note from the author's experience -- an anecdote, an honest failure, the moment something worked."
+  renaming_note: >
+    The first two labels drop "Clauding" per GH-12, which retires the term
+    throughout. The labels above are canonical; GH-12 applies the rename to
+    the drafted chapters.
+
+figures:
+  rule: "Every figure has three parts: a bold figure number above, the diagram, and an italic caption below."
+  numbering: "Sequential within the chapter -- Figure 1.1, Figure 1.2, Figure 3.4. First number is the chapter, second the position."
+  caption: "Self-contained: a reader scanning the chapter understands the figure from the caption alone."
+  checks:
+    - "No figure without a caption."
+    - "No figure duplicating what the prose already states; figures show structure or data, not concepts that are clearer in words."
+    - "Every figure is referenced from the prose."
+    - "A diagram with more than twelve nodes is decomposed into several figures."
+  diagram_language:
+    status: unresolved
+    detail: >
+      book-voice.md states that all figures are written in Mermaid, and the
+      two drafted chapters carry inline mermaid blocks. The build renders
+      PlantUML from figures/*.puml and the pandoc path has no mermaid
+      filter, so those blocks currently reach the PDF as literal code. This
+      rule is deliberately left unbound rather than picking a side that the
+      build or the drafted chapters would then contradict.
+    owner: "GH-21; ARCHITECTURE.yaml open_questions.Q1"
+
+register_test:
+  statement: >
+    Could a working programmer read this chapter, follow every definition and
+    example, and apply the technique to their own project without re-reading
+    it? If not, the chapter needs more examples, clearer definitions, or a
+    simpler decomposition.
+  source: "book-voice.md, 'Test'"
+
+de_ai:
+  rule: "Prose drafted with a model is scanned before it is committed; a flag is a prompt to look, not a verdict."
+  passes:
+    - name: pre_commit
+      when: "After drafting a chapter, before the commit that adds it."
+      scope: "The chapter's source markdown."
+  accepted_residuals: >
+    A term of art that trips a lexical scan stays, and the exception is
+    recorded in the unit's completion comment. Definitions dense with
+    citations may exceed the sentence-length guidance.
+  source: "process.yaml: drafting_pipeline; the Prose workflow in do-work"

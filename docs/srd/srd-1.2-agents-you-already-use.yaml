@@ -1,0 +1,82 @@
+# SRD 1.2 -- The agents you already use.
+# Drafting contract per docs/srd/README.md (GH-17).
+
+meta:
+  chapter: C1.2
+  title: The agents you already use
+  parent: P1
+section_goal: show that the tools the reader already runs are the C1.1 skeleton in different clothes
+goals:
+  - id: G1.3
+    goal: The reader can map a tool they already use onto the state-machine-plus-tools model, and name what that tool hides.
+  - id: G1.4
+    goal: The reader can tell a packaging difference from a capability difference when comparing agents.
+chain:
+  - id: Q1
+    owns: partial
+    note: "Completes Q1: the definition from C1.1 is shown to hold across the tools in actual use."
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S3, V-S5, V-P2, V-V1]
+    note: "V-S3: the survey is decomposed into two or three axes stated up front, not a tool-by-tool tour."
+  - file: ../constitutions/venue.yaml
+    rules: [VN-4, VN-6]
+    note: "VN-6 binds hard here -- every statement about a shipping tool carries a date or version, because this is the chapter that rots fastest."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C5, A-C6, A-X2]
+objective: >
+  It surveys the agents a working programmer already runs -- OpenCode, Claude
+  Code, LangGraph-flavored agents -- against the C1.1 model, showing the same
+  skeleton in each and naming what each one hides from the user.
+prior_material:
+  - path: coding-skills
+    offers: the GitHub issue loop running on top of a coding agent, as a worked instance of the skeleton
+  - path: declarative-agents
+    offers: the reference form the survey compares against
+citations:
+  - id: stackoverflow2025
+    role: evidence
+    note: adoption data for what programmers actually run, which sets the survey's scope
+  - id: metr2025
+    role: counterpoint
+    note: measured productivity effect on experienced developers; complicates any claim that adoption implies benefit
+  - id: coderabbit2025
+    role: evidence
+    note: comparative generation data, used for what differs between tools rather than for ranking them
+  - id: latentpatterns-harness
+    role: anchor
+    note: the vocabulary the survey uses to describe what each tool wraps
+content:
+  - say: "Programmers are already running agents, usually without calling them that; the question is what each one is doing on their behalf."
+    cites: [stackoverflow2025]
+  - say: "Each tool surveyed is the same skeleton: a loop, a state, and a tool boundary. What differs is what it exposes and what it decides for you."
+    cites: [latentpatterns-harness]
+  - say: "The differences that matter are which decisions are hidden -- context assembly, tool permissions, when the loop stops -- not the interface."
+    cites: [coderabbit2025]
+  - say: "Adoption is not evidence of benefit. Measured effects on experienced developers run against the intuition, and the honest reading is that the gain depends on what the programmer does around the tool."
+    cites: [metr2025]
+apparatus:
+  objectives:
+    - Map a tool you already use onto the state-machine-plus-tools model.
+    - Name what a given agent hides: context assembly, tool permissions, stop conditions.
+    - Distinguish a packaging difference from a capability difference.
+  sidebars:
+    - type: Common Error
+      about: choosing an agent on interface impressions rather than on what it decides for you
+    - type: Performance Observation
+      about: the measured productivity effect that runs against the intuition
+  key_terms: [agent, agent_harness, tool]
+figures:
+  - shows: "The same skeleton across three tools, with the components each one exposes to the user shaded and the components each one hides left blank."
+    status: planned
+links:
+  requires: [C1.1]
+  supports: [C1.3]
+gaps:
+  - "No citable source for the specific tools. OpenCode, Claude Code, and LangGraph are documented in their own repositories and docs, none of which is in references.yaml; decide at drafting whether to cite documentation with an access date (VN-6) or describe behavior observed directly and say so."
+  - "The survey dates immediately. Whatever is drafted needs a version-and-date line per tool, and a note in road-map.yaml that this chapter is the first to need revision."
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - Every claim about a shipping tool carries a version or date (VN-6, A-C5).
+  - No tool is ranked; differences are reported as differences (VN-4).
+  - The chapter reads as mechanism, not as a buyer's guide.

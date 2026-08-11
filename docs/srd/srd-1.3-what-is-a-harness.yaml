@@ -1,0 +1,75 @@
+# SRD 1.3 -- What is a harness?
+# Drafting contract per docs/srd/README.md (GH-17).
+
+meta:
+  chapter: C1.3
+  title: What is a harness?
+  parent: P1
+section_goal: name the software around the model and establish it as the book's protagonist
+goals:
+  - id: G1.5
+    goal: The reader can state what a harness is and list its four responsibilities -- tool execution, file-system access, loop control, policy.
+  - id: G1.6
+    goal: The reader recognizes that coding with an agent is using a harness, and that the harness is the part they can change.
+chain:
+  - id: Q2
+    owns: full
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S2, V-S4, V-P1, V-V1, V-V2]
+    note: "V-S4 binds hardest: `harness` is the book's central term and this is where it is defined."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C4, A-X1]
+    note: "A-X1: this chapter establishes fact only. Any prescription that appears here belongs in Parts II-VI."
+objective: >
+  It defines the harness as the software wrapped around the model, walks its
+  four responsibilities, and establishes the claim the rest of the book rests
+  on: the reader's job is shaping the harness, because the harness is the part
+  that is theirs to change.
+prior_material:
+  - path: cobbler-scaffold
+    offers: a harness and orchestrator the reader can inspect, including the policy and loop-control decisions made explicit
+  - path: coding-skills
+    offers: harness behavior shaped by configuration rather than code, as the cheapest worked example
+citations:
+  - id: latentpatterns-harness
+    role: anchor
+    note: the definitional source for the harness as a distinct layer; carries the chapter
+  - id: tmforum-ig1218
+    role: context
+    note: governance and policy vocabulary, useful for the policy responsibility
+content:
+  - say: "The model is a function from context to text. Everything else -- reading files, running commands, deciding when to stop -- is ordinary software someone wrote."
+    cites: [latentpatterns-harness]
+  - say: "That software is the harness, and it has four responsibilities: executing tools, reaching the file system, controlling the loop, and enforcing policy."
+    cites: [latentpatterns-harness]
+  - say: "Coding with an agent is using a harness, whether or not the user thinks of it that way. The distinction matters because the harness is configurable and the model is not."
+    cites: []
+  - say: "Policy is where the harness says no: which tools exist, which paths are reachable, which actions need approval."
+    cites: [tmforum-ig1218]
+  - say: "The harness is the protagonist of this book. Every later chapter is about shaping one of its four responsibilities."
+    cites: []
+apparatus:
+  objectives:
+    - Define a harness and list its four responsibilities.
+    - Given an agent session, identify which behavior came from the model and which from the harness.
+    - Explain why the harness, not the model, is the part the programmer shapes.
+  sidebars:
+    - type: Common Error
+      about: attributing a harness decision to the model, and trying to fix it with prompting
+    - type: Good Practice
+      about: reading a harness's configuration surface before its documentation
+  key_terms: [agent_harness, tool, agentic_loop, orchestrator]
+figures:
+  - shows: "The harness's four responsibilities drawn as a boundary around the model, with the model's only outputs being text and structured tool calls."
+    status: planned
+links:
+  requires: [C1.1, C1.2]
+  supports: [C1.4, C1.6]
+gaps:
+  - "latentpatterns-harness is the only harness citation in the corpus and it carries most of this chapter. A chapter resting on one source is thin; the update-references pass should look for harness-layer literature before drafting."
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The four responsibilities are each defined and each illustrated.
+  - No prescription appears (A-X1); this chapter states fact.
+  - The protagonist claim is made explicitly, since Parts II-VI reference it.

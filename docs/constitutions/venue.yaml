@@ -1,0 +1,111 @@
+# venue.yaml -- constitution for what a practitioner book is and is not
+# (GH-16). Governs: the repository's numbered chapters.
+#
+# The venue is not a journal with a template. It is a form with conventions,
+# and the conventions are what this file records: what the reader expects
+# from a practitioner book, what disqualifies one, and the shape of a chapter
+# inside it.
+
+meta:
+  book: "Agentic Coding"
+  venue: "Practitioner book, self-published and written in the open; chapters also run as articles"
+  governs: "NN-slug.md at the repository root"
+  version: 1
+
+definition:
+  is: >
+    A practitioner book is written for someone who will act on it this week.
+    It carries mechanism far enough that the reader can reason about cases
+    the book does not cover, and it earns every prescription from something
+    observed rather than something argued. Its authority comes from work the
+    reader can go and inspect.
+  is_not: >
+    Not a textbook, which owes completeness and a curriculum. Not a survey,
+    which owes coverage of a literature. Not a manual, which owes exhaustive
+    reference to one tool's surface. Not a blog collection, which owes
+    nothing across chapter boundaries.
+
+rules:
+  - id: VN-1
+    name: acts_this_week
+    rule: "Every chapter leaves the reader able to do something they could not do before, on their own project."
+    check: "The chapter's learning objectives are capabilities, and the summary restates them as things the reader can now do (voice.yaml: V-S1, V-S6)."
+  - id: VN-2
+    name: inspectable_authority
+    rule: "Claims rest on public repositories, instrumented runs, or cited literature -- never on the author's authority alone."
+    check: "Every load-bearing claim carries an evidence type from argument.yaml claims_register."
+  - id: VN-3
+    name: mechanism_before_recipe
+    rule: "A recipe is given only after the mechanism that makes it work. The reader must be able to derive the recipe's limits."
+    check: "argument.yaml A-C4: the prescription names its Part I fact."
+  - id: VN-4
+    name: no_vendor_advocacy
+    rule: "Tools are named and shown concretely, and never sold. A passage that loses its content when the product name is removed is advocacy."
+    check: "argument.yaml A-X2."
+  - id: VN-5
+    name: no_completeness_debt
+    rule: "The book does not owe coverage. A topic is included because the argument needs it, not to fill a gap a textbook would have."
+    check: "Every chapter answers a derivation-chain link (argument.yaml derivation_chain owners)."
+  - id: VN-6
+    name: dated_claims
+    rule: "Statements about shipping tools and models carry a date or version, because the subject changes faster than the book does."
+    check: "argument.yaml A-C5."
+  - id: VN-7
+    name: honest_failure
+    rule: "What did not work is reported alongside what did, including the author's own wrong turns. A book of successes is not credible about a practice this new."
+    check: "Parts V and VI carry failure accounts (argument.yaml part_obligations)."
+  - id: VN-8
+    name: chapter_stands_alone
+    rule: >
+      Each chapter can be read as an article without its neighbors, since
+      chapters also run that way. Cross-references point rather than depend:
+      a reader who does not follow one still gets a complete argument.
+    check: "No chapter's argument is unintelligible without an unread chapter; dependencies are stated as one-line reminders, not assumed."
+
+chapter_arc:
+  description: "The shape every chapter follows, from the Deitel apparatus in voice.yaml."
+  stages:
+    - "Learning objectives: what the reader will be able to do."
+    - "The problem: what breaks, what it costs, why the obvious approach fails."
+    - "The mechanism: what is actually happening, defined before it is used."
+    - "The worked example: the mechanism in action on real material from the evidence base."
+    - "The practice: what follows, stated as observation rather than instruction."
+    - "Summary and key terms."
+
+density_norms:
+  chapter_length:
+    target: "3,000-5,000 words"
+    note: >
+      Set by the article constraint rather than by book convention: a chapter
+      that also runs as a standalone piece has to hold together at that
+      length. Recorded as guidance, not a gate.
+  figures:
+    rule: "At least one figure per chapter where the subject has structure; none where prose is clearer (voice.yaml: figures)."
+  sidebars:
+    rule: "Two to four per chapter, spread across the four types. A chapter with none reads as a manual; a chapter with ten reads as a listicle."
+  citations:
+    rule: "Every load-bearing claim cites, but the citations do not constitute the argument (argument.yaml: A-X3)."
+    current: "30 entries in references.yaml"
+
+exemplar_registry:
+  note: >
+    Practitioner books the register is measured against. The first three
+    resolve in references.yaml; the register models named in VISION.yaml
+    (Deitel & Deitel for the chapter apparatus, Fowler for precision) do not
+    yet have entries, which is a gap in the bibliography rather than a
+    decision -- see the follow-up filed from GH-16.
+  books:
+    - {id: hunt1999, offers: "the practitioner register; tracer bullets, cited directly in Part II"}
+    - {id: mcconnell1996, offers: "construction discipline and the cost of late defects"}
+    - {id: larman2003, offers: "iterative and incremental development, the outer loop's lineage"}
+    - {id: null, name: "Deitel & Deitel", offers: "chapter apparatus: objectives, sidebars, summary, key terms", reference_status: "missing from references.yaml"}
+    - {id: null, name: "Fowler", offers: "precision and the short declarative claim", reference_status: "missing from references.yaml"}
+
+evidence_grounding:
+  rule: >
+    Every load-bearing claim about agent behavior traces to one of the public
+    repositories named in VISION.yaml (inputs.evidence_base), to an
+    instrumented run, or to cited literature. A claim the reader cannot
+    follow to its source is a defect; the README says so publicly and invites
+    an issue.
+  source: "README.md, 'Sources and research notes'"

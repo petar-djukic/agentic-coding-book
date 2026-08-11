@@ -1,0 +1,76 @@
+# SRD 1.1 -- What is an agent?
+# Drafting contract per docs/srd/README.md (GH-17).
+
+meta:
+  chapter: C1.1
+  title: What is an agent?
+  parent: P1
+section_goal: establish the clean model of an agent before any real tool is named
+goals:
+  - id: G1.1
+    goal: The reader can state what an agent is in terms that survive a change of vendor -- a state machine plus a set of tools.
+  - id: G1.2
+    goal: The reader can identify the loop, the state, and the tool boundary in any system presented to them as an agent.
+chain:
+  - id: Q1
+    owns: partial
+    note: "Answers the first half -- what the thing is. C1.2 answers the second half, that real agents are this skeleton in different clothes."
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S2, V-S4, V-V1, V-V2]
+    note: "V-V1 matters most here: the chapter must open on the problem -- 'agent' is used for everything and therefore means nothing -- not on a definition."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C4, A-X2]
+    note: "A-X2 is the live risk: a chapter naming real agent frameworks slides into advocacy easily."
+objective: >
+  It defines an agent as a state machine paired with tools, uses declarative
+  agents as the reference lens because that is the form where the skeleton is
+  still visible, and cross-references the Agentic Applications volume for
+  building agents this way rather than repeating it.
+prior_material:
+  - path: declarative-agents
+    offers: the agent model in the form where the state machine and the tool boundary are explicit rather than buried in a framework
+  - path: agentic-applications-book
+    offers: the companion volume that builds agents this way; this chapter borrows the lens and points there
+citations:
+  - id: latentpatterns-harness
+    role: anchor
+    note: separates the model from the software around it, which is the distinction the whole part turns on
+  - id: tmforum-ig1218
+    role: context
+    note: an industry definition of autonomy levels and agency, useful as the counterexample of how loosely the word is used
+content:
+  - say: "The word 'agent' is applied to autocomplete, to chat wrappers, and to systems that rewrite a codebase overnight. A definition that covers all three carries no information."
+    cites: []
+  - say: "An agent is a state machine plus a set of tools. The state machine decides what to do next; the tools are how it acts on anything outside itself."
+    cites: []
+  - say: "Declarative agents make the skeleton visible: the states, the transitions, and the tool boundary are written down rather than implied by a framework's control flow."
+    cites: []
+  - say: "The model is not the agent. The model proposes; the loop and the tools are what make it an agent, and they are ordinary software."
+    cites: [latentpatterns-harness]
+  - say: "Industry vocabulary grades autonomy without settling what an agent is, which is why a structural definition is worth more than a taxonomy."
+    cites: [tmforum-ig1218]
+apparatus:
+  objectives:
+    - Define an agent as a state machine plus tools, and apply the definition to a system you have used.
+    - Identify the loop, the state, and the tool boundary in a system presented as an agent.
+    - Explain why the model alone is not an agent.
+  sidebars:
+    - type: Common Error
+      about: treating the model as the agent, and therefore attributing the loop's behavior to the model
+    - type: From the Field
+      about: the moment the skeleton became visible in a system that had hidden it
+  key_terms: [agent, tool, agentic_loop]
+figures:
+  - shows: "The agent skeleton: a state machine whose transitions are driven by model output, with tool calls as the only path to anything outside the process."
+    status: planned
+links:
+  requires: []
+  supports: [C1.2, C1.3]
+gaps:
+  - "No agent-definition citation in references.yaml. The corpus has no Wooldridge, Russell & Norvig, or comparable definitional anchor, so the structural definition currently rests on assertion plus the harness reference. Fill before drafting."
+  - "declarative-agents is cited as a repository rather than a publication; check whether the design-patterns monograph is citable by then."
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The definition is stated before any product name appears.
+  - No passage survives the A-X2 test as advocacy (remove the product name; the content must remain).

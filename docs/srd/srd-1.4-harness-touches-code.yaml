@@ -1,0 +1,81 @@
+# SRD 1.4 -- How a harness touches your code.
+# Drafting contract per docs/srd/README.md (GH-17).
+
+meta:
+  chapter: C1.4
+  title: How a harness touches your code
+  parent: P1
+section_goal: trace the exact path from a request to a changed file, so the constraints on specifications become derivable rather than asserted
+goals:
+  - id: G1.7
+    goal: The reader can trace the sequence from prompt to changed file and name every component that touches the code.
+  - id: G1.8
+    goal: The reader can explain why a specification must be self-contained, deriving it from how the harness assembles context.
+  - id: G1.9
+    goal: The reader can describe the generate-verify-feed-back loop as the harness's heartbeat and say what happens when the verifier is absent.
+chain:
+  - id: Q3
+    owns: full
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S2, V-S5, V-P1, V-P3, V-V1]
+    note: "The figure carries this chapter; voice.yaml figures rules bind, and the diagram_language question (GH-21) must be settled before drafting."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C4, A-X1]
+objective: >
+  It walks the harness-to-file-system-to-compiler sequence one step at a time,
+  then names the generate-verify-feed-back cycle that repeats it, and derives
+  from that mechanism the constraint the rest of the book depends on: the
+  harness reads whole files into context and cannot follow a cross-reference.
+prior_material:
+  - path: cobbler-scaffold
+    offers: an inspectable implementation of the loop, including where verification results re-enter context
+  - path: go-unix-utils
+    offers: generation runs where the compiler and test output drove the feedback, with the turn counts recorded
+citations:
+  - id: latentpatterns-harness
+    role: anchor
+    note: the harness layer and its execution path
+  - id: liu2023
+    role: evidence
+    note: "position within a long context changes what the model uses; the direct mechanical reason a specification cannot rely on a cross-reference sitting far away"
+  - id: wang2024
+    role: evidence
+    note: hallucination phenomena in practical code generation; why the verify step is load-bearing rather than optional
+content:
+  - say: "The model never opens a file. The harness reads the file, places its contents in context, receives an edit, and writes it back."
+    cites: [latentpatterns-harness]
+  - say: "Reading is whole-file and position-sensitive: what the harness puts in context is what exists, and where it sits changes how much use the model makes of it."
+    cites: [liu2023]
+  - say: "A specification that refers to another document is a specification the agent cannot read, because nothing in the loop fetches it."
+    cites: [liu2023]
+  - say: "The write is followed by a verifier -- compiler, linter, test suite -- whose output re-enters context as the next input. That cycle is the harness's heartbeat."
+    cites: []
+  - say: "Without the verify step the loop still runs; it just has no way to notice it is wrong, and fluent incorrect output persists."
+    cites: [wang2024]
+apparatus:
+  objectives:
+    - Trace the sequence from a request to a changed file, naming each component.
+    - Explain why a specification must be self-contained, from the mechanism rather than as a rule.
+    - Describe the generate-verify-feed-back loop and what its absence costs.
+  sidebars:
+    - type: Common Error
+      about: writing a specification that cross-references another document the harness will never read
+    - type: Performance Observation
+      about: what the feedback loop costs in turns when the verifier is slow
+  key_terms: [agent_harness, agentic_loop, context_window, tool, verification_gate]
+figures:
+  - shows: "A sequence diagram tracing one request across the programmer, the harness, the model, the file system, and the compiler, with the verification result returning to context as the next input."
+    status: planned
+    note: "The central figure of Part I. Blocked on GH-21: the book's figure format is unsettled and this diagram is the reason it has to be settled first."
+links:
+  requires: [C1.3]
+  supports: [C1.5, C1.6, C2.4, C3.1]
+gaps:
+  - "The figure cannot be drawn until GH-21 resolves whether figures are Mermaid or PlantUML. This chapter is the forcing function for that decision."
+  - "No citation for context-assembly strategies specifically; liu2023 covers position effects but not how harnesses choose what to include."
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The sequence diagram exists, is referenced from the prose, and carries a self-contained caption.
+  - The self-contained-specification constraint is derived from the mechanism, not stated as a rule (A-C4 supplies the fact that Part II will cite).
+  - No prescription appears (A-X1).

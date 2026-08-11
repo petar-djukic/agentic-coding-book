@@ -1,0 +1,116 @@
+# VISION.yaml -- what the Agentic Coding book is for (GH-14).
+# Kept simple by design: this is a book, not a system. The constitutions
+# under docs/constitutions/ carry the binding rules; this file carries the
+# goals those rules serve. Structure lives in ARCHITECTURE.yaml.
+
+meta:
+  name: agentic-coding-book
+  artifact: "Book: Agentic Coding -- How to Build Software with Coding Agents, and Build the Agents Themselves"
+  venue: "Practitioner book, written in the open; chapters run as articles at Mesh Intelligence"
+  started: 2026-08-10
+  supersedes: "The private drafting tree (literature surveys and notes, retained privately); Part I drafts migrated in GH-3"
+
+purpose: |
+  We teach a working programmer to build software with coding agents: to
+  write requirements an agent can execute without guessing, to verify code
+  no human wrote, and to run agent loops past the limit of a single context
+  window. The book is mechanism-first. Part I establishes what an agent is,
+  what a harness is, how a harness manipulates the file system, where the
+  model fails, and where state lives between sessions; every prescription in
+  Parts II-VI then rests on a fact established there. The reader-outcome
+  test: a programmer finishes a chapter and applies the technique to their
+  own project without re-reading it.
+
+audience: |
+  The reader is two-sided, and the sides are unevenly served by existing
+  material. They can program -- they read code, own a codebase, and have
+  shipped systems -- but they cannot yet orchestrate agents: they have not
+  written a specification another party executes, have not verified output
+  they did not author, and have met coding agents only as autocomplete. The
+  book carries them from the first side to the second. It does not teach
+  programming, and it does not assume machine-learning background; the model
+  is explained as far as the practice requires and no further
+  (constitutions/voice.yaml).
+
+thesis: |
+  The harness is the protagonist, not the model. A coding agent is a state
+  machine plus a set of tools, and the software wrapped around the model --
+  tool execution, file-system access, loop control, policy -- is what
+  actually touches your code. The LLM never writes a file; the harness does.
+  This relocates the programmer's job. The work is no longer typing the code
+  and reviewing it by eye, because neither scales past the volume an agent
+  produces; the work is shaping what the harness does -- externalizing
+  intent as specifications the agent executes, building the verification
+  infrastructure that catches what the model gets wrong, and instrumenting
+  the loop so its failures are visible rather than inferred. The mechanism
+  determines the practice: because the harness reads whole files into
+  context, specifications must be self-contained; because the model cannot
+  grade its own output, verification must be mechanical; because memory has
+  to live somewhere the harness can reach, intent must be written down. The
+  programmer who builds this tooling rather than waiting for it compounds
+  the advantage, since the agents generate the tools too.
+
+exemplar: |
+  Deitel & Deitel supply the chapter apparatus: learning objectives that
+  state what the reader can do, sections that open with the problem before
+  the method, a worked example within two pages of any concept, and a
+  closing summary with key terms. The four recurring sidebars are adapted
+  from the same source. Martin Fowler supplies the register -- short
+  declarative sentences for technical claims, precision over emphasis. The
+  author's own results-without-advocacy tone supplies the third element:
+  data presented without amplification, deflation immediately after any
+  claim that sounds impressive. The rules themselves are binding and live in
+  constitutions/voice.yaml; this entry names the models, it does not restate
+  them.
+
+goals:
+  # Reader outcomes for the finished book. Process rules live in the
+  # constitutions, not here. Each section carries its own subgoals, numbered
+  # G<n>.<m> under the book goal G<n> they serve (see docs/srd/).
+  - id: G1
+    goal: "Orient: the reader can state what an agent is, what a harness is, and which of the two touches their files -- the mechanism that the rest of the book's practice is derived from."
+  - id: G2
+    goal: "Specify: the reader can write a requirements document an agent executes without guessing, and can trace a defect in generated code back to the specification that caused it."
+  - id: G3
+    goal: "Verify: the reader can build the verification stack -- differential tests, generated tests, property-based tests, mechanical gates -- for code they did not write and cannot read in full."
+  - id: G4
+    goal: "Orchestrate: the reader can run agent work past a single context window, coordinating multiple agents through shared state, and can recognize the distributed-systems failure modes that follow."
+  - id: G5
+    goal: "Instrument: the reader can measure what their agents did -- turn counts, cost, tool usage, failure modes -- and change the pipeline on evidence rather than on guesswork."
+  - id: G6
+    goal: "Build the tools: the reader treats the harness as something they shape and extend, not a product they consume."
+
+non_goals:
+  - "A book that teaches programming, or that assumes none."
+  - "A machine-learning text. The model is explained as far as the practice requires."
+  - "A prompt-engineering manual, or a catalogue of prompts."
+  - "A product review or tool comparison; harnesses are surveyed as mechanism, not ranked."
+  - "A literature survey. Citations support claims from practice; they do not constitute the argument (constitutions/argument.yaml)."
+  - "Vendor-neutral to the point of vagueness -- concrete harnesses are named and shown."
+
+inputs:
+  evidence_base: |
+    Claims trace to public repositories rather than demonstrations:
+    go-unix-utils (Unix utilities regenerated from specification and verified
+    against the GNU reference binaries by differential testing),
+    cobbler-scaffold (the orchestrator, its specifications and constitutions,
+    and the instrumented generation runs), and coding-skills (the GitHub
+    issue loop Part V describes).
+  companion: |
+    agentic-applications-book covers building applications out of agents.
+    This book borrows the declarative-agents model as a lens for one Part I
+    chapter and pivots to how real coding harnesses differ; the two
+    cross-reference and neither repeats the other.
+  corpus: "references.yaml is the single bibliography, resolved by the pandoc build; dictionary.yaml holds the term definitions, superseded by docs/definitions.yaml at GH-15."
+  drafting_notes: |
+    Literature surveys and drafting notes are kept in a private working tree:
+    they carry third-party source texts that are not redistributable and
+    material from the author's day job that is not public. What survives
+    review moves into the chapters with the source cited.
+
+success_criteria:
+  - "Every section fulfills the obligations its SRD states (docs/srd/), and every SRD references a constitution rule set."
+  - "mage all green: figures render and the PDF builds through the Eisvogel pandoc path."
+  - "mage critic reports no blocking finding against constitutions/voice.yaml and constitutions/argument.yaml (GH-19)."
+  - "Every claim in a drafted chapter resolves to a citation in references.yaml; a claim without a followable source is a defect."
+  - "Each term in docs/definitions.yaml is defined once and used identically across chapters."
