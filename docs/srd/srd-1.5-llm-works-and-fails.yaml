@@ -1,0 +1,115 @@
+# SRD 1.5 -- How the LLM works, and fails.
+# Drafting contract per docs/srd/README.md (GH-17).
+#
+# Written against existing prose. 05-how-the-machine-works.md is drafted and
+# cited, but written as one chapter covering the model and the agentic loop
+# together; the loop material belongs to C1.4 under the arc GH-5 established.
+# This SRD specifies the chapter the split should produce, and the existing
+# draft is corrected against it (README.md: drafting contract, rule 1).
+
+meta:
+  chapter: C1.5
+  title: How the LLM works, and fails
+  parent: P1
+  source_draft: 05-how-the-machine-works.md
+  status: partial
+section_goal: establish what the model does and where it fails, as the fact that makes mechanical verification necessary
+goals:
+  - id: G1.10
+    goal: The reader can explain next-token prediction and interpolation without anthropomorphizing the model.
+  - id: G1.11
+    goal: The reader can name the four failure modes and recognize each in generated output.
+  - id: G1.12
+    goal: The reader can explain why the model cannot grade its own output, and therefore why review by eye does not scale.
+chain:
+  - id: Q4
+    owns: full
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S3, V-S4, V-P1, V-P4, V-V3]
+    note: "V-V3 binds unusually hard: this is the most citation-dense chapter, and the field observation must still lead."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C3, A-C6, A-X3]
+    note: "A-X3 is the live risk -- the citation density here can turn the chapter into a survey."
+objective: >
+  It explains the model as an interpolation machine over training patterns,
+  covers tokens and context budgets as the mechanical limits on what it can
+  see, and works through the four failure modes -- ending on confident
+  miscalibration, which is the fact the entire verification half of the book
+  rests on.
+prior_material:
+  - path: 05-how-the-machine-works.md
+    offers: the drafted prose, cited, requiring the split that moves the agentic-loop material to C1.4
+  - path: go-unix-utils
+    offers: generated code exhibiting each failure mode, with the specification that produced it
+citations:
+  - id: vaswani2017
+    role: anchor
+    note: the architecture; cited once for what the model is, not surveyed
+  - id: xie2021
+    role: evidence
+    note: in-context learning as implicit Bayesian inference -- the interpolation reading
+  - id: olsson2022
+    role: evidence
+    note: induction heads; the mechanism behind pattern completion
+  - id: akyurek2022
+    role: evidence
+    note: what algorithm in-context learning implements
+  - id: vonoswald2023
+    role: evidence
+    note: transformers performing gradient descent in-context; supports the interpolation framing
+  - id: liu2023
+    role: evidence
+    note: position within a long context changes what the model uses; the context-budget failure mode
+  - id: wang2024
+    role: evidence
+    note: hallucination phenomena and mechanism in practical code generation
+  - id: kocetkov2022
+    role: context
+    note: the scale and composition of code training corpora; grounds interpolation density
+  - id: box1976
+    role: anchor
+    note: all models are wrong, some are useful -- the framing for treating the model as an approximation
+  - id: boxdraper1987
+    role: context
+    note: the fuller statement of the same idea
+content:
+  - say: "The model predicts the next token, one at a time, conditioned on everything in context. Nothing in that process retrieves, checks, or reasons about truth."
+    cites: [vaswani2017]
+  - say: "What looks like reasoning is interpolation: the model finds the point in its learned space most consistent with the context it was given."
+    cites: [xie2021, olsson2022, akyurek2022, vonoswald2023]
+  - say: "Interpolation is reliable where training data is dense and unreliable where it is sparse, and the model does not distinguish the two cases."
+    cites: [kocetkov2022]
+  - say: "Tokens and the context window are hard mechanical limits, and position inside the window changes what the model actually uses."
+    cites: [liu2023]
+  - say: "The four failure modes follow from the mechanism rather than from bugs."
+    cites: [wang2024]
+  - say: "The last of them is the load-bearing one: output is equally fluent whether or not it is correct, because there is no internal uncertainty signal. Surface inspection cannot catch it."
+    cites: [wang2024]
+  - say: "Treating the model as an approximation rather than an oracle is the useful posture, and it is an old one."
+    cites: [box1976, boxdraper1987]
+apparatus:
+  objectives:
+    - Explain next-token prediction and interpolation without anthropomorphizing.
+    - Name the four failure modes and recognize each in generated output.
+    - Explain why the model cannot grade its own output.
+  sidebars:
+    - type: Common Error
+      about: reading fluent output as correct output
+    - type: Good Practice
+      about: treating sparse-interpolation territory as requiring more specification, not more prompting
+  key_terms: [large_language_model, token, context_window, interpolation, interpolation_density, confident_miscalibration, sampling]
+figures:
+  - shows: "The four failure modes arranged by whether the mechanism or the context produces them, with the verification layer that catches each."
+    status: planned
+links:
+  requires: [C1.3, C1.4]
+  supports: [C1.6, C3.1, C4.1, C4.2]
+gaps:
+  - "The split from 05-how-the-machine-works.md must be executed before this SRD can be checked against a draft: the agentic-loop material moves to C1.4, and both chapters need their citations re-divided."
+  - "No citation for the four failure modes as a set; they are the author's taxonomy, and each is separately supported. State that plainly rather than implying a source."
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The chapter states the four failure modes as the author's taxonomy, with each mode's support named individually (A-C6).
+  - Confident miscalibration is stated as the fact Parts III and IV rest on, and is cross-referenced from them.
+  - No paragraph's claims are all `literature` with no mechanism or run data (A-X3).

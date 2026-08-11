@@ -1,0 +1,88 @@
+# SRD 1.6 -- Externalizing memory.
+# Drafting contract per docs/srd/README.md (GH-17).
+
+meta:
+  chapter: C1.6
+  title: Externalizing memory
+  parent: P1
+section_goal: establish where state lives between sessions, and mark the point where the human leaves the loop
+goals:
+  - id: G1.13
+    goal: The reader can explain why nothing survives a session unless it is written where the harness can read it back.
+  - id: G1.14
+    goal: The reader can identify what in their own practice is carried in their head and would have to be externalized.
+  - id: G1.15
+    goal: The reader can name the moment the human leaves the loop, and what has to be true before that is safe.
+chain:
+  - id: Q5
+    owns: partial
+    note: "Owns the mechanism half -- that memory has to live somewhere reachable. Part II owns what to write in it."
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S2, V-S4, V-S6, V-P3, V-V4]
+    note: "V-V4 binds hardest: this chapter is the hinge into practice and will pull toward instruction. It must stay observation."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C4, A-X1]
+    note: "A-X1: the hinge chapter is where prescription most easily leaks into Part I. It establishes the fact; Part II prescribes from it."
+  - file: ../constitutions/venue.yaml
+    rules: [VN-3, VN-8]
+objective: >
+  It shows that the model retains nothing between sessions, that the harness's
+  only memory is what was written down, and that this is the mechanism behind
+  every artifact Parts II-VI ask for -- then names the moment the human stops
+  supplying the missing context, which is where the rest of the book begins.
+prior_material:
+  - path: cobbler-scaffold
+    offers: state carried across sessions in specifications, constitutions, and an issue tracker, with the failures when it was not committed
+  - path: coding-skills
+    offers: the GitHub issue loop as externalized memory the harness reads back on the next run
+  - path: go-unix-utils
+    offers: specifications as the artifact that survived regeneration while the code did not
+citations:
+  - id: liu2023
+    role: evidence
+    note: what the context window can hold and where attention degrades; the mechanical bound on carrying state in-session
+  - id: latentpatterns-harness
+    role: anchor
+    note: the harness as the component that reads external state back into context
+  - id: hunt1999
+    role: context
+    note: the practitioner lineage for writing things down; cited to place the idea, not to derive it
+content:
+  - say: "A session ends and the model retains nothing. The next session begins with whatever the harness puts in context and nothing else."
+    cites: [latentpatterns-harness]
+  - say: "In-session memory is bounded and uneven: the window has a size, and position inside it changes what gets used."
+    cites: [liu2023]
+  - say: "So anything that must survive has to be written where the harness can reach it: a specification, a constitution, a tracker, a committed artifact."
+    cites: []
+  - say: "This is the mechanism behind every artifact the rest of the book asks for. The artifacts are not process ceremony; they are the only memory the system has."
+    cites: []
+  - say: "The programmer is themselves a memory device, supplying the missing context each session by answering questions and correcting course."
+    cites: []
+  - say: "The moment the human leaves the loop is the moment that stops. What was carried in their head is either written down or it is gone, and the loop proceeds on what remains."
+    cites: [hunt1999]
+apparatus:
+  objectives:
+    - Explain why nothing survives a session unless it is externalized.
+    - Identify what you currently carry in your head that the harness cannot see.
+    - Name what must be true before the human can leave the loop.
+  sidebars:
+    - type: Common Error
+      about: assuming a correction made in one session persists into the next
+    - type: From the Field
+      about: the run that failed because state was never committed, and what it cost
+  key_terms: [externalized_memory, context_window, knowledge_manager, specification, constitution]
+figures:
+  - shows: "Two sessions separated by a gap, showing what crosses it -- committed artifacts and tracker state -- and what does not: conversation, corrections, and the programmer's unwritten intent."
+    status: planned
+links:
+  requires: [C1.3, C1.4, C1.5]
+  supports: [C2.3, C2.4, C2.5, C5.3, C5.6]
+gaps:
+  - "No citation for memory or context engineering as a technique. The corpus has liu2023 for the bound but nothing on what harnesses do about it; this is the largest single hole for Part I."
+  - "The human-leaves-the-loop framing overlaps the autonomy-levels material stranded in 03-what-is-clauding.md (road-map.yaml: unplaced). Decide at drafting whether the levels arrive here or in Part II, and record it -- the introduction still frames the book on them."
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The chapter establishes the mechanism without prescribing what to write (A-X1); Part II owns that.
+  - The hinge is explicit: the chapter closes by naming what Parts II-VI derive from it.
+  - The autonomy-levels question is answered rather than left implicit.

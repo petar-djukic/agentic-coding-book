@@ -1,0 +1,69 @@
+# Section Requirements Documents (SRDs)
+
+One SRD per chapter, written before the chapter is drafted. The SRD is the
+drafting contract: a chapter issue executes its SRD without re-deriving the
+plan, and `mage critic` (GH-19) checks the draft against it. It is a writing
+spec, not a systems-engineering ceremony.
+
+Files are named `srd-<part>.<chapter>-<slug>.yaml`, matching the chapter ids
+in [../ARCHITECTURE.yaml](../ARCHITECTURE.yaml).
+
+| Field | Content |
+|-------|---------|
+| `meta` | chapter id, title, parent part |
+| `section_goal` | one phrase, rendered as "The goal of this chapter is to ..." |
+| `goals` | list of `{id, goal}`: the subgoals that lead to `section_goal`. Each `id` is `G<n>.<m>`, a subgoal of book goal `G<n>` from [../VISION.yaml](../VISION.yaml) |
+| `chain` | the derivation-chain links this chapter owns, from [../constitutions/argument.yaml](../constitutions/argument.yaml). Every chapter owns at least one; a chapter owning none is not carrying argument |
+| `constitutions` | the rule sets this chapter is checked against, as `{file, rules}`. Required — a chapter with no rule set has nothing to fail |
+| `objective` | one sentence: how the goals are achieved |
+| `prior_material` | list of `{path, offers}`: material to quarry. The corpus-to-part map lives in ARCHITECTURE `material_sources` |
+| `citations` | list of `{id, role, note}`. `role` is `anchor` (carries a theme), `survey` (breadth pointer), `evidence` (supports one claim), `context` (frames the field), or `counterpoint` (complicates the claim). Every `id` resolves in [../../references.yaml](../../references.yaml) |
+| `content` | ordered list of `{say, cites}`: what the chapter will say, and which citations carry it. This is the spine the drafter follows |
+| `apparatus` | the chapter furniture the voice constitution requires: `objectives` (draft learning objectives), `sidebars` (planned, by type), `key_terms` (ids from [../definitions.yaml](../definitions.yaml)) |
+| `figures` | optional list of `{shows, status: ready\|planned}`; `shows` is a full sentence describing what the figure shows |
+| `links` | `requires`: chapter ids this one builds on, which must precede it in reading order; `supports`: chapter ids that consume its output |
+| `gaps` | corpus holes worth filling before or during drafting |
+| `acceptance` | drafting-readiness checks |
+
+## The drafting contract
+
+1. **The SRD comes first.** A chapter is not drafted before its SRD exists
+   ([../constitutions/process.yaml](../constitutions/process.yaml):
+   `drafting_pipeline`). Where drafted prose already exists and the SRD is
+   written after it, the SRD says so and the draft is corrected against it.
+
+2. **Definitions are not re-coined.** Terms come from
+   [../definitions.yaml](../definitions.yaml). A term the chapter needs and
+   the glossary lacks is added there first, in the same unit.
+
+3. **Every chapter answers a chain link.** `chain` names the links from
+   `argument.yaml` the chapter owns. A prescription that cannot name the Part
+   I fact it rests on is a defect (`argument.yaml`: A-C4).
+
+4. **Citations carry claims, not the argument.** Each `content` entry names
+   the citation ids that support it. A `say` with no `cites` and no
+   `mechanism` evidence is a claim the drafter must ground or drop
+   (`argument.yaml`: claims_register).
+
+5. **SRDs never restate the constitutions.** They reference rule sets by
+   file and id. Register, claim discipline, and venue rules live in
+   [../constitutions/](../constitutions/) and are read from there.
+
+## Coverage
+
+Part I has an SRD per chapter, written at GH-17 against the arc EPIC #4
+established. Parts II–VI do not yet, and are follow-on work:
+
+| Part | Chapters | SRD status |
+|---|---|---|
+| P1 — Agents and Harnesses | C1.1–C1.6 | written |
+| P2 — Construction and Requirements | C2.1–C2.7 | to write; C2.1 and C2.2 are drafted prose needing SRDs written against the existing text |
+| P3 — Testing | C3.1–C3.5 | to write |
+| P4 — Correctness | C4.1–C4.5 | to write |
+| P5 — Agent Orchestration | C5.1–C5.8 | to write; C5.4 and C5.5 are blocked on missing background material |
+| P6 — Instrumentation | C6.1–C6.7 | to write |
+
+The Parts II–VI SRDs wait on those parts stabilizing rather than on effort:
+writing a contract against a chapter list that is still moving produces a
+contract that has to be rewritten. `road-map.yaml` carries the drafting order
+that governs when each becomes worth writing.
