@@ -1,0 +1,287 @@
+# Drafting roadmap for the Agentic Coding book (GH-15).
+#
+# Two views of the same plan. `releases` carries the drafting order and the
+# gates between stages; `parts` carries every part and chapter with its
+# current status, so a claim about what is drafted can be checked here rather
+# than inferred from the file listing.
+#
+# The order follows the book's own dependency: Part I is mechanism and every
+# practice part rests on it (ARCHITECTURE.yaml: dependency), so Part I drafts
+# first. Within a release, a chapter is drafted against its SRD; no chapter
+# opens before its SRD exists.
+
+meta:
+  artifact: "Book: Agentic Coding"
+  ordering: "Part I first (mechanism before practice), then Parts II-VI in reading order"
+  gates: >
+    A drafting release opens once its SRDs exist under docs/srd/ and the
+    constitutions it is checked against are in place. Each drafted chapter
+    passes mage critic (GH-19) against constitutions/voice.yaml and
+    constitutions/argument.yaml before its release closes, and every claim
+    resolves to a citation in references.yaml.
+
+status_values:
+  drafted: "full draft in the repository, cited, passing the critic"
+  partial: "draft material exists but does not yet match the chapter as specified"
+  outline: "described in outline.yaml and ARCHITECTURE.yaml; no prose"
+  unplaced: "drafted prose whose home in the current structure is unsettled"
+
+releases:
+
+  - id: rel00.0
+    name: Structure
+    status: complete
+    units: [P1, P2]
+    gate: >
+      Completed at GH-5: outline.yaml encodes the mechanism-first Part I arc,
+      the two construction chapters moved to the head of Part II, and the
+      README and introduction structure tables agree with it.
+
+  - id: rel00.1
+    name: Specification
+    status: in_progress
+    units: [GH-14, GH-15, GH-16, GH-17]
+    gate: "none (opens the epic). VISION and ARCHITECTURE land first; the SRDs depend on the constitutions they reference."
+
+  - id: rel00.2
+    name: Tooling
+    status: pending
+    units: [GH-18, GH-19]
+    gate: "rel00.1 complete -- mage outline reads the SRDs, mage critic checks against the constitutions, and neither can be exercised before those exist."
+
+  - id: rel01.0
+    name: "Part I -- Agents and Harnesses"
+    status: pending
+    units: [C1.1, C1.2, C1.3, C1.4, C1.5, C1.6]
+    gate: "rel00.1 complete (the Part I SRDs are the drafting contracts). C1.5 additionally waits on GH-12, which frees the material it splits from."
+
+  - id: rel01.1
+    name: "Resequencing and terminology retirement"
+    status: pending
+    units: [GH-12]
+    gate: >
+      Runs alongside rel01.0 rather than after it: the file renumbering and
+      the retirement of "clauding" touch the same chapters being drafted, so
+      the later this lands the more prose it has to rewrite.
+
+  - id: rel02.0
+    name: "Part II -- Construction and Requirements"
+    status: pending
+    units: [C2.1, C2.2, C2.3, C2.4, C2.5, C2.6, C2.7]
+    gate: "rel01.0 complete. C2.1 and C2.2 are already drafted and need reframing against Part I rather than first drafting."
+
+  - id: rel03.0
+    name: "Part III -- Testing"
+    status: pending
+    units: [C3.1, C3.2, C3.3, C3.4, C3.5]
+    gate: "rel02.0 complete (testing verifies what the specification asked for)."
+
+  - id: rel04.0
+    name: "Part IV -- Correctness"
+    status: pending
+    units: [C4.1, C4.2, C4.3, C4.4, C4.5]
+    gate: "rel03.0 complete (correctness is the stronger claim testing cannot make on its own)."
+
+  - id: rel05.0
+    name: "Part V -- Agent Orchestration"
+    status: pending
+    units: [C5.1, C5.2, C5.3, C5.4, C5.5, C5.6, C5.7, C5.8]
+    gate: >
+      rel04.0 complete. C5.4 (beads) and C5.5 (gastowns) additionally need
+      background material that outline.yaml records as missing; they cannot
+      be drafted from the current evidence base.
+
+  - id: rel06.0
+    name: "Part VI -- Instrumentation"
+    status: pending
+    units: [C6.1, C6.2, C6.3, C6.4, C6.5, C6.6, C6.7]
+    gate: "rel05.0 complete (instrumentation observes the loop the previous part builds)."
+
+# Every part and chapter with its status. Chapter ids match
+# ARCHITECTURE.yaml; issue numbers are given where a chapter has one.
+parts:
+
+  - id: P1
+    title: Agents and Harnesses
+    status: outline
+    chapters:
+      - id: C1.1
+        title: What is an agent?
+        status: outline
+        issue: GH-6
+      - id: C1.2
+        title: The agents you already use
+        status: outline
+        issue: GH-7
+      - id: C1.3
+        title: What is a harness?
+        status: outline
+        issue: GH-8
+      - id: C1.4
+        title: How a harness touches your code
+        status: outline
+        issue: GH-9
+      - id: C1.5
+        title: How the LLM works, and fails
+        status: partial
+        issue: GH-10
+        note: >
+          05-how-the-machine-works.md is drafted and cited, but it was written
+          as one chapter covering the model and the agentic loop together. The
+          loop material belongs to C1.4 under the new arc, so this chapter is
+          a split of an existing draft rather than new prose.
+
+  # C1.6 closes Part I and opens the practice parts.
+      - id: C1.6
+        title: Externalizing memory
+        status: outline
+        issue: GH-11
+
+  - id: P2
+    title: Construction and Requirements
+    status: outline
+    chapters:
+      - id: C2.1
+        title: Layered construction
+        status: drafted
+        note: "04-layered-construction.md, relocated from Part I at GH-5; the file move is GH-12."
+      - id: C2.2
+        title: Language selection
+        status: drafted
+        note: "06-language-selection.md, relocated from Part I at GH-5; the file move is GH-12."
+      - id: C2.3
+        title: Where requirements come from
+        status: outline
+      - id: C2.4
+        title: Writing specs for agents
+        status: outline
+      - id: C2.5
+        title: The constitution
+        status: outline
+      - id: C2.6
+        title: Spec defects
+        status: outline
+      - id: C2.7
+        title: Task decomposition
+        status: outline
+
+  - id: P3
+    title: Testing
+    status: outline
+    chapters:
+      - id: C3.1
+        title: Differential testing
+        status: outline
+      - id: C3.2
+        title: Generated tests
+        status: outline
+      - id: C3.3
+        title: Test infrastructure
+        status: outline
+      - id: C3.4
+        title: Property-based and fuzz testing
+        status: outline
+      - id: C3.5
+        title: Coverage and confidence
+        status: outline
+
+  - id: P4
+    title: How Do You Know Your Code Is Correct?
+    status: outline
+    chapters:
+      - id: C4.1
+        title: The trust problem
+        status: outline
+      - id: C4.2
+        title: Mechanical verification
+        status: outline
+      - id: C4.3
+        title: Code inspections at scale
+        status: outline
+      - id: C4.4
+        title: Correctness by construction
+        status: outline
+      - id: C4.5
+        title: Confidence, not proof
+        status: outline
+
+  - id: P5
+    title: Agent Orchestration
+    status: outline
+    chapters:
+      - id: C5.1
+        title: Why orchestrate
+        status: outline
+      - id: C5.2
+        title: The measure/stitch pattern
+        status: outline
+      - id: C5.3
+        title: GitHub as coordination layer
+        status: outline
+      - id: C5.4
+        title: Beads
+        status: outline
+        note: "Background material missing; outline.yaml records it under background_needed."
+      - id: C5.5
+        title: Gastowns
+        status: outline
+        note: "Background material missing; outline.yaml records it under background_needed."
+      - id: C5.6
+        title: State management
+        status: outline
+      - id: C5.7
+        title: Failure modes
+        status: outline
+      - id: C5.8
+        title: Building your own
+        status: outline
+
+  - id: P6
+    title: Instrumentation
+    status: outline
+    chapters:
+      - id: C6.1
+        title: The black box problem
+        status: outline
+      - id: C6.2
+        title: What to log
+        status: outline
+      - id: C6.3
+        title: Reading the logs
+        status: outline
+      - id: C6.4
+        title: The economics
+        status: outline
+      - id: C6.5
+        title: Building intuition
+        status: outline
+      - id: C6.6
+        title: Non-determinism
+        status: outline
+      - id: C6.7
+        title: Stats and post-run analysis
+        status: outline
+
+# Drafted prose with no chapter in the current structure. Recorded here so it
+# is not mistaken for lost work, and so the material is placed deliberately
+# rather than by whoever next opens the file.
+unplaced:
+  - source: 03-what-is-clauding.md
+    status: unplaced
+    holds: >
+      Behavioral and constructional intent, the six autonomy levels, and the
+      verification stack -- three concepts the book still needs, in a chapter
+      whose framing GH-5 retired. The intent pair reads as Part II material,
+      the verification stack as Parts III-IV, and the autonomy levels have no
+      settled home: the introduction still frames the whole book on them
+      (01-introduction.md, "How the book is arranged").
+    owner: "GH-12, which also retires the term the chapter is named for"
+
+# The migration this file completes.
+supersedes:
+  - path: dictionary.yaml
+    by: docs/definitions.yaml
+    note: >
+      All 57 terms migrated. The old file remains in place until GH-12 stops
+      referencing it; delete it in that pass rather than leaving two
+      glossaries that can disagree.

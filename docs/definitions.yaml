@@ -1,0 +1,626 @@
+# definitions.yaml -- canonical terminology for the Agentic Coding book (GH-15).
+#
+# The vocabulary every SRD and chapter uses, defined once and used
+# identically. Each term is a top-level key with a `definition` and optional
+# `see_also`, `synonyms`, `references` (citation ids resolving in
+# references.yaml), and `introduced` (the chapter id from
+# ARCHITECTURE.yaml where the term is first defined). Prose and SRDs cite
+# these meanings rather than redefining them.
+#
+# Supersedes dictionary.yaml, migrated here in full (57 terms). The old file
+# keyed each term by display name and anchored it to a chapter number from
+# the pre-GH-5 Part I. Those numbers no longer resolve, so `introduced`
+# appears only where the new arc settles it: chapter 3 of the old Part I
+# became C1.5, chapter 2 became C2.1, chapter 4 became C2.2, and the
+# part-level anchors carried over unchanged. Terms from the dissolved
+# "What is clauding?" chapter carry no `introduced` yet -- GH-17 assigns them
+# as the Part I SRDs are written, and GH-12 relocates the prose that defines
+# them.
+#
+# The spine: a HARNESS runs a LOOP around a MODEL; the model INTERPOLATES and
+# cannot check itself; so intent is EXTERNALIZED into a SPECIFICATION and
+# checked by a VERIFICATION STACK.
+
+# --- Retired terminology -------------------------------------------------
+
+clauding:
+  status: retired
+  definition: >
+    A coined term for the practice this book teaches, tied to the tool the
+    author used most and predating the book's current title. Recorded here so
+    the term resolves for readers of the earlier drafts and the Substack
+    articles. It is not canonical vocabulary: new prose uses "agentic coding".
+  superseded_by: agentic_coding
+  retirement: "GH-12 removes the term from chapter titles, sidebar labels, and body prose."
+  see_also: [agentic_coding]
+
+# --- Core concepts -------------------------------------------------------
+
+agentic_coding:
+  definition: >
+    The practice of externalizing both behavioral and constructional intent
+    into machine-readable artifacts -- specifications, constitutions,
+    architectural constraints -- then using coding agents to generate code
+    from those artifacts, verifying the output through automated gates rather
+    than manual review.
+  synonyms: [agent-based development]
+  see_also: [behavioral_intent, constructional_intent, specification, verification_stack]
+
+behavioral_intent:
+  definition: >
+    The specification of what the software does: inputs, outputs, edge cases,
+    error handling, and observable behavior.
+  see_also: [constructional_intent, specification]
+
+constructional_intent:
+  definition: >
+    The specification of how the software is built: module boundaries, naming
+    conventions, function size limits, design patterns, and architectural
+    constraints. The model interpolates from training patterns, so
+    constructional decisions specific to one project are exactly what it gets
+    wrong unless they are stated.
+  see_also: [behavioral_intent, architecture_document, interpolation]
+
+specification:
+  definition: >
+    The complete declarative definition of what the software does and how it
+    is structured. Comprises requirements, architecture document, use cases,
+    test suite, constitutions, and domain-knowledge references. The
+    specification is the source code in the generative model; generated code
+    is the compiled artifact. Updating the software means updating the
+    specification.
+  layers: [requirements, architecture, use_cases, test_suite, constitution, domain_knowledge]
+  see_also: [specification_delta, transient_code]
+
+specification_delta:
+  definition: >
+    The difference between the current specification and what the project now
+    requires. The input to the regeneration cycle. A delta targets specific
+    layers -- most commonly requirements and use cases. Architecture deltas
+    cost the most because they affect every downstream layer.
+  types: [requirement_delta, use_case_delta, architecture_delta, test_delta]
+  introduced: P5
+  see_also: [evolution, specification]
+
+# --- Specification layers ------------------------------------------------
+
+requirements:
+  full_name: Product Requirements Document (PRD)
+  definition: >
+    The architectural layer of a specification. Defines the structural
+    skeleton: component boundaries, interfaces, module organization, data
+    flow, technology stack, and non-functional requirements. The most stable
+    layer -- it changes rarely, and when it does the change reaches
+    everything downstream.
+  stability: stable
+  consumed_by: "measure phase (task decomposition)"
+  see_also: [specification, architecture_document]
+
+architecture_document:
+  definition: >
+    The structural decisions that persist across regeneration cycles: module
+    boundaries, naming conventions, patterns, constraints. The architecture
+    evolves independently of any particular generated implementation -- the
+    skeleton that generated code attaches to.
+  stability: stable
+  consumed_by: "agent (context assembly)"
+  see_also: [constructional_intent, requirements]
+
+use_case:
+  definition: >
+    A structured, machine-parseable declaration of functionality. Specifies
+    dependencies (forming a DAG), priority, preconditions, scenarios,
+    postconditions, and acceptance criteria linking to tests. Use cases make
+    task ordering and incremental generation automatic.
+  stability: grows
+  consumed_by: "measure phase (task ordering), agent (implementation guidance)"
+  see_also: [specification, increment]
+
+test_suite:
+  definition: >
+    The executable specification of correctness: unit, integration, and
+    acceptance tests. Half or more of a generated codebase. Grows
+    monotonically -- tests are added during evolution and never removed. It
+    is both the verification mechanism for generation and the regression net
+    during evolution.
+  stability: grows monotonically
+  consumed_by: "verification (inner loop)"
+  see_also: [verification_stack, verification_gate]
+
+constitution:
+  definition: >
+    A document of prohibitive rules constraining agent behavior during
+    generation. Constitutions say "do not do X" and "follow rule Y". They are
+    stable across projects: every project using the same orchestrator uses
+    the same constitutions regardless of what it builds. A constitution
+    constrains how the agent works; the specification declares what it builds.
+  stability: stable
+  introduced: C2.5
+  see_also: [guardian, specification]
+
+domain_knowledge:
+  definition: >
+    External context grounding the agent in the project's domain: API
+    documentation, protocol specifications, library documentation,
+    operational patterns. Referenced by the specification rather than
+    authored as part of it.
+  stability: external
+  consumed_by: "agent (context assembly)"
+  see_also: [knowledge_manager, context_window]
+
+# --- The two loops -------------------------------------------------------
+
+inner_loop:
+  definition: >
+    The per-task development cycle: specify a task, generate code, verify by
+    compiling, linting and testing, fix errors, repeat until the task passes.
+    With agents this loop is automated by the harness.
+  introduced: C2.1
+  see_also: [outer_loop, agent_harness]
+
+outer_loop:
+  definition: >
+    The per-project development cycle: gather requirements, make
+    architectural decisions, identify the next increment, run the inner loop,
+    verify the increment end to end, repair defects, and periodically assess
+    structural quality. The programmer drives this loop or reviews a proposed
+    plan; the agent does not know the construction order.
+  steps: [plan, build, verify, repair, improve]
+  introduced: C2.1
+  see_also: [inner_loop, tracer_bullet, aade_loop]
+
+tracer_bullet:
+  definition: >
+    The thinnest slice of functionality that works end to end through the
+    system. A tracer bullet touches every component it needs but implements
+    only enough of each to make one feature work. It proves the architecture
+    before the architecture is complete.
+  introduced: C2.1
+  references: [hunt1999]
+  see_also: [increment, outer_loop]
+
+increment:
+  definition: >
+    One pass through the outer loop, adding a working end-to-end slice of
+    functionality. Each increment is verified before the next builds on it.
+    Increments are lumpy -- one may need substantial data-model work and a
+    trivial endpoint.
+  introduced: C2.1
+  see_also: [tracer_bullet, verification_gate]
+
+verification_gate:
+  definition: >
+    The set of automated checks that must pass after an increment before
+    construction proceeds to the next. Gates stop defects accumulating across
+    increments. A gate is not merely "tests pass" -- it is a deliberate
+    checkpoint confirming the system still works end to end.
+  introduced: C2.1
+  see_also: [verification_stack, increment]
+
+# --- The model -----------------------------------------------------------
+
+large_language_model:
+  definition: >
+    A neural network trained on a large text corpus to predict the next token
+    in a sequence. At inference it generates text by predicting one token at
+    a time, conditioned on the context provided. It interpolates from
+    training patterns; it does not retrieve, reason, or verify.
+  synonyms: [LLM, the model]
+  introduced: C1.5
+  references: [vaswani2017]
+  see_also: [interpolation, context_window, token]
+
+token:
+  definition: >
+    The atomic unit of text a model processes, produced by a deterministic
+    tokenizer mapping strings to numerical identifiers. Common words map to
+    single tokens; uncommon words, technical terms, and code split into
+    several.
+  introduced: C1.5
+  see_also: [context_window]
+
+context_window:
+  definition: >
+    The maximum number of tokens a model can process and generate in one
+    request, covering input (system prompt, conversation history, tool
+    definitions, source files) and output. Everything the model knows about
+    the current task must fit inside it.
+  introduced: C1.5
+  see_also: [token, knowledge_manager]
+
+interpolation:
+  definition: >
+    The process by which a model constructs a response by finding the point
+    in its learned space most consistent with the provided context. More than
+    pattern matching, since it generalizes; less than reasoning, since it does
+    not verify its own output. Reliable when the target is adjacent to
+    training data, unreliable when the target is novel -- and it does not
+    distinguish the two cases.
+  introduced: C1.5
+  see_also: [confident_miscalibration, interpolation_density]
+
+interpolation_density:
+  definition: >
+    The concentration of training-data patterns in a region of the model's
+    learned space. Denser regions generate more reliably. High-resource
+    languages have dense interpolation spaces; low-resource languages have
+    sparse ones.
+  introduced: C2.2
+  references: [kocetkov2022, cassano2023]
+  see_also: [interpolation, language_model_pairing]
+
+confident_miscalibration:
+  definition: >
+    The failure mode in which the model generates fluent, confident output
+    whether or not the interpolation is correct. There is no internal
+    uncertainty signal, which is why surface inspection fails as a
+    verification method and why verification must be mechanical.
+  introduced: C1.5
+  see_also: [interpolation, verification_stack]
+
+sampling:
+  definition: >
+    Selecting the next token from the model's predicted probability
+    distribution, controlled by temperature, top-k, and top-p. Lower values
+    produce more predictable output.
+  introduced: C1.5
+  see_also: [token, large_language_model]
+
+# --- Agents and harnesses ------------------------------------------------
+
+agent:
+  definition: >
+    A state machine paired with a set of tools. The state machine decides
+    what to do next; the tools are how it acts on anything outside itself.
+    Coding agents differ from that skeleton in packaging rather than in kind.
+  introduced: C1.1
+  see_also: [agent_harness, agentic_loop, tool]
+
+tool:
+  definition: >
+    A capability the harness exposes to the model as a callable interface --
+    reading a file, writing a file, running a command, searching a codebase.
+    The model emits a structured call; the harness executes it and returns
+    the result. Tools are the only way the model affects anything.
+  introduced: C1.1
+  see_also: [agent, agent_harness, agentic_loop]
+
+agentic_loop:
+  definition: >
+    The cycle by which a model takes actions: the model emits a response
+    containing structured tool calls, the harness executes them, the results
+    are appended to context, and the model responds again. Repeats until
+    completion or a stop condition.
+  introduced: C1.4
+  see_also: [agent_harness, tool]
+
+agent_harness:
+  definition: >
+    The software wrapped around a model: tool execution, file-system access,
+    loop control, and policy. The harness runs the inner loop for a single
+    task. The model never touches the file system -- the harness does, which
+    is why the harness, not the model, determines what agentic coding
+    practice has to look like.
+  synonyms: [harness]
+  introduced: C1.3
+  references: [latentpatterns-harness]
+  see_also: [agentic_loop, orchestrator, tool]
+
+orchestrator:
+  definition: >
+    The system managing the outer loop: task decomposition, dependency
+    ordering, state tracking, verification gates, and transitions between
+    increments. The orchestrator drives the harness with the right tasks in
+    the right order.
+  introduced: P5
+  see_also: [agent_harness, inner_loop, outer_loop]
+
+externalized_memory:
+  definition: >
+    State the harness can read back in a later session -- specifications,
+    constitutions, notes, issue trackers, committed artifacts. The model
+    retains nothing between sessions, so anything that must survive one has
+    to be written where the harness can reach it. This is also the point at
+    which the human leaves the loop: what is not externalized cannot be
+    acted on without them.
+  introduced: C1.6
+  see_also: [context_window, knowledge_manager, specification]
+
+# --- Language selection --------------------------------------------------
+
+language_model_pairing:
+  definition: >
+    The combination of a programming language and a model, evaluated by how
+    reliably the model generates correct code in that language. A strong
+    pairing produces code that compiles, passes tests, and matches the
+    specification on the first or second attempt. The programmer's own
+    fluency does not enter into it.
+  introduced: C2.2
+  see_also: [interpolation_density, corpus_uniformity]
+
+corpus_uniformity:
+  definition: >
+    How consistently a language's public code follows the same patterns. More
+    uniform corpora produce tighter interpolation spaces; languages with
+    enforced formatting rank higher than languages with diverse style
+    conventions.
+  introduced: C2.2
+  see_also: [interpolation_density, language_model_pairing]
+
+fsm_constrained_decoding:
+  definition: >
+    Compiling a grammar into a finite state machine and masking invalid
+    tokens at each decode step, which guarantees syntactically valid output.
+    Simpler grammars produce smaller machines and less distortion of the
+    model's distribution.
+  introduced: C2.2
+  references: [willard2023, beurer-kellner2023]
+  see_also: [language_model_pairing]
+
+# --- Verification --------------------------------------------------------
+
+verification_stack:
+  definition: >
+    Multiple independent automated layers, each catching a different class of
+    defect: compilation for syntax and types, linting for structure, tests
+    for behavior, coverage for test adequacy, specification conformance, and
+    intent conformance. No single layer suffices.
+  see_also: [verification_gate, confident_miscalibration]
+
+differential_testing:
+  definition: >
+    Running two implementations of the same specification on the same inputs
+    and comparing outputs. Any discrepancy reveals a defect in at least one.
+    Requires no oracle beyond agreement.
+  introduced: P3
+  see_also: [verification_stack]
+
+mutation_testing:
+  definition: >
+    Injecting small faults into code and running the test suite against each
+    mutant. A surviving mutant marks a gap in the tests. The mutation score
+    is the most robust known metric for test adequacy.
+  introduced: P3
+  see_also: [verification_stack, test_suite]
+
+# --- Code as artifact ----------------------------------------------------
+
+transient_code:
+  definition: >
+    Code that does not need to persist: generated when needed, verified,
+    used, and replaced when the specification evolves. The code is correct
+    and production-quality -- transient means it need not survive, not that
+    it does not matter. Like a compiled binary: correct, necessary, not the
+    thing you version.
+  introduced: C2.1
+  see_also: [specification, software_entropy]
+
+software_entropy:
+  definition: >
+    The tendency of code to decay as changes accumulate. With generated code
+    entropy accelerates, because each increment is produced independently
+    with no memory of prior structural decisions. Periodic structural review
+    counters it.
+  introduced: C2.1
+  see_also: [outer_loop, transient_code]
+
+# --- Orchestration phases ------------------------------------------------
+
+measure:
+  definition: >
+    The planning phase of the orchestration cycle: read the specification,
+    query current project state, propose tasks with dependencies. Maps to the
+    plan step of the outer loop.
+  cobbler_phase: measure
+  introduced: C5.2
+  see_also: [stitch, orchestrator]
+
+stitch:
+  definition: >
+    The implementation phase: pick a ready task, create an isolated worktree,
+    invoke the agent with task context, commit, merge back. Maps to the build
+    step of the outer loop.
+  cobbler_phase: stitch
+  introduced: C5.2
+  see_also: [measure, inspect]
+
+inspect:
+  definition: >
+    The verification phase: run the full verification stack after generation
+    -- linting, coverage, mutation testing, security scanning, specification
+    conformance, not tests alone. Produces a pass/fail report feeding mend.
+  cobbler_phase: inspect
+  introduced: P5
+  see_also: [stitch, mend, verification_stack]
+
+mend:
+  definition: >
+    The repair phase: take a defect report from inspect and produce a fix.
+    Distinct from stitch -- the context is diagnostic, the success criterion
+    includes no regressions, and the retry logic differs.
+  cobbler_phase: mend
+  introduced: P5
+  see_also: [inspect, stitch]
+
+pattern_phase:
+  definition: >
+    The structural-quality phase: analyze accumulated code for
+    inconsistency, duplication, and drift from the architecture, and produce
+    refactoring proposals that re-enter as new tasks. Counters software
+    entropy.
+  cobbler_phase: pattern
+  introduced: P5
+  see_also: [measure, software_entropy]
+
+# --- Agent roles ---------------------------------------------------------
+
+planner:
+  definition: >
+    The agent role that decomposes work into tasks: reads the specification
+    and current state, identifies what must be built, produces an ordered
+    task list.
+  coding_analogue: "cobbler measure, make-work"
+  introduced: P5
+  see_also: [executor, orchestrator]
+
+executor:
+  definition: >
+    The agent role that generates code from a task specification: receives a
+    task, assembles context, generates code, produces a commit.
+  coding_analogue: "cobbler stitch, do-work"
+  introduced: P5
+  see_also: [planner, critic]
+
+critic:
+  definition: >
+    The agent role that evaluates whether generated output matches the
+    specification. Runs the verification stack and produces a pass/fail
+    assessment.
+  coding_analogue: "cobbler inspect"
+  introduced: P5
+  see_also: [executor, guardian]
+
+guardian:
+  definition: >
+    The agent role that enforces policy. Always active -- not a phase but a
+    continuous constraint. Enforced mechanically through harness tool
+    permissions and probabilistically through the constitution in context.
+    The constitution is the soft guardian; the harness is the hard one.
+  coding_analogue: "constitution plus harness policy"
+  introduced: C2.5
+  see_also: [constitution, agent_harness]
+
+monitor:
+  definition: >
+    The agent role that collects telemetry from the generation process:
+    compiler output, test results, token costs, turn counts, context
+    utilization. Supplies the data the analyst interprets.
+  coding_analogue: "logging, metrics collection"
+  introduced: P6
+  see_also: [analyst]
+
+analyst:
+  definition: >
+    The agent role that interprets observations: diagnoses errors, identifies
+    failure patterns, recognizes recurring issues.
+  coding_analogue: "cobbler pattern, error diagnosis"
+  introduced: P5
+  see_also: [monitor, pattern_phase]
+
+coordinator:
+  definition: >
+    The agent role that manages interactions between multiple agents on
+    related tasks: dependency ordering, conflict resolution, context sharing,
+    and consensus when agents propose different approaches.
+  coding_analogue: "cobbler task scheduling, merge management"
+  introduced: P5
+  see_also: [orchestrator]
+
+knowledge_manager:
+  definition: >
+    The agent role that decides what enters the context window, how it is
+    structured, and when it is refreshed. Different phases need different
+    context.
+  coding_analogue: "context assembly, retrieval, memory management"
+  introduced: P5
+  see_also: [context_window, domain_knowledge, externalized_memory]
+
+creator:
+  definition: >
+    The agent role handling agent instantiation and lifecycle: spinning up
+    sub-agents, managing worktrees, and running parallel generation
+    instances.
+  coding_analogue: "worktree management, sub-agent lifecycle"
+  introduced: P5
+  see_also: [orchestrator]
+
+# --- Lifecycle -----------------------------------------------------------
+
+genesis:
+  definition: >
+    Creating new software from specifications when no implementation exists:
+    identify the need, compose the specification, run generation against an
+    empty codebase, validate, deploy. Constructive -- building from nothing.
+  introduced: P5
+  see_also: [evolution, specification]
+
+evolution:
+  definition: >
+    Modifying existing software by changing its specification and
+    regenerating the affected code: detect the gap, author a delta, merge it,
+    run gap analysis, generate changes, validate against regressions and new
+    tests, deploy with rollback. Surgical -- modifying what exists while
+    preserving what works.
+  introduced: P5
+  see_also: [genesis, specification_delta]
+
+drift:
+  definition: >
+    The state in which the software's current specification no longer matches
+    what the project requires. Drift accumulates continuously; small gaps may
+    not matter, and accumulated gaps eventually make the software wrong for
+    its context. The threshold for triggering evolution is a judgment call.
+  introduced: P5
+  see_also: [evolution, software_entropy]
+
+# --- Autonomy ------------------------------------------------------------
+
+autonomy_level:
+  definition: >
+    A classification of how much of the plan-and-execute cycle a system
+    handles without human direction, from L0 (fully manual) to L5 (fully
+    self-managing).
+  levels:
+    L0: "manual -- the programmer types every line"
+    L1: "assisted -- the tool suggests completions"
+    L2: "partial -- the agent implements within a bounded scope, the programmer approves"
+    L3: "conditional -- the agent implements from specifications, the programmer writes them"
+    L4: "high -- the agent proposes its own work breakdown, the programmer reviews"
+    L5: "recursive -- the system manages its own evolution from intent alone"
+  see_also: [software_factory, specification_factory]
+
+software_factory:
+  definition: >
+    A system that compiles specifications into working code through the
+    measure/stitch cycle. Takes specifications in, produces working code out.
+  autonomy_level: L4+
+  introduced: P5
+  see_also: [specification_factory, orchestrator]
+
+specification_factory:
+  definition: >
+    A system that turns objectives into specifications a software factory can
+    compile: architectural decisions, module decomposition, interface design,
+    acceptance criteria. Does not exist in practice.
+  autonomy_level: L5
+  introduced: P5
+  see_also: [software_factory, autonomy_level]
+
+guided_component:
+  definition: >
+    A model-based agent with self-programming and limited self-reflection,
+    operating with a human on the loop. Generates code but needs external
+    direction for task decomposition and architectural decisions. Current
+    coding agents are guided components.
+  capabilities: [self-programming, "self-reflection (limited)"]
+  introduced: P5
+  see_also: [recursive_component, agent_harness]
+
+recursive_component:
+  definition: >
+    An agent exhibiting self-programming, self-reflection, self-orienting,
+    and self-architecting: decomposes requirements, plans, generates, and
+    validates without per-iteration human intervention. Not achieved;
+    orchestrators approximate it by coordinating guided components.
+  capabilities: [self-programming, self-reflection, self-orienting, self-architecting]
+  introduced: P5
+  see_also: [guided_component, software_factory]
+
+aade_loop:
+  definition: >
+    Assure-analyze-decide-execute. The cognitive loop underlying both the
+    inner and outer loops: observe current state, interpret observations,
+    plan the intervention, carry it out. The same pattern as OODA and PDCA.
+  phases: [assure, analyze, decide, execute]
+  introduced: P5
+  see_also: [inner_loop, outer_loop]
