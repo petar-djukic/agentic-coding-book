@@ -39,15 +39,26 @@ releases:
 
   - id: rel00.1
     name: Specification
-    status: in_progress
+    status: complete
     units: [GH-14, GH-15, GH-16, GH-17]
-    gate: "none (opens the epic). VISION and ARCHITECTURE land first; the SRDs depend on the constitutions they reference."
+    gate: >
+      Completed under EPIC GH-13: VISION and ARCHITECTURE state the goals and
+      the component model, road-map and definitions fill them in, four
+      constitutions carry 60 rules with ids, and the SRD contract plus the six
+      Part I SRDs bind chapters to those rules. Cross-checked: every rule an
+      SRD cites exists, every chain link it claims is owned by that chapter in
+      argument.yaml, every subgoal hangs off a VISION goal, and every citation
+      and key term resolves.
 
   - id: rel00.2
     name: Tooling
-    status: pending
+    status: complete
     units: [GH-18, GH-19]
-    gate: "rel00.1 complete -- mage outline reads the SRDs, mage critic checks against the constitutions, and neither can be exercised before those exist."
+    gate: >
+      Completed under EPIC GH-13: mage outline renders the SRDs to a PDF and
+      mage critic reports findings by constitution rule id. The critic's model
+      call is gated on ANTHROPIC_API_KEY and has not been exercised against
+      the live API -- first run with a key is the real test (GH-19).
 
   - id: rel01.0
     name: "Part I -- Agents and Harnesses"
