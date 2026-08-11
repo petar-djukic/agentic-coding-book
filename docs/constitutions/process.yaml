@@ -1,0 +1,101 @@
+# process.yaml -- constitution for how the book gets drafted and revised
+# (GH-16). Governs: the repository.
+#
+# Distillation sources: the coding-skills GitHub loop actually used on this
+# repository (gh-issue-push, gh-issue-pop, do-work), the mage targets in
+# magefiles/, and the SRD contract this epic establishes.
+
+meta:
+  book: "Agentic Coding"
+  governs: "repository"
+  version: 1
+
+drafting_pipeline:
+  name: "srd-draft-critic-revise"
+  rule: "A section is not drafted before its SRD exists. The SRD is the contract; the draft is checked against it and against the constitutions, not against taste."
+  steps:
+    - id: srd
+      rule: >
+        Write the Section Requirements Document under docs/srd/: the section
+        goal, the book goals and derivation-chain links it advances, its
+        objective, the prior material it draws on, and its candidate
+        citations. The SRD names the constitution rule sets the section is
+        checked against.
+    - id: draft
+      rule: >
+        Draft the section against its SRD and the chapter arc
+        (venue.yaml: chapter_arc). Definitions come from docs/definitions.yaml
+        rather than being re-coined; a term the section needs and the
+        glossary lacks is added there first.
+    - id: de_ai
+      rule: "Scan the draft before committing (voice.yaml: de_ai). A flag is a prompt to look, not a verdict; accepted residuals are recorded in the unit's completion comment."
+    - id: critic
+      rule: "Run mage critic (GH-19) over the draft. It reports findings by constitution rule id against the section's SRD and never edits the prose."
+    - id: revise
+      rule: "Fix blocking findings. A finding dismissed as an accepted residual is recorded with its reason, not silently ignored."
+
+build_gate:
+  commands:
+    - "mage all -- renders figures, then builds the PDF through the Eisvogel pandoc path into generated-files/."
+    - "mage outline (GH-18) -- regenerates the outline PDF from the SRDs; it must run clean after any structural change."
+  additional_checks:
+    - "Every figure and table is referenced from the prose (voice.yaml: figures.checks)."
+    - "No forbidden terms (voice.yaml: forbidden_terms)."
+    - "Every [@key] resolves in references.yaml."
+    - "Every term used resolves in docs/definitions.yaml."
+  rule: "The gate runs before a pull request opens; a failed gate blocks the merge."
+
+structural_change:
+  rule: >
+    Structure changes in the specification first, never in the chapters.
+    outline.yaml and docs/ARCHITECTURE.yaml are two views of one structure
+    and move together; a chapter that has drifted from its SRD is corrected
+    against the SRD, or the SRD is changed deliberately and the chapter
+    follows.
+  check: "After any structural change, the part and chapter lists in outline.yaml, ARCHITECTURE.yaml, and road-map.yaml agree."
+
+status_discipline:
+  rule: >
+    docs/road-map.yaml is the record of what is drafted. A claim about the
+    book's state is checked there rather than inferred from the file listing,
+    and the status field moves in the same commit as the work it describes.
+  check: "No chapter file exists whose road-map status is `outline`, and no chapter marked `drafted` lacks a file."
+
+bibliography:
+  rule: >
+    references.yaml is the sole bibliography, in CSL-YAML, shared by the
+    pandoc build and the reference-maintenance skills. Prose cites with
+    pandoc [@key]. There is no private or per-chapter bibliography, and a
+    claim whose citation the reader cannot follow is a defect.
+  source: "README.md, 'Sources and research notes'"
+
+sources_policy:
+  rule: >
+    Drafting notes and literature surveys stay in the private working tree:
+    they carry third-party source texts that are not redistributable and
+    material from the author's day job that is not public. What survives
+    review moves into a chapter with the source cited. Nothing enters the
+    repository that could not be published.
+
+workflow:
+  rule: >
+    Every change is filed as an issue and lands through a pull request;
+    direct commits to main are prohibited. /gh-issue-push opens an issue,
+    /gh-issue-pop transplants it into a worktree, and /do-work works one unit
+    per pass inside that worktree. One worktree and one pull request per
+    epic.
+  check: "Every commit on main is a merge commit or carries a GH-<n> reference."
+  provenance: >
+    Skills record themselves as git trailers -- `Skill:` and `Called-by:` --
+    so git log reconstructs which skill produced which commit and which
+    called which.
+  source: "coding-skills: gh-issue-pop, do-work"
+
+deviation_policy:
+  rule: >
+    An acceptance criterion that has gone stale is met in intent and recorded
+    as unmet in letter, in the unit's completion comment, with what was done
+    instead. It is not quietly reinterpreted. The same applies to a file
+    listed for modification that turns out to need none.
+  source: "GH-5 and GH-15 practice: both carried criteria written before an
+    earlier restructure landed."
