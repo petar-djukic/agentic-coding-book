@@ -13,7 +13,7 @@
 # appears only where the new arc settles it: chapter 3 of the old Part I
 # became C1.5, chapter 2 became C2.1, chapter 4 became C2.2, and the
 # part-level anchors carried over unchanged. Terms from the dissolved
-# "What is clauding?" chapter carry no `introduced` yet -- GH-17 assigns them
+# retired opening chapter carry no `introduced` yet -- GH-17 assigns them
 # as the Part I SRDs are written, and GH-12 relocates the prose that defines
 # them.
 #

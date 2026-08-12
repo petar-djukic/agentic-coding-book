@@ -80,7 +80,7 @@ links:
   supports: [C2.3, C2.4, C2.5, C5.3, C5.6]
 gaps:
   - "No citation for memory or context engineering as a technique. The corpus has liu2023 for the bound but nothing on what harnesses do about it; this is the largest single hole for Part I."
-  - "The human-leaves-the-loop framing overlaps the autonomy-levels material stranded in 03-what-is-clauding.md (road-map.yaml: unplaced). Decide at drafting whether the levels arrive here or in Part II, and record it -- the introduction still frames the book on them."
+  - "The human-leaves-the-loop framing overlaps the autonomy-levels material parked in unplaced-intent-autonomy-and-verification.md (road-map.yaml: unplaced). Decide at drafting whether the levels arrive here or in Part II, and record it -- the introduction still frames the book on them."
 acceptance:
   - Every citation id resolves in references.yaml.
   - The chapter establishes the mechanism without prescribing what to write (A-X1); Part II owns that.

@@ -67,7 +67,8 @@ parts:
       relocated: >
         "Layered construction" and "Language selection" left Part I for
         Part II — they are construction and decision practices, not
-        machine mechanics. Issue #12 moves the files and renumbers them.
+        machine mechanics. GH-12 moved the files and renumbered the
+        sequence.
       retired: >
         Two never-drafted Part I outline chapters were dropped in the
         restructure: "The agency argument" (build your own tooling — the
