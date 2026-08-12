@@ -24,25 +24,16 @@
 accepted:
   # --- Prose written before voice.yaml existed (GH-28) ---
 
-  - file: 07-how-the-llm-works-and-fails.md
-    rule: 'voice.yaml: forbidden_terms'
-    detail: 'uses "just"'
-    issue: GH-28
-    note: >
-      Inside the quoted phrase "just guesses randomly" -- a naive belief the
-      chapter is reporting, not the minimizer the rule bars. May survive as a
-      permanent exception; GH-28 decides.
-
   - file: 11-language-selection.md
     rule: 'voice.yaml: forbidden_terms'
     detail: 'uses "powerful"'
-    issue: GH-28
+    issue: GH-57
     note: '"C++ is a powerful language precisely because it offers choice."'
 
   - file: 10-layered-construction.md
     rule: 'voice.yaml: figures.checks'
     detail: Figure 7.1 is never referenced from the prose
-    issue: GH-28
+    issue: GH-57
     note: >
       Renumbered from Figure 2.1 by GH-35; the figure is still unreferenced,
       which is the part GH-28 clears.
