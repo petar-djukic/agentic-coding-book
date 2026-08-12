@@ -23,7 +23,7 @@ components:
     role: "One Section Requirements Document per section (GH-17), each stating the section's goal, the book goals and claims it advances, its objective, the prior material it draws on, and its candidate citations. The SRD is the contract a drafter writes against; mage audit checks the mechanically checkable part of that contract, and the review-chapter skill judges the rest."
   figures:
     path: figures/
-    role: "PlantUML sources compile to PNG via mage figures. Note the unresolved conflict recorded under open_questions: the two drafted chapters carry inline mermaid blocks instead, which the current pandoc path does not render."
+    role: "PlantUML sources under figures/, named fig-<chapter>-<figure>-<slug>.puml, compile to PNG via mage figures; chapters reference the PNG with an image link. The sources are versioned, the PNGs are build artifacts and gitignored (constitutions/voice.yaml: figures.diagram_language, resolved at GH-21)."
   build:
     path: "magefiles/, templates/"
     role: "mage figures renders figures/*.puml to PNG; mage pdf runs pandoc over the numbered chapters through templates/eisvogel.latex with xelatex, emitting into generated-files/; mage all chains the two. mage outline renders the SRDs to an outline PDF; mage audit checks specification consistency, prose conformance, and the build together (GH-27)."
@@ -188,18 +188,6 @@ traceability:
   - "Constitution rules bind chapters through the SRDs: each SRD names the rule sets its section is checked against, and mage audit reports findings by rule id."
   - "Chapters feed the corpus: every citation resolves to references.yaml, and every term to docs/definitions.yaml."
   - "outline.yaml and this file are two views of one structure. Any structural change updates both; the outline carries descriptions for a human reader, this file carries ids, SRD paths, and dependencies for the tooling."
-
-open_questions:
-  - id: Q1
-    question: "Figures: PlantUML or Mermaid?"
-    detail: |
-      constitutions/voice.yaml will port a rule stating that all figures are
-      Mermaid, and the two drafted chapters carry inline mermaid blocks. The
-      build renders PlantUML from figures/*.puml, that directory is empty,
-      and the pandoc path has no mermaid filter -- so those blocks currently
-      reach the PDF as literal code. One of the two has to give before any
-      chapter with a figure is drafted.
-    owner: "GH-16 (voice constitution), with the build change tracked separately"
 
 workflow: |
   Spec-first. An SRD exists before its section is drafted; the drafter writes

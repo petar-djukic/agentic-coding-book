@@ -24,48 +24,7 @@ The inner loop is the one people think about. The outer loop is the one that det
 
 **Figure 2.1** The inner and outer loops of software construction.
 
-```mermaid
-flowchart TB
-    subgraph outer["OUTER LOOP (programmer)"]
-        direction TB
-        R[Gather requirements] --> A[Make architectural decisions]
-        A --> D[Decompose into layers]
-        D --> L1
-
-        subgraph L1[Layer 1]
-            subgraph inner1["INNER LOOP (agent)"]
-                direction LR
-                S1[Specify task] --> G1[Generate code]
-                G1 --> V1[Verify]
-                V1 -->|fail| S1
-            end
-        end
-
-        L1 -->|pass gate| L2
-
-        subgraph L2[Layer 2]
-            subgraph inner2["INNER LOOP (agent)"]
-                direction LR
-                S2[Specify task] --> G2[Generate code]
-                G2 --> V2[Verify]
-                V2 -->|fail| S2
-            end
-        end
-
-        L2 -->|pass gate| L3
-
-        subgraph L3[Layer N]
-            subgraph inner3["INNER LOOP (agent)"]
-                direction LR
-                S3[Specify task] --> G3[Generate code]
-                G3 --> V3[Verify]
-                V3 -->|fail| S3
-            end
-        end
-
-        L3 -->|pass gate| Done[System complete]
-    end
-```
+![](figures/fig-2-1-inner-outer-loops.png)
 
 *The outer loop governs the project: requirements, architecture, decomposition into increments, and verification gates between them. The programmer drives this loop. Within each increment, the inner loop runs one or more tasks: specify, generate, verify. The agent drives this loop. Each increment must pass its verification gate before the next increment builds on top of it. The "fail" path in the inner loop feeds errors back to the agent for correction. The "pass gate" transitions between increments are decisions the programmer makes — or, at L4, decisions the orchestrator proposes and the programmer approves.*
 

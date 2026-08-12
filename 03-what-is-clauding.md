@@ -22,35 +22,7 @@ Consider a programmer building a notification system. The behavioral intent is: 
 
 **Figure 1.1** Strategy pattern for delivery channel selection.
 
-```mermaid
-classDiagram
-    class Notifier {
-        -strategy: DeliveryStrategy
-        +send(user, message)
-        +selectStrategy(user): DeliveryStrategy
-    }
-    class DeliveryStrategy {
-        <<interface>>
-        +deliver(address, message): Result
-        +retry(address, message, attempts): Result
-    }
-    class EmailDelivery {
-        +deliver(address, message): Result
-        +retry(address, message, attempts): Result
-    }
-    class SMSDelivery {
-        +deliver(address, message): Result
-        +retry(address, message, attempts): Result
-    }
-    class PushDelivery {
-        +deliver(address, message): Result
-        +retry(address, message, attempts): Result
-    }
-    Notifier --> DeliveryStrategy
-    DeliveryStrategy <|.. EmailDelivery
-    DeliveryStrategy <|.. SMSDelivery
-    DeliveryStrategy <|.. PushDelivery
-```
+![](figures/fig-1-1-strategy-delivery-channels.png)
 
 *The `Notifier` delegates delivery to a `DeliveryStrategy` interface. Each channel (email, SMS, push) is an interchangeable implementation. Adding a new channel requires only a new implementation — the selection logic in `Notifier` does not change. This decomposition is a constructional decision: it does not affect what the system does, only how it is built.*
 

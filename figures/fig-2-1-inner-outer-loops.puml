@@ -1,0 +1,64 @@
+@startuml
+' Figure 2.1 -- The inner and outer loops of software construction.
+' The outer loop is the programmer's: requirements, architecture, decomposition,
+' and a verification gate between increments. The inner loop is the agent's:
+' specify, generate, verify, and back on failure.
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam ArrowFontSize 11
+skinparam rectangle {
+  BorderThickness 1
+}
+
+rectangle "OUTER LOOP (programmer)" as outer {
+
+  rectangle "Gather\nrequirements" as R
+  rectangle "Make architectural\ndecisions" as A
+  rectangle "Decompose into\nincrements" as D
+
+  rectangle "Increment 1" as L1 {
+    rectangle "INNER LOOP (agent)" as inner1 {
+      rectangle "Specify task" as S1
+      rectangle "Generate code" as G1
+      rectangle "Verify" as V1
+      S1 -down-> G1
+      G1 -down-> V1
+      V1 -up[#black,dashed]-> S1 : fail
+    }
+  }
+
+  rectangle "Increment 2" as L2 {
+    rectangle "INNER LOOP (agent)" as inner2 {
+      rectangle "Specify task" as S2
+      rectangle "Generate code" as G2
+      rectangle "Verify" as V2
+      S2 -down-> G2
+      G2 -down-> V2
+      V2 -up[#black,dashed]-> S2 : fail
+    }
+  }
+
+  rectangle "Increment N" as L3 {
+    rectangle "INNER LOOP (agent)" as inner3 {
+      rectangle "Specify task" as S3
+      rectangle "Generate code" as G3
+      rectangle "Verify" as V3
+      S3 -down-> G3
+      G3 -down-> V3
+      V3 -up[#black,dashed]-> S3 : fail
+    }
+  }
+
+  rectangle "System complete" as Done
+
+  R -down-> A
+  A -down-> D
+  D -down-> L1
+  L1 -down-> L2 : pass gate
+  L2 -down-> L3 : pass gate
+  L3 -down-> Done : pass gate
+}
+
+@enduml

@@ -1,0 +1,43 @@
+@startuml
+' Figure 1.1 -- Strategy pattern for delivery channel selection.
+' Constructional intent made explicit: the selection logic is separated from
+' the delivery logic, so a new channel is a new implementation and nothing else.
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam defaultFontName Helvetica
+hide empty members
+
+class Notifier {
+  - strategy : DeliveryStrategy
+  + send(user, message)
+  + selectStrategy(user) : DeliveryStrategy
+}
+
+interface DeliveryStrategy {
+  + deliver(address, message) : Result
+  + retry(address, message, attempts) : Result
+}
+
+class EmailDelivery {
+  + deliver(address, message) : Result
+  + retry(address, message, attempts) : Result
+}
+
+class SMSDelivery {
+  + deliver(address, message) : Result
+  + retry(address, message, attempts) : Result
+}
+
+class PushDelivery {
+  + deliver(address, message) : Result
+  + retry(address, message, attempts) : Result
+}
+
+Notifier --> DeliveryStrategy
+DeliveryStrategy <|.. EmailDelivery
+DeliveryStrategy <|.. SMSDelivery
+DeliveryStrategy <|.. PushDelivery
+
+@enduml
