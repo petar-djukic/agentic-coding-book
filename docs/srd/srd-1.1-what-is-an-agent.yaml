@@ -67,7 +67,7 @@ apparatus:
       about: treating the model as the agent, and therefore attributing the loop's behavior to the model
     - type: From the Field
       about: the moment the skeleton became visible in a system that had hidden it
-  key_terms: [agent, tool]
+  key_terms: [agent, tool, state, transition, declarative_agent]
   key_terms_note: >
     agentic_loop dropped at GH-50: definitions.yaml marks it introduced at
     C1.4, and this chapter defers the loop to the harness chapters on purpose.

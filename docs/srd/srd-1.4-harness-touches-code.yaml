@@ -63,7 +63,7 @@ apparatus:
       about: writing a specification that cross-references another document the harness will never read
     - type: Performance Observation
       about: what the feedback loop costs in turns when the verifier is slow
-  key_terms: [agent_harness, agentic_loop, context_window, tool, verification_gate]
+  key_terms: [agent_harness, agentic_loop, context_assembly, context_window, tool, verification_gate]
 figures:
   - shows: "A sequence diagram tracing one request across the programmer, the harness, the model, the file system, and the compiler, with the verification result returning to context as the next input."
     status: planned

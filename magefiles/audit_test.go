@@ -762,3 +762,64 @@ func TestBindingAcceptsATableTermWithAGloss(t *testing.T) {
 		t.Fatalf("a trailing gloss should not unmatch a key term, got:\n%v", err)
 	}
 }
+
+// ------------------------------------------------ glossary coverage (GH-52)
+
+// The reverse of the key_terms check: a term coined while drafting must reach
+// definitions.yaml, whether or not the chapter has an SRD.
+func TestBindingCatchesATableTermMissingFromTheGlossary(t *testing.T) {
+	files := cleanTree()
+	files["03-what-is-an-agent.md"] = strings.Replace(
+		files["03-what-is-an-agent.md"],
+		"| **Agent** | A state machine plus tools |",
+		"| **Agent** | A state machine plus tools |\n| **Tracer bullet** | A thin end-to-end slice |", 1)
+	err := auditTree(t, files)
+	if err == nil {
+		t.Fatal("a table term absent from definitions.yaml should be a finding")
+	}
+	if !strings.Contains(err.Error(), "not in docs/definitions.yaml") {
+		t.Errorf("finding should name the glossary, got:\n%v", err)
+	}
+}
+
+// It applies to chapters with no SRD too, which is where coined terms hide.
+func TestGlossaryCheckAppliesWithoutAnSRD(t *testing.T) {
+	files := cleanTree()
+	files["04-second-chapter.md"] = `<!-- chapter: C1.2 -->
+
+# Second chapter
+
+## Learning Objectives
+
+1. Do the thing.
+
+## Summary
+
+Done.
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| **Undefined coinage** | Something nobody wrote down |
+`
+	err := auditTree(t, files)
+	if err == nil || !strings.Contains(err.Error(), "undefined coinage") {
+		t.Fatalf("C1.2 has no SRD but its table still needs the glossary, got:\n%v", err)
+	}
+}
+
+// A glossary key and a table row may spell the separator differently. The
+// keys use underscores, the tables hyphenate, and both name one term.
+func TestTermMatchingIgnoresSeparatorStyle(t *testing.T) {
+	for _, c := range []struct{ key, row string }{
+		{"file_system_access", "File-system access"},
+		{"file_system_access", "File system access"},
+		{"fsm_constrained_decoding", "FSM-constrained decoding"},
+	} {
+		if normalizeTerm(c.key) != normalizeTerm(c.row) {
+			t.Errorf("%q and %q should normalize alike, got %q and %q",
+				c.key, c.row, normalizeTerm(c.key), normalizeTerm(c.row))
+		}
+	}
+}
