@@ -126,7 +126,13 @@ parts:
         issue: GH-6
       - id: C1.2
         title: The agents you already use
-        status: outline
+        status: drafted
+        note: >
+          The first chapter that will need revision. Its survey is a dated
+          snapshot -- Claude Code 2.1.220, OpenCode 1.18.16, Crush v0.88.1,
+          inspected 2026-08-11 -- and VN-6 requires the versions to stay
+          current. Re-inspect before any release; if a version line goes stale
+          the claims around it go stale with it.
         issue: GH-7
       - id: C1.3
         title: What is a harness?

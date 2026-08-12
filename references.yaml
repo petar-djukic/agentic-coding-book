@@ -171,7 +171,15 @@ references:
   - {literal: METR}
   title: Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity
   issued: {year: 2025}
-  note: needs-verification — no URL in the source manuscript
+  URL: https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/
+  note: >
+    Verified 2026-08-11 (GH-7). Also arXiv:2507.09089. RCT: 16 experienced
+    open-source developers, 246 tasks on their own mature repositories. AI-allowed
+    tasks took 19% longer; developers forecast a 24% speedup beforehand and still
+    estimated a 20% speedup afterwards. Tools were early-2025 -- Cursor Pro with
+    Claude 3.5/3.7 Sonnet -- so the result does not transfer to later agents. Cite
+    it for the expectation-versus-measurement gap, not as a claim about current
+    tools.
 
 - id: coderabbit2025
   type: report
@@ -179,7 +187,15 @@ references:
   - {literal: CodeRabbit}
   title: AI vs Human Code Generation Report
   issued: {year: 2025}
-  note: needs-verification — no URL in the source manuscript
+  URL: https://www.coderabbit.ai/blog/state-of-ai-vs-human-code-generation-report
+  note: >
+    Verified 2026-08-11 (GH-7). 470 open-source GitHub pull requests -- 320
+    AI-co-authored, 150 human-only -- scored with the vendor's own issue taxonomy:
+    10.83 issues per AI PR against 6.45 for human-only (about 1.7x), with logic and
+    correctness issues 75% more common and security issues up to 2.74x. Two
+    cautions: this is a vendor report from a company that sells code review, and it
+    compares AI-authored against human-authored code rather than one tool against
+    another, so it cannot support a claim about what differs between harnesses.
 
 - id: stackoverflow2025
   type: report
@@ -187,7 +203,12 @@ references:
   - {literal: Stack Overflow}
   title: Developer Survey 2025
   issued: {year: 2025}
-  note: needs-verification — no URL in the source manuscript
+  URL: https://survey.stackoverflow.co/2025/ai
+  note: >
+    Verified 2026-08-11 (GH-7). 33,662 respondents. 84% use or plan to use AI tools
+    (up from 76%); 51% of professional developers use them daily. Positive sentiment
+    fell from over 70% in 2023-2024 to 60%; 46% distrust the accuracy of the output
+    against 33% who trust it. Self-reported survey data, not measurement.
 
 - id: runmat2024
   type: post-weblog
