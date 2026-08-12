@@ -5,6 +5,22 @@ title: "Agentic Coding"
 subtitle: "How to Build Software with Coding Agents — and Build the Agents Themselves"
 author: "Petar Djukic"
 
+# The build thread (GH-62). The reader builds a small declarative coding
+# harness across the book and grows it into an orchestrator in Part V. Each
+# part's prose stays mechanism-first; each part ends having added a working
+# component, recorded per part under build_deliverable. The artifact is
+# written in Go — the language C2.2 argues for and the language of the
+# evidence base. It is pedagogical and usable, distinct from cobbler-scaffold
+# and go-unix-utils, which remain the production evidence.
+build_thread: >
+  Part I: the harness skeleton — state machine, tool table, edit application,
+  one verification gate. Part II: the spec loader (context assembly from a
+  PRD) and the constitution as an enforced policy gate. Part III: a
+  differential test harness, built standalone. Part IV: the verification
+  stack wired into the loop as gates, and an inspector sub-agent. Part V: a
+  planner and a generator coordinated through a blackboard, assembled into
+  the orchestrator. Part VI: instrumentation of the reader's own harness.
+
 parts:
   - id: part-i
     title: "Agents and Harnesses"
@@ -24,6 +40,11 @@ parts:
       justified by a Part I fact — because the harness reads the whole file
       into context, because the model cannot grade its own output, because
       memory has to live somewhere the harness can reach.
+
+      Build deliverable: the harness skeleton — a state machine, a tool
+      table, edit application, and one verification gate. Planned as
+      end-of-chapter Build sections added in a later pass; the drafted
+      prose is untouched until that pass amends the chapters and their SRDs.
     chapters:
       - title: "What is an agent?"
         status: outline
@@ -103,6 +124,10 @@ parts:
       programmers have never written a formal spec because they carried the
       requirements in their head while they coded. That doesn't work when
       someone (something) else is doing the coding.
+
+      Build deliverable: the spec loader — context assembly from a PRD —
+      and the constitution as an enforced policy gate in the reader's
+      harness.
     chapters:
       - title: "Layered construction"
         status: drafted  # relocated from Part I; file move tracked in #12
@@ -160,6 +185,9 @@ parts:
       trust an agent to generate the tests? If not, who writes them? If yes,
       how do you verify the tests themselves? This part works through the
       options.
+
+      Build deliverable: a differential test harness, built standalone here;
+      Part IV wires it into the loop as a gate.
     chapters:
       - title: "Differential testing"
         description: >
@@ -207,6 +235,10 @@ parts:
       because the answer to "how do you know?" shapes how you design the
       pipeline, what gates you enforce, and how much autonomy you give the
       agents.
+
+      Build deliverable: the verification stack wired into the reader's
+      harness loop as gates, and an inspector sub-agent that reviews
+      generated output.
     chapters:
       - title: "The trust problem"
         description: >
@@ -249,36 +281,56 @@ parts:
       code at a scale that a single conversation can't handle. This part
       covers the architecture and mechanics of multi-agent code generation.
 
-      This is the most technically dense part of the book. It draws directly
-      from cobbler-scaffold's design: the measure/stitch cycle, GitHub issues
-      as coordination infrastructure, beads as execution units, gastowns as
-      agent configurations. The reader should come away understanding not just
-      how cobbler-scaffold works, but how to build their own orchestration
-      layer.
+      This is the most technically dense part of the book. Three ideas carry
+      it: planning and generating as the two agent roles, the blackboard as
+      the coordination substrate the roles read and write, and the
+      orchestrator as the process that manages the sub-agent lifecycle.
+      cobbler-scaffold supplies the production evidence; its internal
+      vocabulary appears only as annotation. The reader should come away
+      having built their own orchestration layer, not just understood one.
+
+      Build deliverable: a planner and a generator coordinated through a
+      blackboard the reader implements — first as a YAML file, then as a
+      Dolt database — assembled into the orchestrator with a sub-agent
+      lifecycle manager.
     chapters:
       - title: "Why orchestrate"
         description: >
           The limits of single-session generation. Context windows, task
           scope, sustained execution. When you need more than one agent.
-      - title: "The measure/stitch pattern"
+      - title: "Planning and generating"
         description: >
-          Two agent types with different jobs: one plans, one executes. Why
-          planning costs more than execution. The orchestration loop: measure
-          proposes, stitch implements, repeat.
-      - title: "GitHub as coordination layer"
+          Two agent roles with different jobs: the planner decomposes and
+          orders work, the generator implements one task in an isolated
+          worktree. Why planning costs more than generation. The
+          plan/generate cycle maps to the outer-loop steps named in
+          "Layered construction".
+      - title: "The blackboard"
         description: >
-          Issues as task queues, labels as state machine, comments as handoff.
-          Why a project tracker becomes infrastructure when agents are the
-          workers. (cobbler-scaffold #1475, #1467)
-      - title: "Beads"
+          The coordination substrate as a concept: shared state that agents
+          read and write. What it must record — task state, claims,
+          handoffs, history. The blackboard-architecture lineage, and why a
+          project tracker becomes infrastructure when agents are the
+          workers.
+      - title: "Off-the-shelf blackboards: GitHub and beads"
         description: >
-          [Need background materials] Execution units in cobbler-scaffold.
-          How work is packaged and tracked.
-      - title: "Gastowns"
+          GitHub issues as task queue, labels as state machine, comments as
+          handoff, and the API race conditions that follow
+          (cobbler-scaffold #1475, #1467). Then beads, the git-backed issue
+          tracker driven by bd, as the purpose-built alternative: offline,
+          diffable, no rate limits.
+      - title: "Build your own blackboard"
         description: >
-          [Need background materials] Agent type configurations. How different
-          agents get different prompts, tools, and constraints.
-      - title: "State management"
+          A YAML-file blackboard first — diffable, single-writer, enough
+          for one orchestrator. Then the Dolt graduation: concurrent
+          writers, SQL queries, a versioned audit trail. When to graduate,
+          and what each step buys.
+      - title: "The sub-agent lifecycle"
+        description: >
+          The orchestrator spawns, configures, monitors, collects, and
+          kills sub-agents. Worktree isolation, one task per worktree.
+          Agent configurations: per-role prompt, tools, and constraints.
+      - title: "State management and recovery"
         description: >
           requirements.yaml, road-map.yaml, the consistency problem. What
           happens when state isn't committed (#1385), when status isn't
@@ -288,13 +340,15 @@ parts:
           Race conditions with GitHub API (#1475), stale branches causing
           infinite retries (#1561), no backoff on failures (#1562), premature
           stops (#1361). Distributed systems problems in agent orchestration.
-      - title: "Building your own"
+      - title: "Assembling the orchestrator"
         description: >
-          Why building the orchestrator yourself is the point. CLI vs. SDK
-          (#687). The 31-tries iteration story.
+          The parts become the whole: planner, generator, blackboard, and
+          lifecycle manager in one loop. CLI vs. SDK (#687). The 31-tries
+          iteration story, and why building it yourself is the point.
     background_needed:
-      - "Beads: what they are, how they work in cobbler-scaffold"
-      - "Gastowns: what they are, how agent types are configured"
+      - "Beads: a bd usage walkthrough for the off-the-shelf chapter"
+      - "Dolt: a blackboard schema sketch for the build-your-own chapter"
+      - "Sub-agent lifecycle examples from cobbler-scaffold"
       - cobbler-scaffold architecture diagram or walkthrough
       - Examples of coordination failures and their fixes
 
@@ -314,6 +368,10 @@ parts:
       cost per task, tool usage, and failure modes, you could see what was
       happening and make informed decisions about what to optimize. This part
       teaches that skill.
+
+      Build deliverable: instrumentation of the reader's own harness — turn
+      counts, cost per task, tool usage, failure modes — so the receipts
+      they learn to read are their own.
     chapters:
       - title: "The black box problem"
         description: >

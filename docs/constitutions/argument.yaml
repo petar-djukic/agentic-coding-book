@@ -57,7 +57,7 @@ derivation_chain:
   - id: Q7
     question: "How does this run past one context window?"
     answer: "Multiple agents coordinated through shared state the harness can reach, which turns the work into a distributed system and imports its failure modes."
-    owners: [C5.1, C5.2, C5.3, C5.6, C5.7, C5.8]
+    owners: [C5.1, C5.2, C5.3, C5.6, C5.7, C5.8, C5.9]
   - id: Q8
     question: "How do you know what the agents did?"
     answer: "By instrumenting the loop. Without measurement the pipeline is changed on guesswork; with it, on evidence."
