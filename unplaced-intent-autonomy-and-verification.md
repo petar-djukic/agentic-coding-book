@@ -43,9 +43,10 @@ This creates a problem that does not exist in manual development. Agents guess c
 
 > **Common Error:** Leaving constructional intent unspecified. The agent produces code that compiles and passes tests but diverges structurally from the programmer's design. A wrong architectural assumption baked into the first generated function infects everything built on top of it. The assumption is invisible because it was never discussed — the agent made it silently.
 
-> **Definition: Agentic coding** — the practice of externalizing both behavioral and constructional intent into machine-readable artifacts (requirements, constitutions, architectural constraints), then using coding agents to generate code from those artifacts while verifying the output through automated gates rather than manual review.
-
-A programmer writes code. A clauder writes specifications that code is generated from. The difference is not the tool. The difference is that the specification must now be explicit, because the person who holds the intent is no longer the person who types the code.
+A programmer writes code; someone working this way writes the specifications
+code is generated from. The difference is not the tool. It is that the
+specification must now be explicit, because the person who holds the intent is
+no longer the person who types the code.
 
 ## 1.3 Levels of Autonomy
 

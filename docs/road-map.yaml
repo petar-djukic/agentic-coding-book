@@ -302,8 +302,9 @@ unplaced:
       Three concepts still needing a home, in a chapter whose framing GH-5
       retired. GH-43 narrowed this entry: what remains is the fuller treatment
       of behavioral and constructional intent (the worked notification-system
-      example, its Strategy-pattern figure, a Common Error sidebar, and the
-      boxed definition of agentic_coding, which no drafted chapter carries);
+      example, its Strategy-pattern figure, and a Common Error sidebar; the boxed
+      definition of agentic_coding that used to sit here went to
+      01-introduction.md at GH-60);
       the per-level autonomy walkthrough with its bottleneck-by-level and
       programmer-role-by-level tables; and the six-layer verification stack
       with its Good Practice and From the Field sidebars.

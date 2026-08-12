@@ -491,3 +491,61 @@ references:
   issued:
     year: 2026
   note: Companion volume by the same author, in progress and public.
+
+- id: karpathy2025
+  type: post
+  title: "There's a new kind of coding I call \"vibe coding\""
+  author:
+    - family: Karpathy
+      given: Andrej
+  container-title: X
+  issued:
+    year: 2025
+    month: 2
+    day: 2
+  URL: https://x.com/karpathy/status/1886192184808149383
+  note: >
+    The coinage of "vibe coding". Quoted as "fully give in to the vibes, embrace
+    exponentials, and forget that the code even exists". Verified 2026-08-12
+    (GH-60) against multiple secondary sources for wording and date; the post
+    itself could not be fetched directly, since X requires authentication, so
+    the status id is the commonly cited one rather than one confirmed at
+    first hand. needs-verification on the URL only.
+
+- id: sapkota2025
+  type: article
+  title: "Vibe Coding vs. Agentic Coding: Fundamentals and Practical Implications of Agentic AI"
+  author:
+    - family: Sapkota
+      given: Ranjan
+    - family: Roumeliotis
+      given: Konstantinos I.
+    - family: Karkee
+      given: Manoj
+  container-title: arXiv preprint arXiv:2505.19443
+  URL: https://arxiv.org/abs/2505.19443
+  issued:
+    year: 2025
+    month: 5
+  note: >
+    Verified 2026-08-12 (GH-60). A 35-page review separating the two paradigms:
+    vibe coding as "intuitive, human-in-the-loop interaction through
+    prompt-based, conversational workflows", agentic coding as "autonomous
+    software development through goal-driven agents capable of planning,
+    executing, testing, and iterating tasks with minimal human intervention".
+    Single version, May 2025, no venue -- still a preprint.
+
+- id: github-speckit
+  type: webpage
+  title: "Spec-driven development with AI: Get started with a new open source toolkit"
+  author:
+    - literal: GitHub
+  container-title: The GitHub Blog
+  URL: https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/
+  issued:
+    year: 2025
+  note: >
+    Verified 2026-08-12 (GH-60). Primary source for Spec Kit, cited for what
+    spec-driven development means rather than as a recommendation (VN-4). The
+    practice has several implementations -- Kiro, OpenSpec, fspec among them --
+    and no academic treatment settling the term.
