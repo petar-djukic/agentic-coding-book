@@ -1,3 +1,5 @@
+<!-- chapter: C1.2 -->
+
 # The Agents You Already Use
 
 ## Learning Objectives

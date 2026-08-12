@@ -1,3 +1,5 @@
+<!-- chapter: C1.3 -->
+
 # What Is a Harness?
 
 ## Learning Objectives

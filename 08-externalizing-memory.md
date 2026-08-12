@@ -1,3 +1,5 @@
+<!-- chapter: C1.6 -->
+
 # Externalizing Memory
 
 ## Learning Objectives

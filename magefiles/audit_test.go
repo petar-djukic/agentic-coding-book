@@ -22,6 +22,7 @@ parts:
   - id: part-i
     chapters:
       - title: What is an agent?
+      - title: Second chapter
 `,
 		"docs/ARCHITECTURE.yaml": `
 structure:
@@ -29,12 +30,16 @@ structure:
     - id: P1
       chapters:
         - id: C1.1
+          srd: docs/srd/srd-1.1-what-is-an-agent.yaml
+        - id: C1.2
 `,
 		"docs/road-map.yaml": `
 parts:
   - id: P1
     chapters:
       - id: C1.1
+        status: outline
+      - id: C1.2
         status: outline
 `,
 		"docs/VISION.yaml": `
@@ -95,7 +100,9 @@ apparatus:
 - id: hunt1999
   title: The Pragmatic Programmer
 `,
-		"03-what-is-an-agent.md": `# What is an agent?
+		"03-what-is-an-agent.md": `<!-- chapter: C1.1 -->
+
+# What is an agent?
 
 ## Learning Objectives
 
@@ -106,6 +113,12 @@ Prose that cites something [@hunt1999].
 ## Summary
 
 It is a state machine plus tools.
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| **Agent** | A state machine plus tools |
 `,
 	}
 }
@@ -404,7 +417,9 @@ sidebars:
 `
 
 func chapterWithSidebar(label string) string {
-	return `# What is an agent?
+	return `<!-- chapter: C1.1 -->
+
+# What is an agent?
 
 ## Learning Objectives
 
@@ -417,6 +432,12 @@ Prose that cites something [@hunt1999].
 ## Summary
 
 It is a state machine plus tools.
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| **Agent** | A state machine plus tools |
 `
 }
 
@@ -503,8 +524,10 @@ func TestSidebarAuthorshipSkipsUncommittedLines(t *testing.T) {
 // ------------------------------------------------ section numbering (GH-35)
 
 // numberedChapter is a minimal chapter whose sections carry the given number.
-func numberedChapter(title string, n int) string {
-	return fmt.Sprintf(`# %s
+func numberedChapter(id, title string, n int) string {
+	return fmt.Sprintf(`<!-- chapter: %s -->
+
+# %s
 
 ## Learning Objectives
 
@@ -521,14 +544,20 @@ More prose.
 ## Summary
 
 Done.
-`, title, n, n)
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| **Agent** | A state machine plus tools |
+`, id, title, n, n)
 }
 
 // twoChapterTree adds a second chapter so positions can actually be wrong.
 func twoChapterTree(firstNum, secondNum int) tree {
 	files := cleanTree()
-	files["03-what-is-an-agent.md"] = numberedChapter("What is an agent?", firstNum)
-	files["04-second-chapter.md"] = numberedChapter("Second chapter", secondNum)
+	files["03-what-is-an-agent.md"] = numberedChapter("C1.1", "What is an agent?", firstNum)
+	files["04-second-chapter.md"] = numberedChapter("C1.2", "Second chapter", secondNum)
 	return files
 }
 
@@ -580,7 +609,7 @@ func TestSectionNumberingSkipsPartDividersAndReferences(t *testing.T) {
 func TestSectionNumberingCatchesAStaleFigureNumber(t *testing.T) {
 	files := twoChapterTree(1, 2)
 	files["04-second-chapter.md"] = strings.Replace(
-		numberedChapter("Second chapter", 2),
+		numberedChapter("C1.2", "Second chapter", 2),
 		"## Summary",
 		"**Figure 3.1** A caption.\n\n![](figures/fig-3-1-x.png)\n\nFigure 3.1 is referenced here.\n\n## Summary", 1)
 	err := auditTree(t, files)
@@ -600,5 +629,106 @@ func TestSectionNumberingReportsOncePerChapter(t *testing.T) {
 	}
 	if got := strings.Count(err.Error(), "voice.yaml: section_numbering"); got != 1 {
 		t.Errorf("a chapter with several wrong headings should report once, got %d", got)
+	}
+}
+
+// -------------------------------------------- chapter <-> SRD binding (GH-25)
+
+func TestBindingRejectsAChapterWithNoMarker(t *testing.T) {
+	files := cleanTree()
+	files["03-what-is-an-agent.md"] = strings.Replace(
+		files["03-what-is-an-agent.md"], "<!-- chapter: C1.1 -->\n\n", "", 1)
+	err := auditTree(t, files)
+	if err == nil {
+		t.Fatal("an unmarked chapter should be a finding, not a silent pass")
+	}
+	if !strings.Contains(err.Error(), "carries no") {
+		t.Errorf("finding should say the marker is missing, got:\n%v", err)
+	}
+}
+
+// The old mechanism inferred the pairing from the chapter's title, so a
+// retitle silently unpaired it. The marker has to survive that.
+func TestBindingSurvivesARetitle(t *testing.T) {
+	files := cleanTree()
+	files["03-what-is-an-agent.md"] = strings.Replace(
+		files["03-what-is-an-agent.md"], "# What is an agent?", "# Something Else Entirely", 1)
+	if err := auditTree(t, files); err != nil {
+		t.Fatalf("the binding is the marker, not the title, got:\n%v", err)
+	}
+}
+
+// ...and a rename, which is what broke six times while Part I was drafted.
+func TestBindingSurvivesARenumber(t *testing.T) {
+	files := cleanTree()
+	files["07-what-is-an-agent.md"] = files["03-what-is-an-agent.md"]
+	delete(files, "03-what-is-an-agent.md")
+	if err := auditTree(t, files); err != nil {
+		t.Fatalf("the binding lives in the file, not its name, got:\n%v", err)
+	}
+}
+
+func TestBindingRejectsAnUnknownChapterID(t *testing.T) {
+	files := cleanTree()
+	files["03-what-is-an-agent.md"] = strings.Replace(
+		files["03-what-is-an-agent.md"], "chapter: C1.1", "chapter: C9.9", 1)
+	err := auditTree(t, files)
+	if err == nil || !strings.Contains(err.Error(), "ARCHITECTURE does not define") {
+		t.Fatalf("an id absent from ARCHITECTURE should be a finding, got:\n%v", err)
+	}
+}
+
+func TestBindingRejectsTwoChaptersClaimingOneID(t *testing.T) {
+	files := cleanTree()
+	files["04-second-chapter.md"] = files["03-what-is-an-agent.md"]
+	err := auditTree(t, files)
+	if err == nil || !strings.Contains(err.Error(), "already claimed by") {
+		t.Fatalf("two files claiming C1.1 should be a finding, got:\n%v", err)
+	}
+}
+
+// The contract half: apparatus.key_terms promises the Key Terms table.
+func TestBindingCatchesAKeyTermMissingFromTheTable(t *testing.T) {
+	files := cleanTree()
+	files["03-what-is-an-agent.md"] = strings.Replace(
+		files["03-what-is-an-agent.md"], "| **Agent** | A state machine plus tools |", "", 1)
+	err := auditTree(t, files)
+	if err == nil || !strings.Contains(err.Error(), `key term "agent"`) {
+		t.Fatalf("a declared key term absent from the table should be a finding, got:\n%v", err)
+	}
+}
+
+// An anchor citation is the source the SRD says carries the chapter.
+func TestBindingCatchesAnUncitedAnchor(t *testing.T) {
+	files := cleanTree()
+	files["03-what-is-an-agent.md"] = strings.Replace(
+		files["03-what-is-an-agent.md"], "[@hunt1999]", "with no citation", 1)
+	err := auditTree(t, files)
+	if err == nil || !strings.Contains(err.Error(), "anchor citation") {
+		t.Fatalf("an uncited anchor should be a finding, got:\n%v", err)
+	}
+}
+
+// Only anchors are required; a context or evidence citation may go unused.
+func TestBindingIgnoresUncitedNonAnchors(t *testing.T) {
+	files := cleanTree()
+	files["docs/srd/srd-1.1-what-is-an-agent.yaml"] = strings.Replace(
+		files["docs/srd/srd-1.1-what-is-an-agent.yaml"],
+		"  - id: hunt1999\n    role: anchor",
+		"  - id: hunt1999\n    role: anchor\n  - id: hunt1999\n    role: context", 1)
+	if err := auditTree(t, files); err != nil {
+		t.Fatalf("only anchors are required to appear, got:\n%v", err)
+	}
+}
+
+// A chapter the road map calls drafted must have a file claiming it.
+func TestBindingCatchesADraftedChapterWithNoFile(t *testing.T) {
+	files := cleanTree()
+	files["docs/road-map.yaml"] = strings.Replace(
+		files["docs/road-map.yaml"], "      - id: C1.2\n        status: outline",
+		"      - id: C1.2\n        status: drafted", 1)
+	err := auditTree(t, files)
+	if err == nil || !strings.Contains(err.Error(), "marked drafted but no chapter file claims it") {
+		t.Fatalf("a drafted chapter with no file should be a finding, got:\n%v", err)
 	}
 }
