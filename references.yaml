@@ -416,3 +416,29 @@ references:
   URL: https://arxiv.org/abs/2603.07670
   issued:
     year: 2026
+
+- id: deitel2021
+  type: book
+  title: "C How to Program"
+  author:
+  - family: Deitel
+    given: Paul
+  - family: Deitel
+    given: Harvey M.
+  edition: 9
+  publisher: Pearson
+  ISBN: 9780137398393
+  issued:
+    year: 2021
+
+- id: fowler2018
+  type: book
+  title: "Refactoring: Improving the Design of Existing Code"
+  author:
+  - family: Fowler
+    given: Martin
+  edition: 2
+  publisher: Addison-Wesley Professional
+  ISBN: 9780134757599
+  issued:
+    year: 2018

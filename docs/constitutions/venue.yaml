@@ -89,17 +89,33 @@ density_norms:
 
 exemplar_registry:
   note: >
-    Practitioner books the register is measured against. The first three
-    resolve in references.yaml; the register models named in VISION.yaml
-    (Deitel & Deitel for the chapter apparatus, Fowler for precision) do not
-    yet have entries, which is a gap in the bibliography rather than a
-    decision -- see the follow-up filed from GH-16.
+    Practitioner books the register is measured against. Every entry resolves
+    in references.yaml (GH-22). The two register models named in VISION.yaml
+    are cited by a representative volume rather than a whole shelf: the
+    apparatus and the register are each a house style held across a series,
+    and one book is enough to point at it.
   books:
     - {id: hunt1999, offers: "the practitioner register; tracer bullets, cited directly in Part II"}
     - {id: mcconnell1996, offers: "construction discipline and the cost of late defects"}
     - {id: larman2003, offers: "iterative and incremental development, the outer loop's lineage"}
-    - {id: null, name: "Deitel & Deitel", offers: "chapter apparatus: objectives, sidebars, summary, key terms", reference_status: "missing from references.yaml"}
-    - {id: null, name: "Fowler", offers: "precision and the short declarative claim", reference_status: "missing from references.yaml"}
+    - id: deitel2021
+      offers: "chapter apparatus: objectives, sidebars, summary, key terms"
+      note: >
+        Cited as the representative volume of the "How to Program" series,
+        whose apparatus this book adopts: Objectives opening every chapter,
+        a Summary and Terminology section closing it, a worked program for
+        each new concept, and the enumerated tip types -- Common Programming
+        Error, Good Programming Practice, Performance Tip -- that voice.yaml
+        adapts into Common Error, Good Practice, and Performance Observation.
+        Deitel's "for Programmers" line is the professional cut and drops much
+        of that apparatus, so it is the wrong volume to cite for it even
+        though it is closer to this book's audience.
+    - id: fowler2018
+      offers: "precision and the short declarative claim"
+      note: >
+        Cited for register rather than subject. The catalog entries are the
+        model: a claim stated once, plainly, with the qualification carried by
+        the example instead of by hedging.
 
 evidence_grounding:
   rule: >
