@@ -44,12 +44,42 @@ clauding:
 
 # --- Core concepts -------------------------------------------------------
 
+vibe_coding:
+  introduced: Introduction
+  definition: >
+    Working from conversation alone: describing what is wanted, accepting what
+    the model produces, and not reading the code. Coined by Karpathy in
+    February 2025 for throwaway projects. Distinguished from agentic coding by
+    the absence of a verification loop rather than by the tools used.
+  see_also: [agentic_coding, spec_driven_development, autonomy_level]
+
+spec_driven_development:
+  introduced: Introduction
+  definition: >
+    Treating the specification as the contract an agent generates from, rather
+    than as documentation written after the fact. Names the same commitment as
+    this book's practice from the artifact's side; the difference is emphasis,
+    since spec-driven development names the artifact and this book spends as
+    much attention on the gates that check the output against it.
+  see_also: [agentic_coding, specification, behavioral_intent]
+
+dark_factory:
+  introduced: Introduction
+  definition: >
+    Borrowed from lights-out manufacturing, where a plant runs with nobody on
+    the floor: a pipeline in which planning, generation, testing, review, and
+    shipping all proceed with no human approving anything. The term circulates
+    through vendor material rather than literature, so it describes a direction
+    rather than a defined state.
+  see_also: [agentic_coding, autonomy_level, orchestrator]
+
 agentic_coding:
   introduced: Introduction
   introduced_note: >
-    The book states its subject in the front matter. The introduction does not
-    yet carry a boxed definition of the term, which is a gap worth closing when
-    the front matter is next revised (GH-53).
+    Boxed in 01-introduction.md at GH-60, alongside the three neighbours it is
+    confused with. The definition leads with artifacts and gates rather than
+    with autonomy, which is narrower than common usage; the introduction says
+    so explicitly rather than letting a reader import the looser meaning.
   definition: >
     The practice of externalizing both behavioral and constructional intent
     into machine-readable artifacts -- specifications, constitutions,
