@@ -5,6 +5,8 @@ themselves.** A book on agentic coding, spec-driven development, and
 AI-assisted software engineering: writing requirements a coding agent
 can execute, verifying generated code you did not write, and
 orchestrating agent loops past the limits of a single context window.
+A build thread runs through every part: the reader builds a small
+declarative coding harness and grows it into an orchestrator by Part V.
 
 The material comes from production runs rather than demos — 44,628 lines
 of Go generated across 31 pipeline runs, and 123 Unix utilities
@@ -48,7 +50,7 @@ mechanism, so that every prescription in Parts II–VI has a fact behind it.
 |---|---|---|
 | [III — Testing](12-part-iii-testing.md) | outline | Verifying code no human wrote; differential testing; the generated-test circularity problem |
 | [IV — Correctness](13-part-iv-correctness.md) | outline | What "correct" means when you did not write the code |
-| [V — Orchestration](14-part-v-orchestration.md) | outline | Agent roles, GitHub as coordination substrate, worktrees, failure and recovery |
+| [V — Orchestration](14-part-v-orchestration.md) | outline | Planners and generators; the blackboard — GitHub, beads, or build your own; the sub-agent lifecycle; failure and recovery |
 | [VI — Instrumentation](15-part-vi-instrumentation.md) | outline | Logging, cost analysis, failure diagnosis |
 
 One drafted chapter is parked outside the sequence:

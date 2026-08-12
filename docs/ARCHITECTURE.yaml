@@ -127,19 +127,21 @@ structure:
         - id: C5.1
           title: Why orchestrate
         - id: C5.2
-          title: The measure/stitch pattern
+          title: Planning and generating
         - id: C5.3
-          title: GitHub as coordination layer
+          title: The blackboard
         - id: C5.4
-          title: Beads
+          title: "Off-the-shelf blackboards: GitHub and beads"
         - id: C5.5
-          title: Gastowns
+          title: Build your own blackboard
         - id: C5.6
-          title: State management
+          title: The sub-agent lifecycle
         - id: C5.7
-          title: Failure modes
+          title: State management and recovery
         - id: C5.8
-          title: Building your own
+          title: Failure modes
+        - id: C5.9
+          title: Assembling the orchestrator
     - id: P6
       title: Instrumentation
       role: "Making the loop observable, so the pipeline changes on evidence rather than guesswork."
@@ -183,7 +185,7 @@ material_sources:
     feeds: [P1, P2, P3, P4, P5, P6]
 
 traceability:
-  - "Vision goals map onto parts: G1 (orient) is Part I; G2 (specify) is Part II; G3 (verify) is Parts III and IV; G4 (orchestrate) is Part V; G5 (instrument) is Part VI; G6 (build the tools) runs across Parts V and VI and is not a part of its own."
+  - "Vision goals map onto parts: G1 (orient) is Part I; G2 (specify) is Part II; G3 (verify) is Parts III and IV; G4 (orchestrate) is Part V; G5 (instrument) is Part VI; G6 (build the tools) runs across every part through the build thread (outline.yaml: build_thread) and culminates in Parts V and VI; it is not a part of its own."
   - "Vision goals map onto constitution rules: G1 links to voice.yaml chapter apparatus and definitions-before-use; G2-G5 link to argument.yaml claim discipline; G6 links to argument.yaml observation-over-advocacy, since the tooling argument is the one most likely to slide into advocacy."
   - "Constitution rules bind chapters through the SRDs: each SRD names the rule sets its section is checked against, and mage audit reports findings by rule id."
   - "Chapters feed the corpus: every citation resolves to references.yaml, and every term to docs/definitions.yaml."

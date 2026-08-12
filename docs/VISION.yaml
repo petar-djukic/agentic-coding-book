@@ -17,7 +17,10 @@ purpose: |
   window. The book is mechanism-first. Part I establishes what an agent is,
   what a harness is, how a harness manipulates the file system, where the
   model fails, and where state lives between sessions; every prescription in
-  Parts II-VI then rests on a fact established there. The reader-outcome
+  Parts II-VI then rests on a fact established there. The book also builds:
+  a build thread (outline.yaml: build_thread) runs through every part, and
+  the reader who follows it finishes with a small working harness grown
+  into an orchestrator, not only with technique. The reader-outcome
   test: a programmer finishes a chapter and applies the technique to their
   own project without re-reading it.
 
@@ -48,7 +51,10 @@ thesis: |
   grade its own output, verification must be mechanical; because memory has
   to live somewhere the harness can reach, intent must be written down. The
   programmer who builds this tooling rather than waiting for it compounds
-  the advantage, since the agents generate the tools too.
+  the advantage, since the agents generate the tools too. The book takes its
+  own argument literally: each part ends with the reader having built the
+  component the part described, and by Part V the components assemble into
+  an orchestrator of their own.
 
 exemplar: |
   Deitel & Deitel supply the chapter apparatus: learning objectives that
@@ -78,7 +84,7 @@ goals:
   - id: G5
     goal: "Instrument: the reader can measure what their agents did -- turn counts, cost, tool usage, failure modes -- and change the pipeline on evidence rather than on guesswork."
   - id: G6
-    goal: "Build the tools: the reader treats the harness as something they shape and extend, not a product they consume."
+    goal: "Build the tools: the reader treats the harness as something they shape and extend, not a product they consume -- and by Part V has built one: a planner and a generator coordinated through a blackboard they implemented themselves, with the sub-agent lifecycle under their orchestrator's control."
 
 non_goals:
   - "A book that teaches programming, or that assumes none."
@@ -95,7 +101,9 @@ inputs:
     against the GNU reference binaries by differential testing),
     cobbler-scaffold (the orchestrator, its specifications and constitutions,
     and the instrumented generation runs), and coding-skills (the GitHub
-    issue loop Part V describes).
+    issue loop Part V describes). The harness the reader builds along the
+    build thread is pedagogical and separate from this evidence base: the
+    claims rest on the production repositories, not on the teaching artifact.
   companion: |
     agentic-applications-book covers building applications out of agents.
     This book borrows the declarative-agents model as a lens for one Part I

@@ -89,7 +89,7 @@ later parts covers one thing the mechanism makes necessary.
 | II | Construction and requirements: layering construction, choosing the language, and externalizing intent so agents can execute it |
 | III | Testing: verifying code no human wrote |
 | IV | Correctness: what "correct" means when you did not write the code |
-| V | Orchestration: the machinery that runs the loop across hundreds of tasks |
+| V | Orchestration: planners and generators coordinated through a blackboard, at the scale of hundreds of tasks |
 | VI | Instrumentation: observing what the agents actually did |
 
 **Work in progress, written in the open.** Part I is drafted; the remaining

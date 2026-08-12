@@ -109,11 +109,12 @@ releases:
   - id: rel05.0
     name: "Part V -- Agent Orchestration"
     status: pending
-    units: [C5.1, C5.2, C5.3, C5.4, C5.5, C5.6, C5.7, C5.8]
+    units: [C5.1, C5.2, C5.3, C5.4, C5.5, C5.6, C5.7, C5.8, C5.9]
     gate: >
-      rel04.0 complete. C5.4 (beads) and C5.5 (gastowns) additionally need
-      background material that outline.yaml records as missing; they cannot
-      be drafted from the current evidence base.
+      rel04.0 complete. C5.4 additionally needs the beads (bd) usage
+      walkthrough and C5.5 the Dolt blackboard schema sketch, background
+      material that outline.yaml records as missing; they cannot be drafted
+      from the current evidence base.
 
   - id: rel06.0
     name: "Part VI -- Instrumentation"
@@ -243,27 +244,30 @@ parts:
         title: Why orchestrate
         status: outline
       - id: C5.2
-        title: The measure/stitch pattern
+        title: Planning and generating
         status: outline
       - id: C5.3
-        title: GitHub as coordination layer
+        title: The blackboard
         status: outline
       - id: C5.4
-        title: Beads
+        title: "Off-the-shelf blackboards: GitHub and beads"
         status: outline
-        note: "Background material missing; outline.yaml records it under background_needed."
+        note: "Background material missing (the bd usage walkthrough); outline.yaml records it under background_needed."
       - id: C5.5
-        title: Gastowns
+        title: Build your own blackboard
         status: outline
-        note: "Background material missing; outline.yaml records it under background_needed."
+        note: "Background material missing (the Dolt blackboard schema sketch); outline.yaml records it under background_needed."
       - id: C5.6
-        title: State management
+        title: The sub-agent lifecycle
         status: outline
       - id: C5.7
-        title: Failure modes
+        title: State management and recovery
         status: outline
       - id: C5.8
-        title: Building your own
+        title: Failure modes
+        status: outline
+      - id: C5.9
+        title: Assembling the orchestrator
         status: outline
 
   - id: P6
