@@ -1,0 +1,160 @@
+# SRD 2.4 -- Writing specs for agents.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+#
+# This is the chapter the Introduction's definition of agentic coding is cashed
+# out in: "externalizing intent into machine-readable artifacts". If the chapter
+# cannot show that concretely, the front-matter definition is wrong and changes.
+
+meta:
+  chapter: C2.4
+  title: Writing specs for agents
+  parent: P2
+section_goal: give the anatomy of a specification an agent can execute without guessing, and derive each part of it from how the harness reads
+goals:
+  - id: G2.13
+    goal: The reader can write a requirement with an id and acceptance criteria that an agent executes without asking a question.
+  - id: G2.14
+    goal: The reader can explain why a specification must be self-contained, from how the harness assembles context rather than as a style rule.
+  - id: G2.15
+    goal: The reader can separate behavioral from constructional intent in a specification, and can tell which one their draft has left implicit.
+  - id: G2.16
+    goal: The reader can judge what belongs inline -- signatures, struct fields, format strings -- and what can be referenced.
+  - id: G6.4
+    goal: "The reader has built a spec loader: the harness reads a specification from disk and assembles it into the request, so the artifact this chapter describes is one the reader's own tool consumes."
+chain:
+  - id: Q5
+    owns: partial
+    note: >
+      Q5 asks what has to be written down and where. C2.3 answers where the
+      content comes from; this chapter answers what the artifact looks like and
+      why it has that shape.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S2, V-S4, V-S5, V-S6]
+    note: "V-S5 binds: no part of the anatomy stands as theory without a specification fragment showing it."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C4, A-X1]
+    note: >
+      A-C4 is the chapter's spine. Every rule about specification shape names
+      the Part I fact it rests on: whole-file reading and position sensitivity
+      from C1.4 section 4.2, interpolation from training averages from C1.5.
+objective: >
+  It gives the anatomy of a specification an agent executes -- requirement ids,
+  acceptance criteria, inline context -- and derives each element from the
+  mechanism rather than asserting it as good practice. The central derivation is
+  self-containment: C1.4 established that the harness reads whole files into
+  context and that nothing in the loop follows a cross-reference, so a
+  specification that points at another document has told the agent nothing. The
+  chapter also shows the half of intent that usually goes unwritten, using the
+  worked example currently parked outside the numbered sequence.
+prior_material:
+  - path: go-unix-utils
+    offers: >
+      docs/specs/software-requirements/, the PRD corpus 123 utilities were
+      generated from. srd001-testutils.yaml is the anatomy case: it states the
+      problem, then carries the full API and a canonical usage fragment inline,
+      explicitly so that an agent implementing a cmd/ package reads one document
+      and does not reinvent the harness.
+  - path: unplaced-intent-autonomy-and-verification.md
+    offers: >
+      The notification-system worked example and its Strategy-pattern figure --
+      behavioral intent stated as delivery over a preferred channel with retry,
+      constructional intent stated as the decomposition into a Notifier and
+      interchangeable DeliveryStrategy implementations, plus the Common Error
+      about leaving the second unspecified. This SRD claims that material; GH-43
+      records it as awaiting a destination and this is it.
+  - path: cobbler-scaffold
+    offers: the spec loader in the orchestrator, as the reference implementation for the Build section
+citations:
+  - id: github-speckit
+    role: anchor
+    note: >
+      Spec-driven development as the industry names it: the specification as the
+      contract an agent generates from. Cited for the practice, and named as one
+      implementation among several rather than recommended (VN-4, A-X2).
+  - id: liu2023
+    role: evidence
+    note: >
+      Position within a long context changes what the model uses. Carries the
+      claim that inclusion is necessary and not sufficient, which is why the
+      chapter argues about placement and not only about completeness.
+  - id: iso29148
+    role: context
+    note: >
+      What a requirement is required to contain, from the standards lineage.
+      Used as the contrast: complete for a human reader and for procurement is
+      not the same property as self-contained for a process that cannot ask.
+  - id: latentpatterns-harness
+    role: context
+    note: the harness as the component that assembles the context the specification lands in
+content:
+  - say: "A specification an agent executes is not a document about the work; it is the input the harness assembles into the request, and it is the only thing the model will see."
+    cites: [latentpatterns-harness]
+  - say: "A cross-reference is an instruction to fetch, and the loop contains no fetcher, so a specification that points at the architecture document has conveyed nothing and the model fills the gap from training averages."
+    cites: []
+  - say: "Inclusion is necessary and not sufficient: a constraint buried in the middle of a long specification is present by byte count and absent in the output."
+    cites: [liu2023]
+  - say: "Requirement ids and acceptance criteria exist so a generated result can be checked against a named claim rather than against an impression."
+    cites: [iso29148]
+  - say: "Intent divides in two, and the constructional half is the one that usually goes unwritten; an agent given only behavioral intent will choose a structure and be confident about it."
+    cites: []
+  - say: "What goes inline is decided by what the model would otherwise interpolate: signatures, struct fields, and format strings are cheap to state and expensive to guess."
+    cites: [github-speckit]
+apparatus:
+  objectives:
+    - Write a requirement with an id and acceptance criteria an agent can execute.
+    - Derive self-containment from how the harness assembles context.
+    - Separate behavioral from constructional intent in a specification.
+    - Judge what belongs inline and what may be referenced.
+    - Build a spec loader that assembles a specification into the request.
+  sidebars:
+    - type: Common Error
+      about: leaving constructional intent unspecified, and the structural assumption baked into the first generated function
+    - type: Good Practice
+      about: stating signatures and formats inline rather than naming the document that holds them
+    - type: Performance Observation
+      about: what a specification's length and ordering cost in context budget, against what a re-generation costs
+  key_terms: [specification, architecture_document, use_case, test_suite, domain_knowledge]
+figures:
+  - shows: "The Strategy-pattern decomposition of the notification example: a Notifier selecting among interchangeable DeliveryStrategy implementations, as the constructional intent a specification has to state."
+    status: drawn_elsewhere
+    path: figures/fig-1-1-strategy-delivery-channels.puml
+    note: >
+      The figure exists but is numbered for the retired Chapter 1 and is
+      referenced only from the parked file, so it is inert today. Placing it
+      here makes it live and it must be renumbered to this chapter under the
+      GH-35 rule, which also removes its collision with C1.1's Figure 1.1.
+links:
+  requires: [C1.4, C1.5, C2.3]
+  supports: [C2.5, C2.6, C2.7, C3.2]
+gaps:
+  - >
+    The Build section owes a spec loader, per outline.yaml build_thread: the
+    skeleton reads a specification from disk and assembles it into the request.
+    Its scope against C2.5's constitution gate is not settled -- both touch what
+    enters the context -- and the two SRDs should agree on the seam before
+    either chapter is drafted.
+  - >
+    The parked prose this chapter claims predates docs/constitutions/ and has
+    not been checked against voice.yaml. It also contains the retired term in
+    at least one sentence's original form; GH-60 removed the last live use, so
+    the parked copy should be re-read rather than reused verbatim.
+  - >
+    Five terms are assigned here by definitions.yaml -- specification,
+    architecture_document, use_case, test_suite, domain_knowledge -- which makes
+    this the largest key-terms obligation in the book. The chapter has to define
+    all five or the glossary has to reassign some; test_suite in particular is
+    introduced here as a specification layer while Part III treats testing
+    itself, and that split should be visible in the prose rather than only in
+    the glossary note.
+  - >
+    This chapter is where the Introduction's definition of agentic coding is
+    tested. If the anatomy cannot show intent externalized into an artifact an
+    agent executes, the front-matter definition written at GH-60 is wrong and
+    changes rather than the chapter bending to it.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - Every element of the anatomy is derived from a Part I fact and names it (A-C4, A-X1), rather than being asserted as practice.
+  - No element stands as theory without a specification fragment showing it (V-S5).
+  - The intent pair is applied, not redefined; C1.5 introduces it and this chapter uses it.
+  - The Build section produces a working spec loader, and the chapter's own specification fragments are ones that loader could consume.

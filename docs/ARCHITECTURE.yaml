@@ -86,8 +86,10 @@ structure:
           srd: docs/srd/srd-2.2-language-selection.yaml
         - id: C2.3
           title: Where requirements come from
+          srd: docs/srd/srd-2.3-where-requirements-come-from.yaml
         - id: C2.4
           title: Writing specs for agents
+          srd: docs/srd/srd-2.4-writing-specs-for-agents.yaml
         - id: C2.5
           title: The constitution
         - id: C2.6

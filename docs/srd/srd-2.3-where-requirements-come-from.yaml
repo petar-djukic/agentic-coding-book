@@ -1,0 +1,117 @@
+# SRD 2.3 -- Where requirements come from.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+
+meta:
+  chapter: C2.3
+  title: Where requirements come from
+  parent: P2
+section_goal: show that requirements for agent-generated software are extracted from existing artifacts rather than invented, and name the artifacts worth extracting from
+goals:
+  - id: G2.10
+    goal: The reader can name the sources a behavioral requirement can be extracted from, and say which are authoritative.
+  - id: G2.11
+    goal: The reader can extract a behavior specification from a working implementation, including the parts the documentation omits.
+  - id: G2.12
+    goal: The reader can record a source precisely enough that a later reader can check the extraction against it.
+chain:
+  - id: Q5
+    owns: partial
+    note: >
+      Q5 asks what has to be written down and where. C2.3 answers the prior
+      question of where the content comes from; C2.4 answers what the written
+      artifact looks like.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S2, V-S5, V-S6, V-V1]
+    note: "V-S2 binds: the chapter opens on the problem -- an agent asked to build something nobody has specified will specify it itself -- before naming any source."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C4, A-C5, A-X1]
+    note: >
+      A-C4: the prescription to extract rather than invent rests on Q4, the
+      model interpolating from training averages when the context does not say
+      otherwise. A-C5: a source is cited at a version or a commit.
+objective: >
+  It treats requirements as something found rather than authored: standards,
+  reference implementations, RFCs, existing codebases, and domain knowledge
+  already encode the behavior a system must have. It shows the extraction on
+  the go-unix-utils corpus, where 123 utilities were specified from POSIX and
+  the GNU implementations, and it establishes the recording discipline that
+  makes an extraction checkable -- a pinned commit, a named source file, a line
+  number for the behavior in question.
+prior_material:
+  - path: go-unix-utils
+    offers: >
+      docs/specs/sources.yaml, a catalog of the four C repositories the specs
+      were extracted from, recording per utility the source file, the
+      flag-parsing entry point, the exit-code logic location, and the reference
+      binary used to verify the result. Each repository is pinned to a commit.
+      This is the worked example the chapter is built on.
+  - path: go-unix-utils
+    offers: docs/specs/use-cases and docs/specs/test-suites, showing what the extracted behavior became downstream
+citations:
+  - id: posix2024
+    role: anchor
+    note: >
+      The standard as a requirements source, and the case where the authority is
+      explicit. Cited for what POSIX fixes and, as importantly, for what it
+      leaves implementation-defined -- which is where extraction from a working
+      implementation becomes necessary.
+  - id: iso29148
+    role: context
+    note: >
+      What a requirement is required to contain. Cited to place the practice
+      rather than to adopt the process; the specifications in this book are
+      written to be executed by an agent, not to pass a procurement review.
+  - id: hunt1999
+    role: context
+    note: the practitioner lineage for writing things down before building
+content:
+  - say: "An agent asked to build something nobody has specified will specify it itself, from the average of its training data. The requirement exists either way; the only question is who wrote it."
+    cites: []
+  - say: "For most systems worth building, the behavior is already written down somewhere: a standard, an RFC, a reference implementation, a codebase being replaced, or a domain expert's knowledge."
+    cites: [posix2024]
+  - say: "A standard fixes less than it appears to. POSIX leaves behavior implementation-defined in places where two implementations differ, so the specification has to be extracted from the implementation that is actually being matched."
+    cites: [posix2024]
+  - say: "An extraction is only checkable if the source is recorded precisely: the repository at a commit, the file, and the location of the behavior in question."
+    cites: []
+  - say: "What a requirement must contain is not a new question, and the standards answer it -- but they answer it for human readers and procurement, and an agent needs the content self-contained rather than merely complete."
+    cites: [iso29148]
+apparatus:
+  objectives:
+    - Name the sources a behavioral requirement can be extracted from.
+    - Extract a behavior specification from a working implementation.
+    - Record a source precisely enough for the extraction to be checked.
+  sidebars:
+    - type: Common Error
+      about: treating the standard as complete and discovering the implementation-defined gaps only when the differential test fails
+    - type: Good Practice
+      about: pinning the source repository to a commit in the specification itself, so the extraction can be re-checked after the source moves
+  key_terms: [requirements]
+figures:
+  - shows: "The extraction path for one utility: standard and reference implementation on one side, the recorded source entry in the middle, the generated implementation and its differential test on the other."
+    status: planned
+links:
+  requires: [C1.4, C1.5]
+  supports: [C2.4, C2.6, C3.1]
+gaps:
+  - >
+    The chapter needs one worked extraction carried end to end, and the
+    candidate is a utility whose POSIX text and GNU behavior diverge, so the
+    implementation-defined point is concrete rather than asserted. go-unix-utils
+    sources.yaml records exit-code logic per utility, which is where such a
+    divergence is most likely; the specific utility is a drafting decision.
+  - >
+    definitions.yaml assigns only `requirements` to this chapter. If the
+    drafting coins terms for the extraction practice -- source catalog, pinned
+    source, implementation-defined gap -- they reach the glossary first
+    (contract rule 2), and mage audit enforces it in both directions since
+    GH-52.
+  - >
+    The figure is planned, not drawn. Under the GH-35 numbering rule it becomes
+    Figure 9.1 if C2.3 lands as chapter 9, which depends on whether any chapter
+    is inserted before it.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The extraction is shown on a real source, with the repository, file, and location recorded, not described in the abstract.
+  - Every claim about what a standard specifies names the standard at its edition (A-C5).
+  - The prescription to extract rather than invent names the Part I fact it rests on (A-X1, A-C4).
