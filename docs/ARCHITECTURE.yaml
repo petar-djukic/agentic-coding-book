@@ -17,7 +17,7 @@ components:
     role: "VISION.yaml (goals) and this file. road-map.yaml carries drafting order and per-chapter status; definitions.yaml carries the canonical terms (both GH-15). outline.yaml at the repository root remains the human-facing plan of record and must agree with the structure block below."
   chapters:
     path: "NN-slug.md (repository root)"
-    role: "Markdown is the canonical source, numbered in reading order, with part dividers as their own files. Prose carries pandoc [@key] citations; the build resolves them against references.yaml. Chapter apparatus -- learning objectives, summary, key terms, sidebars -- is prescribed by constitutions/voice.yaml."
+    role: "Markdown is the canonical source, numbered in reading order, with part dividers as their own files. Each chapter file names itself on its first line as `<!-- chapter: C1.6 -->`, which is what binds it to the `srd:` path below; the binding survives retitling and renumbering, and mage audit reports an unmarked chapter (GH-25). Prose carries pandoc [@key] citations; the build resolves them against references.yaml. Chapter apparatus -- learning objectives, summary, key terms, sidebars -- is prescribed by constitutions/voice.yaml."
   specification:
     path: docs/srd/
     role: "One Section Requirements Document per section (GH-17), each stating the section's goal, the book goals and claims it advances, its objective, the prior material it draws on, and its candidate citations. The SRD is the contract a drafter writes against; mage audit checks the mechanically checkable part of that contract, and the review-chapter skill judges the rest."

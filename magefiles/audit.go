@@ -40,6 +40,7 @@ func audit(root string, figures, build func() error) error {
 		findings = append(findings, checkProse(root, spec)...)
 		findings = append(findings, checkSidebarAuthorship(root, spec)...)
 		findings = append(findings, checkSectionNumbering(root)...)
+		findings = append(findings, checkChapterBinding(root, spec)...)
 	}
 
 	if figures != nil {
@@ -135,7 +136,8 @@ type archDoc struct {
 		Parts []struct {
 			ID       string `yaml:"id"`
 			Chapters []struct {
-				ID string `yaml:"id"`
+				ID  string `yaml:"id"`
+				SRD string `yaml:"srd"`
 			} `yaml:"chapters"`
 		} `yaml:"parts"`
 	} `yaml:"structure"`
@@ -199,7 +201,8 @@ type srdDoc struct {
 		Rules []string `yaml:"rules"`
 	} `yaml:"constitutions"`
 	Citations []struct {
-		ID string `yaml:"id"`
+		ID   string `yaml:"id"`
+		Role string `yaml:"role"`
 	} `yaml:"citations"`
 	Apparatus struct {
 		KeyTerms []string `yaml:"key_terms"`
@@ -556,6 +559,108 @@ func checkProse(root string, s *spec) []finding {
 		}
 		if !headings["summary"] {
 			add(path, "V-S6", "no Summary section")
+		}
+	}
+	return out
+}
+
+// chapterMarkerRe matches the binding a chapter file carries to name itself.
+// An HTML comment rather than YAML front matter: pandoc merges metadata across
+// every concatenated input, so a `chapter:` key would share a namespace with
+// the book's real metadata, while a comment renders to nothing in any output
+// format (GH-25).
+var chapterMarkerRe = regexp.MustCompile(`(?m)^<!--\s*chapter:\s*(\S+)\s*-->`)
+
+// keyTermsRe isolates the Key Terms table, which is where apparatus.key_terms
+// promises the terms will be.
+var keyTermsRe = regexp.MustCompile(`(?ms)^## Key Terms\s*$(.*)`)
+
+// checkChapterBinding resolves each drafted chapter to the SRD that governs it
+// and checks the mechanically checkable half of that contract.
+//
+// Chapters name themselves; nothing infers the pairing from a title or a
+// filename. Title matching was the old mechanism and it broke silently when a
+// chapter was retitled, while a filename map in the spec goes stale every time
+// the book is renumbered -- which happened six times while Part I was drafted
+// (GH-25).
+func checkChapterBinding(root string, s *spec) []finding {
+	var out []finding
+	add := func(file, rule, format string, args ...any) {
+		out = append(out, finding{File: file, Rule: rule, Detail: fmt.Sprintf(format, args...)})
+	}
+
+	srdByChapter := map[string]string{}
+	archChapters := map[string]bool{}
+	for _, p := range s.arch.Structure.Parts {
+		for _, c := range p.Chapters {
+			archChapters[c.ID] = true
+			if c.SRD != "" {
+				srdByChapter[c.ID] = c.SRD
+			}
+		}
+	}
+	srdByPath := map[string]*srdDoc{}
+	for i := range s.srds {
+		srdByPath[rel(root, s.srds[i].path)] = &s.srds[i]
+	}
+
+	fileOf := map[string]string{}
+	for _, path := range chapterFiles(root) {
+		data, err := os.ReadFile(filepath.Join(root, path))
+		if err != nil {
+			continue
+		}
+		body := string(data)
+		if isIntroduction(body) {
+			continue
+		}
+		m := chapterMarkerRe.FindStringSubmatch(body)
+		if m == nil {
+			add(path, "GH-25 binding", "carries no `<!-- chapter: ID -->` marker, so no SRD governs it")
+			continue
+		}
+		id := m[1]
+		if prev, dup := fileOf[id]; dup {
+			add(path, "GH-25 binding", "claims chapter %s, already claimed by %s", id, prev)
+			continue
+		}
+		fileOf[id] = path
+		if !archChapters[id] {
+			add(path, "GH-25 binding", "claims chapter %s, which ARCHITECTURE does not define", id)
+			continue
+		}
+
+		srdPath, ok := srdByChapter[id]
+		if !ok {
+			continue // no SRD written yet; the outline reports that gap
+		}
+		d := srdByPath[srdPath]
+		if d == nil {
+			add(path, "GH-25 binding", "ARCHITECTURE points %s at %s, which did not load", id, srdPath)
+			continue
+		}
+		terms := ""
+		if km := keyTermsRe.FindStringSubmatch(body); km != nil {
+			terms = strings.ToLower(km[1])
+		}
+		for _, t := range d.Apparatus.KeyTerms {
+			if !strings.Contains(terms, strings.ReplaceAll(t, "_", " ")) {
+				add(path, "GH-25 binding", "%s lists key term %q, absent from the Key Terms table", srdPath, t)
+			}
+		}
+		for _, c := range d.Citations {
+			if c.Role == "anchor" && !strings.Contains(body, "[@"+c.ID) {
+				add(path, "GH-25 binding", "%s names %s as an anchor citation, which the chapter never cites", srdPath, c.ID)
+			}
+		}
+	}
+
+	// A chapter the road map calls drafted must have a file claiming it.
+	for _, p := range s.roadmap.Parts {
+		for _, c := range p.Chapters {
+			if c.Status == "drafted" && fileOf[c.ID] == "" {
+				add("docs/road-map.yaml", "GH-25 binding", "%s is marked drafted but no chapter file claims it", c.ID)
+			}
 		}
 	}
 	return out

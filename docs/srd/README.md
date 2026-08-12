@@ -9,6 +9,29 @@ spec, not a systems-engineering ceremony.
 Files are named `srd-<part>.<chapter>-<slug>.yaml`, matching the chapter ids
 in [../ARCHITECTURE.yaml](../ARCHITECTURE.yaml).
 
+## How a chapter binds to its SRD
+
+Two hops, both explicit, neither inferred:
+
+1. The chapter file names itself on its first line, as an HTML comment:
+   `<!-- chapter: C1.6 -->`.
+2. `ARCHITECTURE.yaml` maps that chapter id to its `srd:` path.
+
+So the binding survives both a retitle and a renumber, and `mage audit` reports
+an unmarked or unknown chapter rather than quietly checking nothing.
+
+The marker is a comment rather than YAML front matter on purpose: pandoc merges
+metadata across every concatenated input file, so a `chapter:` key would share a
+namespace with the book's real metadata, while a comment renders to nothing in
+every output format (GH-25).
+
+With the binding in place, `mage audit` checks the mechanical half of the
+contract: every `apparatus.key_terms` entry appears in the chapter's Key Terms
+table, and every citation with `role: anchor` is actually cited. Terms and
+sources the SRD merely lists as `context` or `evidence` are not required to
+appear -- an anchor is the source the SRD says carries the chapter, so its
+absence is a defect rather than a choice.
+
 | Field | Content |
 |-------|---------|
 | `meta` | chapter id, title, parent part |

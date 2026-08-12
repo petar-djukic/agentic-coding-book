@@ -1,3 +1,5 @@
+<!-- chapter: C2.1 -->
+
 # Layered Construction
 
 ## Learning Objectives

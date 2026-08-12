@@ -64,3 +64,49 @@ accepted:
     note: >
       Section 6.3, on a generation run that rebuilt a component against
       different assumptions. Same provenance, from GH-11.
+
+  # The GH-25 chapter-to-SRD binding exposed six contract gaps on its first run.
+  # Each needs a direction chosen -- spec wrong, or chapter wrong -- which is
+  # GH-50's job. Recorded rather than fixed so the binding lands on its own.
+  - file: 03-what-is-an-agent.md
+    rule: GH-25 binding
+    detail: docs/srd/srd-1.1-what-is-an-agent.yaml lists key term "agentic_loop", absent from the Key Terms table
+    issue: GH-50
+    note: >
+      Likely a spec error: definitions.yaml marks agentic_loop introduced at
+      C1.4, and C1.1 defers the loop to the harness chapters deliberately.
+
+  - file: 05-what-is-a-harness.md
+    rule: GH-25 binding
+    detail: docs/srd/srd-1.3-what-is-a-harness.yaml lists key term "agentic_loop", absent from the Key Terms table
+    issue: GH-50
+    note: Same as C1.1; C1.3 names loop control without defining the loop.
+
+  - file: 07-how-the-llm-works-and-fails.md
+    rule: GH-25 binding
+    detail: docs/srd/srd-1.5-llm-works-and-fails.yaml lists key term "interpolation_density", absent from the Key Terms table
+    issue: GH-50
+    note: Likely a chapter gap; the term is defined and the chapter is about interpolation.
+
+  - file: 08-externalizing-memory.md
+    rule: GH-25 binding
+    detail: docs/srd/srd-1.6-externalizing-memory.yaml lists key term "knowledge_manager", absent from the Key Terms table
+    issue: GH-50
+    note: >
+      Direction unclear: definitions.yaml marks knowledge_manager introduced at
+      P5, so C1.6 may be reaching forward.
+
+  - file: 04-the-agents-you-already-use.md
+    rule: GH-25 binding
+    detail: docs/srd/srd-1.2-agents-you-already-use.yaml names latentpatterns-harness as an anchor citation, which the chapter never cites
+    issue: GH-50
+    note: Chapter gap; it uses the harness vocabulary without crediting the source.
+
+  - file: 05-what-is-a-harness.md
+    rule: GH-25 binding
+    detail: docs/srd/srd-1.3-what-is-a-harness.yaml names latentpatterns-harness as an anchor citation, which the chapter never cites
+    issue: GH-50
+    note: >
+      Chapter gap, and the sharpest one: srd-1.3 calls this source the
+      definitional anchor that carries the chapter, and section 3.1's boxed
+      definition is what it should support.

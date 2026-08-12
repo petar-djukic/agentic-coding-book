@@ -1,3 +1,5 @@
+<!-- chapter: C1.1 -->
+
 # What Is an Agent?
 
 ## Learning Objectives

@@ -1,3 +1,5 @@
+<!-- chapter: C1.4 -->
+
 # How a Harness Touches Your Code
 
 ## Learning Objectives

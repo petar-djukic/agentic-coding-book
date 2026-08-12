@@ -1,3 +1,5 @@
+<!-- chapter: C1.5 -->
+
 # How the LLM Works, and Fails
 
 ## Learning Objectives
