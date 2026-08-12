@@ -122,7 +122,7 @@ parts:
     chapters:
       - id: C1.1
         title: What is an agent?
-        status: outline
+        status: drafted
         issue: GH-6
       - id: C1.2
         title: The agents you already use

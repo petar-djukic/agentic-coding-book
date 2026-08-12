@@ -1,0 +1,40 @@
+@startuml
+' Figure 1.1 -- The agent skeleton.
+' A state machine whose transitions are driven by model output. Executing a
+' tool is the only state that reaches anything outside the process; every
+' other transition is bookkeeping the loop does to itself.
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam ArrowFontSize 11
+skinparam state {
+  BorderThickness 1
+}
+
+[*] --> Deciding : task arrives
+
+state "Deciding\nask the model what to do next" as Deciding
+state "Executing a tool\nthe only state that reaches outside" as Executing
+state "Verifying\nrun the checks" as Verifying
+
+Deciding --> Executing : model emits\na tool call
+Executing --> Deciding : result appended\nto state
+Deciding --> Verifying : model signals\ncompletion
+Verifying --> Deciding : checks failed
+Verifying --> [*] : checks passed
+
+note right of Executing
+  Files, network, compiler,
+  anything outside the process.
+  No other state can reach them.
+end note
+
+note left of Deciding
+  State carried across
+  transitions: the task,
+  what has been tried,
+  what came back.
+end note
+
+@enduml

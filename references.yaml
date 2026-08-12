@@ -442,3 +442,31 @@ references:
   ISBN: 9780134757599
   issued:
     year: 2018
+
+- id: declarative-agents
+  type: software
+  title: "Declarative Agents: profile-driven runtime and design patterns for tool-augmented LLM agents"
+  author:
+    - family: Djukic
+      given: Petar
+  URL: https://github.com/petar-djukic/declarative-agents
+  issued:
+    year: 2026
+  note: >
+    Public repository. Fork of the Nokia Bell Labs Declarative Agents framework,
+    which the author designed and built there. The design-patterns/ directory
+    carries the white paper "Design Patterns for Declarative Agents: Eleven
+    Patterns for Building Reliable Agents" (June 2026), which is unpublished
+    source rather than a citable venue paper -- cite the repository until that
+    changes (GH-6).
+
+- id: agentic-applications
+  type: book
+  title: "Agentic Applications: Agent Papers as Declarative Machines -- Use, Modify, Create"
+  author:
+    - family: Djukic
+      given: Petar
+  URL: https://github.com/petar-djukic/agentic-applications-book
+  issued:
+    year: 2026
+  note: Companion volume by the same author, in progress and public.
