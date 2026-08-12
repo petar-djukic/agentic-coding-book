@@ -12,7 +12,7 @@ regenerated from specification and verified against the GNU reference
 binaries by differential testing.
 
 **Work in progress, written in the open.** Part I is being drafted
-mechanism-first — the harness is the protagonist. Two of its six chapters
+mechanism-first — the harness is the protagonist. Three of its six chapters
 are written; the remaining parts are outlines. Chapters also run as articles at
 [Mesh Intelligence](https://meshintelligence.substack.com?utm_source=github&utm_campaign=agentic-coding-book). Star or watch to follow the drafts.
 
@@ -29,27 +29,27 @@ mechanism, so that every prescription in Parts II–VI has a fact behind it.
 |---|---|---|
 | What Is an Agent? | outline | A state machine plus tools; declarative agents as the lens where the skeleton is still visible |
 | The Agents You Already Use | outline | OpenCode, Claude Code, LangGraph-flavored agents surveyed against that model |
-| What Is a Harness? | outline | The software around the model: tool execution, file-system access, loop control, policy |
-| [How a Harness Touches Your Code](03-how-a-harness-touches-your-code.md) | drafted | The harness ↔ file system ↔ compiler sequence; generate → verify → feed-back as the heartbeat |
-| [How the LLM Works, and Fails](04-how-the-llm-works-and-fails.md) | drafted | Next-token prediction; tokens and context budgets; the interpolation model; four failure modes |
+| [What Is a Harness?](03-what-is-a-harness.md) | drafted | The software around the model: tool execution, file-system access, loop control, policy |
+| [How a Harness Touches Your Code](04-how-a-harness-touches-your-code.md) | drafted | The harness ↔ file system ↔ compiler sequence; generate → verify → feed-back as the heartbeat |
+| [How the LLM Works, and Fails](05-how-the-llm-works-and-fails.md) | drafted | Next-token prediction; tokens and context budgets; the interpolation model; four failure modes |
 | Externalizing Memory | outline | Carrying state across sessions, and the moment the human leaves the loop |
 
-### [Part II — Construction and Requirements](05-part-ii-construction-and-requirements.md)
+### [Part II — Construction and Requirements](06-part-ii-construction-and-requirements.md)
 
 | Chapter | State | Subject |
 |---|---|---|
-| [Layered Construction](06-layered-construction.md) | drafted | Inner and outer loops; tracer bullets; verification gates; why agents automate only one loop |
-| [Language Selection](07-language-selection.md) | drafted | Language-model pairing; interpolation density; grammar complexity; the compiler in the inner loop |
+| [Layered Construction](07-layered-construction.md) | drafted | Inner and outer loops; tracer bullets; verification gates; why agents automate only one loop |
+| [Language Selection](08-language-selection.md) | drafted | Language-model pairing; interpolation density; grammar complexity; the compiler in the inner loop |
 | Where requirements come from · Writing specs for agents · The constitution · Spec defects · Task decomposition | outline | Externalizing intent so agents execute it without guessing |
 
 ### Parts III–VI
 
 | Part | State | Subject |
 |---|---|---|
-| [III — Testing](08-part-iii-testing.md) | outline | Verifying code no human wrote; differential testing; the generated-test circularity problem |
-| [IV — Correctness](09-part-iv-correctness.md) | outline | What "correct" means when you did not write the code |
-| [V — Orchestration](10-part-v-orchestration.md) | outline | Agent roles, GitHub as coordination substrate, worktrees, failure and recovery |
-| [VI — Instrumentation](11-part-vi-instrumentation.md) | outline | Logging, cost analysis, failure diagnosis |
+| [III — Testing](09-part-iii-testing.md) | outline | Verifying code no human wrote; differential testing; the generated-test circularity problem |
+| [IV — Correctness](10-part-iv-correctness.md) | outline | What "correct" means when you did not write the code |
+| [V — Orchestration](11-part-v-orchestration.md) | outline | Agent roles, GitHub as coordination substrate, worktrees, failure and recovery |
+| [VI — Instrumentation](12-part-vi-instrumentation.md) | outline | Logging, cost analysis, failure diagnosis |
 
 One drafted chapter is parked outside the sequence:
 [Intent, Autonomy, and Verification](unplaced-intent-autonomy-and-verification.md)

@@ -130,7 +130,7 @@ parts:
         issue: GH-7
       - id: C1.3
         title: What is a harness?
-        status: outline
+        status: drafted
         issue: GH-8
       - id: C1.4
         title: How a harness touches your code
