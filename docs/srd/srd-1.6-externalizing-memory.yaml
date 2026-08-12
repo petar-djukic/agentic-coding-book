@@ -86,7 +86,7 @@ apparatus:
       about: assuming a correction made in one session persists into the next
     - type: From the Field
       about: the run that failed because state was never committed, and what it cost
-  key_terms: [externalized_memory, context_window]
+  key_terms: [externalized_memory, context_window, human_in_the_loop, human_on_the_loop, autonomy_level]
   key_terms_note: >
     knowledge_manager, specification, and constitution dropped at GH-50.
     definitions.yaml puts knowledge_manager at P5 and constitution at C2.5, and

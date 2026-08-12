@@ -149,6 +149,23 @@ domain_knowledge:
   see_also: [knowledge_manager, context_window]
 
 # --- The two loops -------------------------------------------------------
+human_in_the_loop:
+  definition: >
+    A mode of operation where the programmer instructs the agent, reviews each
+    output, and corrects mistakes interactively. The programmer is the
+    verification layer, and also the memory that carries context the harness
+    never received.
+  introduced: C1.6
+  see_also: [human_on_the_loop, externalized_memory, autonomy_level]
+
+human_on_the_loop:
+  definition: >
+    A mode of operation where the programmer supplies specifications and
+    constraints in advance, the agent executes across many tasks, and results
+    are verified through automated testing and instrumentation. The programmer
+    builds the verification layer instead of serving as it.
+  introduced: C1.6
+  see_also: [human_in_the_loop, externalized_memory, autonomy_level]
 
 inner_loop:
   definition: >
@@ -267,6 +284,94 @@ sampling:
   see_also: [token, large_language_model]
 
 # --- Agents and harnesses ------------------------------------------------
+state:
+  definition: >
+    What an agent carries from one step to the next: the task it was given,
+    what it has tried, and what came back. State is the reason step twelve
+    differs from step one.
+  introduced: C1.1
+  see_also: [agent, transition, agentic_loop]
+
+transition:
+  definition: >
+    The rule moving an agent from one state to the next, given a signal. In an
+    agent most signals come from model output or from a tool's result.
+  introduced: C1.1
+  see_also: [agent, state, declarative_agent]
+
+declarative_agent:
+  definition: >
+    An agent whose states, transitions, and tool declarations live in a data
+    file interpreted by a fixed runtime, so the skeleton is readable and a
+    workflow change is a configuration edit rather than a code change.
+  introduced: C1.1
+  see_also: [agent, state, transition]
+
+packaging_difference:
+  definition: >
+    A difference in where a decision is written down -- file format,
+    configuration location, interface -- that leaves what the agent may do
+    unchanged. Distinguished from a capability difference, which changes what
+    is reachable.
+  introduced: C1.2
+  see_also: [capability_difference, agent_harness]
+
+capability_difference:
+  definition: >
+    A difference in what an agent can reach: a tool present in one tool set and
+    absent from another. It survives any change of format, which is what
+    separates it from a packaging difference.
+  introduced: C1.2
+  see_also: [packaging_difference, tool]
+
+context_policy:
+  definition: >
+    The harness's rule for what happens to accumulated state when a session
+    outgrows the context window: what is summarized, what is dropped, and what
+    decides.
+  introduced: C1.2
+  see_also: [context_window, context_assembly, externalized_memory]
+
+tool_execution:
+  definition: >
+    The harness responsibility of publishing callable capabilities and running
+    them on request. The model emits a structured call; the harness parses it,
+    executes it, and returns the result as text.
+  introduced: C1.3
+  see_also: [agent_harness, tool, policy]
+
+file_system_access:
+  definition: >
+    The harness responsibility of reading files into the request and writing
+    edits back out. What the harness did not read does not exist for that
+    request.
+  introduced: C1.3
+  see_also: [agent_harness, context_assembly]
+
+loop_control:
+  definition: >
+    The harness responsibility of deciding whether to issue another request:
+    iteration counts, completion signals, and the limits that end a session.
+  introduced: C1.3
+  see_also: [agent_harness, agentic_loop]
+
+policy:
+  definition: >
+    The configured constraints a harness enforces before executing anything --
+    which tools exist, which paths are reachable, which actions require
+    approval. Policy is decided in configuration, before the model sees
+    anything, which is why removing a tool differs in kind from instructing the
+    model not to use it.
+  introduced: C1.3
+  see_also: [agent_harness, tool_execution, verification_gate]
+
+context_assembly:
+  definition: >
+    The harness's selection of what enters the context window for a given
+    request: which files, how much conversation history, which tool
+    definitions, and in what order.
+  introduced: C1.4
+  see_also: [context_window, context_policy, file_system_access]
 
 agent:
   definition: >
@@ -327,6 +432,20 @@ externalized_memory:
   see_also: [context_window, knowledge_manager, specification]
 
 # --- Language selection --------------------------------------------------
+high_resource_language:
+  definition: >
+    A language with substantial representation in model training data --
+    Python, JavaScript, Go, C++, Java, TypeScript, Rust -- and therefore a
+    dense interpolation space and higher first-attempt generation accuracy.
+  introduced: C2.2
+  see_also: [low_resource_language, interpolation_density, language_model_pairing]
+
+low_resource_language:
+  definition: >
+    A language with limited representation in model training data, producing a
+    sparser interpolation space and lower first-attempt generation accuracy.
+  introduced: C2.2
+  see_also: [high_resource_language, interpolation_density]
 
 language_model_pairing:
   definition: >

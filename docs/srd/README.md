@@ -37,6 +37,13 @@ inside another row's definition is not a term the table defines, and the looser
 reading hid three real gaps until GH-50. A trailing gloss is ignored, so
 `**Large language model (LLM)**` satisfies `large_language_model`.
 
+`mage audit` also checks the reverse: every term a chapter's Key Terms table
+defines must exist in `definitions.yaml`, whether or not the chapter has an SRD
+yet. Terms get coined while drafting -- the four harness responsibilities and
+the packaging/capability distinction both were -- and the glossary is where
+they have to land (GH-52). Separator style does not matter: the glossary key
+`file_system_access` and the table row **File-system access** are one term.
+
 **What belongs in `apparatus.key_terms`.** Only terms the chapter itself
 introduces, which `definitions.yaml` records per term in its `introduced`
 field. A chapter's table may repeat a term defined elsewhere for the reader's

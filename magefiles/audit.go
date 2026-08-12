@@ -584,9 +584,19 @@ var (
 	parenGlossRe = regexp.MustCompile(`\s*\([^)]*\)\s*$`)
 )
 
+// termKeyRe collapses the separators a term may be written with. A glossary key
+// is `file_system_access`, a Key Terms row is "File-system access", and prose
+// may hyphenate either way; all three name one term (GH-52).
+var termKeyRe = regexp.MustCompile(`[-_\s]+`)
+
+// normalizeTerm renders a term in one comparable form.
+func normalizeTerm(s string) string {
+	return strings.TrimSpace(termKeyRe.ReplaceAllString(strings.ToLower(s), " "))
+}
+
 // tableDefines reports whether the Key Terms table has a row defining term.
 func tableDefines(rows []string, term string) bool {
-	want := strings.ReplaceAll(strings.ToLower(term), "_", " ")
+	want := normalizeTerm(term)
 	for _, r := range rows {
 		if r == want {
 			return true
@@ -619,6 +629,11 @@ func checkChapterBinding(root string, s *spec) []finding {
 			}
 		}
 	}
+	defined := map[string]bool{}
+	for k := range s.definitions {
+		defined[normalizeTerm(k)] = true
+	}
+
 	srdByPath := map[string]*srdDoc{}
 	for i := range s.srds {
 		srdByPath[rel(root, s.srds[i].path)] = &s.srds[i]
@@ -650,6 +665,23 @@ func checkChapterBinding(root string, s *spec) []finding {
 			continue
 		}
 
+		// Every term a chapter's table defines has to reach the glossary,
+		// whether or not the chapter has an SRD yet. This is the reverse of the
+		// key_terms check below: that one catches a contract promising a term the
+		// chapter never defines, this one catches a term coined while drafting
+		// that never reached definitions.yaml (GH-52).
+		var rows []string
+		if km := keyTermsRe.FindStringSubmatch(body); km != nil {
+			for _, m := range keyTermRowRe.FindAllStringSubmatch(km[1], -1) {
+				rows = append(rows, normalizeTerm(parenGlossRe.ReplaceAllString(m[1], "")))
+			}
+		}
+		for _, r := range rows {
+			if !defined[r] {
+				add(path, "V-S4", "Key Terms defines %q, which is not in docs/definitions.yaml", r)
+			}
+		}
+
 		srdPath, ok := srdByChapter[id]
 		if !ok {
 			continue // no SRD written yet; the outline reports that gap
@@ -658,12 +690,6 @@ func checkChapterBinding(root string, s *spec) []finding {
 		if d == nil {
 			add(path, "GH-25 binding", "ARCHITECTURE points %s at %s, which did not load", id, srdPath)
 			continue
-		}
-		var rows []string
-		if km := keyTermsRe.FindStringSubmatch(body); km != nil {
-			for _, m := range keyTermRowRe.FindAllStringSubmatch(km[1], -1) {
-				rows = append(rows, strings.TrimSpace(strings.ToLower(parenGlossRe.ReplaceAllString(m[1], ""))))
-			}
 		}
 		for _, t := range d.Apparatus.KeyTerms {
 			if !tableDefines(rows, t) {
