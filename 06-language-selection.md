@@ -103,7 +103,7 @@ The connection to language selection: a language with a simpler grammar produces
 
 Most readers will not build FSM-constrained decoders. But the mechanism explains why "simpler language = better output" is not just a training data argument. It is a decoding argument: simpler grammars are more constrainable at the mechanical level, with less quality degradation from the constraining process.
 
-> **Good Clauding Practice:** When choosing between two languages for a new project, prefer the one with fewer syntactic constructs and more enforced conventions. This is not about simplicity for its own sake — it is about interpolation density and constrainability. The model generates more reliable code in languages where there are fewer ways to express the same thing.
+> **Good Practice:** When choosing between two languages for a new project, prefer the one with fewer syntactic constructs and more enforced conventions. This is not about simplicity for its own sake — it is about interpolation density and constrainability. The model generates more reliable code in languages where there are fewer ways to express the same thing.
 
 ## 4.4 The Compiler in the Inner Loop
 
@@ -133,7 +133,7 @@ For manual development, this tradeoff is manageable. The programmer sees the cod
 
 AI-generated code omits null checks, early returns, guardrails, and comprehensive exception handling at a higher rate than human-written code [@coderabbit2025]. In a compiled language, some of these omissions are caught by the compiler. In Python, none of them are. They pass through the inner loop, through the verification gate, and into production.
 
-> **Common Clauding Error:** Choosing Python because the model is most fluent in it. Fluency is not reliability. The model generates Python that reads well, runs on the first try for the happy path, and fails silently on edge cases that no test covers. A language with a compiler catches an entire class of these failures automatically — before any test runs, before any code executes. For agent-based development at scale, that automatic verification layer is not optional.
+> **Common Error:** Choosing Python because the model is most fluent in it. Fluency is not reliability. The model generates Python that reads well, runs on the first try for the happy path, and fails silently on edge cases that no test covers. A language with a compiler catches an entire class of these failures automatically — before any test runs, before any code executes. For agent-based development at scale, that automatic verification layer is not optional.
 
 ### 4.4.2 Fewer Ways to Do It
 
@@ -145,7 +145,7 @@ This is not just an aesthetic issue. Inconsistent patterns make the codebase har
 
 Languages that restrict how things are done eliminate this problem. Go has one way to iterate, one way to handle errors, one way to format code. The model cannot choose a surprising approach because the language does not offer one. The programmer's specifications do not need to say "use a for loop, not a list comprehension" because the language has already made that decision.
 
-> **Good Clauding Practice:** Prefer languages with fewer ways to express the same pattern. This is not about language simplicity for its own sake — it is about controllability. Every choice the language eliminates is a choice the model cannot get wrong and the specification does not need to address. The fewer degrees of freedom the model has, the more predictable its output, and the less effort the programmer spends correcting stylistic drift across generated code.
+> **Good Practice:** Prefer languages with fewer ways to express the same pattern. This is not about language simplicity for its own sake — it is about controllability. Every choice the language eliminates is a choice the model cannot get wrong and the specification does not need to address. The fewer degrees of freedom the model has, the more predictable its output, and the less effort the programmer spends correcting stylistic drift across generated code.
 
 > **Performance Observation:** The generate-compile-fix cycle is where language choice has its largest practical effect. A language with fast compilation, clear error messages, and a type system that catches common mistakes makes the inner loop converge faster. Go compiles in under a second and produces error messages the model can parse. Rust compiles slower but catches ownership and concurrency errors that would be runtime failures in other languages. Python has no compilation step — errors surface at runtime, if the tests cover the right paths.
 
@@ -163,7 +163,7 @@ The answer depends on interpolation density in the specific domain:
 
 **The boundary moves over time.** What required a library last year may be generatable this year, as models improve and training data grows. But at any given time, the boundary exists. The programmer's job is to know where it is for the current model and the current domain.
 
-> **Common Clauding Error:** Generating infrastructure code that should come from a library. The model produces a plausible TLS implementation or a plausible B-tree index. It compiles. The tests pass — because the tests were also generated from the same incomplete understanding of the domain. The code ships with subtle correctness or security defects that no amount of generated tests will catch. Use libraries for domains where the cost of a subtle bug is high and the verification difficulty is high.
+> **Common Error:** Generating infrastructure code that should come from a library. The model produces a plausible TLS implementation or a plausible B-tree index. It compiles. The tests pass — because the tests were also generated from the same incomplete understanding of the domain. The code ships with subtle correctness or security defects that no amount of generated tests will catch. Use libraries for domains where the cost of a subtle bug is high and the verification difficulty is high.
 
 ## 4.6 Making the Decision
 

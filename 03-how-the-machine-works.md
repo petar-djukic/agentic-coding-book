@@ -76,7 +76,7 @@ Two properties of context that affect agent behavior:
 
 **Attention is strongest at both ends of the context and weakest in the middle.** Recall is highest for material at the beginning of the window and for material at the end; what sits between them is recalled least reliably. This "lost in the middle" effect [@liu2023] means that how context is structured matters, not just what is in it. Position is an engineering decision rather than a stylistic one — and the two strong positions are not interchangeable, because they are strong for different reasons.
 
-> **Good Clauding Practice:** Place stable, reusable context (system prompts, constitutions, architectural constraints) at the beginning of the window, and task-specific, variable content (the current file, the current requirement) at the end. The beginning earns the stable material twice over: it is well attended, and it is the only position that can be cached — prefix caching lets the serving infrastructure reuse the computation for the unchanging head of the context, cutting latency and cost on every subsequent request. The end earns the current task because recency favors it. What lands in the middle is what you can most afford to lose.
+> **Good Practice:** Place stable, reusable context (system prompts, constitutions, architectural constraints) at the beginning of the window, and task-specific, variable content (the current file, the current requirement) at the end. The beginning earns the stable material twice over: it is well attended, and it is the only position that can be cached — prefix caching lets the serving infrastructure reuse the computation for the unchanging head of the context, cutting latency and cost on every subsequent request. The end earns the current task because recency favors it. What lands in the middle is what you can most afford to lose.
 
 ## 3.3 The Interpolation Machine
 
@@ -100,14 +100,14 @@ This metaphor is supported by three theoretical accounts of how in-context learn
 
 These accounts are not mutually exclusive. The productive synthesis: the model has, through training on a vast corpus, developed internal mechanisms for recognizing task structure from examples, abstracting patterns beyond literal copying, and generating responses consistent with inferred task structure.
 
-The interpolation metaphor captures what matters for clauding:
+The interpolation metaphor captures what matters for agentic coding:
 
 - The model's behavior is a function of what is in context. The weights are fixed. The context is the programming interface. What you put in context determines what the model interpolates from.
 - Interpolation works when the target is adjacent to training data. The model generates correct code for common patterns, standard APIs, well-documented libraries — because the interpolation space is dense in those regions.
 - Interpolation fails when the target is novel. Proprietary APIs, unusual architectures, domain-specific conventions that do not appear in training data — these are sparse regions where the model interpolates from the wrong anchors. The output is plausible but wrong.
 - The model does not know the difference. It generates with the same confidence whether the interpolation is good or bad. There is no internal uncertainty signal.
 
-> **Common Clauding Error:** Treating the model as a reasoning engine that "understands" the problem. The model interpolates. When the interpolation is good, the output looks like understanding. When the interpolation is bad, the output looks like understanding too. The difference is not visible in the output — only in the verification results.
+> **Common Error:** Treating the model as a reasoning engine that "understands" the problem. The model interpolates. When the interpolation is good, the output looks like understanding. When the interpolation is bad, the output looks like understanding too. The difference is not visible in the output — only in the verification results.
 
 > **From the Field:** The interpolation model changed how I write specifications. When I described architecture in prose — "use the repository pattern with dependency injection" — the model interpolated from the average repository pattern in its training data, which was not my repository pattern. When I included a concrete example — an actual interface definition with the function signatures I wanted — the model interpolated from that example. The closer the context is to what I want, the closer the interpolation lands. Specifications are interpolation anchors.
 
@@ -138,7 +138,7 @@ The harness is the machinery that makes the loop work. It is not the model. It i
 
 The model's role in the loop is to predict what text (including tool calls) comes next, given everything in context. It selects which tool to call the same way it selects every other token — by interpolation from patterns in training data. This means it can call the wrong tool, call the right tool with wrong arguments, or fail to call a tool when one is needed. The harness cannot fix wrong tool selection, but it can constrain the blast radius.
 
-> **Good Clauding Practice:** When building or configuring a harness, limit the available tools to those the task requires. Every tool definition consumes context tokens. Every unnecessary tool is an opportunity for the model to select incorrectly. A focused tool set produces better tool selection and leaves more context for the task itself.
+> **Good Practice:** When building or configuring a harness, limit the available tools to those the task requires. Every tool definition consumes context tokens. Every unnecessary tool is an opportunity for the model to select incorrectly. A focused tool set produces better tool selection and leaves more context for the task itself.
 
 ## 3.5 What the Model Cannot Do
 
@@ -158,7 +158,7 @@ The model's output is sensitive to how context is structured in ways that are no
 
 This sensitivity is a property of interpolation: small changes to the interpolation anchors shift the output. It is the reason prompt engineering exists as a discipline, and it is the reason prompt engineering feels fragile — because it is. A prompt that works for one task may fail for a similar task because the interpolation landed differently.
 
-For clauding, the practical response is not to chase the perfect prompt. It is to build verification that catches the cases where framing shifts the output in unintended directions. The verification stack exists because no prompt is reliable enough to make verification unnecessary.
+For agentic coding, the practical response is not to chase the perfect prompt. It is to build verification that catches the cases where framing shifts the output in unintended directions. The verification stack exists because no prompt is reliable enough to make verification unnecessary.
 
 ### 3.5.3 Context Poisoning
 
@@ -176,7 +176,7 @@ This is the most dangerous failure mode for agent-based development. A programme
 
 This is why verification is not optional. The verification stack — compiler, linter, tests, coverage, specification conformance, intent conformance — exists because the model's confidence is not evidence of correctness. Plausible is not the same as correct.
 
-> **Good Clauding Practice:** Assume the model is wrong until verification proves otherwise. The interpolation machine produces plausible output by design. The verification stack exists because the model cannot verify its own output. Trust the verification results. Do not trust the code's appearance.
+> **Good Practice:** Assume the model is wrong until verification proves otherwise. The interpolation machine produces plausible output by design. The verification stack exists because the model cannot verify its own output. Trust the verification results. Do not trust the code's appearance.
 
 ## 3.6 Sampling: Controlling the Interpolation
 
@@ -190,7 +190,7 @@ When the model generates a token, it does not produce a single answer. It produc
 
 **Top-p** (nucleus sampling) filters differently: keep the smallest set of tokens whose combined probability exceeds p, discard the rest, and re-normalize. This adapts to the shape of the distribution — when the model is confident (one token dominates), few tokens survive. When the model is uncertain (probability is spread), more tokens survive.
 
-For clauding, the practical implication is that code generation tasks — where the specification defines what the output should be — benefit from low temperature. The specification constrains the correct output; high temperature introduces unnecessary variation. Creative tasks — brainstorming names, generating documentation, exploring alternative approaches — tolerate higher temperature because there is no single correct answer.
+For agentic coding, the practical implication is that code generation tasks — where the specification defines what the output should be — benefit from low temperature. The specification constrains the correct output; high temperature introduces unnecessary variation. Creative tasks — brainstorming names, generating documentation, exploring alternative approaches — tolerate higher temperature because there is no single correct answer.
 
 Most coding agent frameworks set sampling parameters automatically. The reader does not need to tune them for routine work. The concept matters because it reveals something about what the model is doing: it is not producing "the answer." It is producing a distribution and sampling from it. Every response is one draw from a space of possibilities. A different random seed would produce a different response. The verification stack must hold regardless of which draw the model produced.
 

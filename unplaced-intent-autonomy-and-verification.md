@@ -1,10 +1,19 @@
-# What Is Clauding?
+# Intent, Autonomy, and Verification
+
+<!--
+  Unplaced. This chapter was drafted as "What Is Clauding?", the opening of the
+  previous Part I. GH-5 re-cut Part I mechanism-first and this framing went with
+  it, but three concepts here are still load-bearing and have nowhere to live
+  yet: behavioral versus constructional intent, the six autonomy levels, and the
+  verification stack. Parked out of the numbered sequence so the build skips it
+  and the prose survives. docs/road-map.yaml tracks the placement.
+-->
 
 ## Learning Objectives
 
 After reading this chapter, the reader will be able to:
 
-1. Distinguish clauding from coding and explain why they require different skills.
+1. Distinguish agentic coding from programming and explain why they require different skills.
 2. Define the two kinds of intent — behavioral and constructional — that must be externalized for agent-based development.
 3. Identify which autonomy level (L0–L5) a given development workflow operates at.
 4. Determine the bottleneck at each autonomy level and identify what must change to advance to the next level.
@@ -32,9 +41,9 @@ When a coding agent writes the code, these two activities split apart. The progr
 
 This creates a problem that does not exist in manual development. Agents guess confidently. They infer behavioral decisions from partial descriptions. They choose architectural patterns from training data averages. They have no model of what they do not know, and they do not signal when they are guessing.
 
-> **Common Clauding Error:** Leaving constructional intent unspecified. The agent produces code that compiles and passes tests but diverges structurally from the programmer's design. A wrong architectural assumption baked into the first generated function infects everything built on top of it. The assumption is invisible because it was never discussed — the agent made it silently.
+> **Common Error:** Leaving constructional intent unspecified. The agent produces code that compiles and passes tests but diverges structurally from the programmer's design. A wrong architectural assumption baked into the first generated function infects everything built on top of it. The assumption is invisible because it was never discussed — the agent made it silently.
 
-> **Definition: Clauding** — the practice of externalizing both behavioral and constructional intent into machine-readable artifacts (requirements, constitutions, architectural constraints), then using coding agents to generate code from those artifacts while verifying the output through automated gates rather than manual review.
+> **Definition: Agentic coding** — the practice of externalizing both behavioral and constructional intent into machine-readable artifacts (requirements, constitutions, architectural constraints), then using coding agents to generate code from those artifacts while verifying the output through automated gates rather than manual review.
 
 A programmer writes code. A clauder writes specifications that code is generated from. The difference is not the tool. The difference is that the specification must now be explicit, because the person who holds the intent is no longer the person who types the code.
 
@@ -127,9 +136,9 @@ Each layer adds confidence. No single layer is sufficient. Layers 1–5 are auto
 
 Verification is not the end of the cycle. When verification finds defects, something must repair them — and repair is a different operation from building, with different context and different success criteria (Chapter 2). Over time, the accumulated code also needs structural review: identifying inconsistencies and duplication that no individual task introduced but that degrade the codebase as a whole. The full development cycle — plan, build, verify, repair, improve — is covered in detail in Part V.
 
-> **Good Clauding Practice:** Treat verification as a stack, not a single check. A pipeline that compiles and passes tests but skips linting ships code with structural defects. A pipeline that lints but does not run differential tests ships code with behavioral defects. Each layer catches what the layers below it miss.
+> **Good Practice:** Treat verification as a stack, not a single check. A pipeline that compiles and passes tests but skips linting ships code with structural defects. A pipeline that lints but does not run differential tests ships code with behavioral defects. Each layer catches what the layers below it miss.
 
-> **From the Field:** Programmers who have deployed ML models in production already know this pattern. Nobody validates a neural network by reading the weights. The validation pipeline — test set performance, A/B testing, drift monitoring, rollback triggers — builds confidence through layers of automated evidence. Clauding applies the same discipline to code generation. The generated code is the model output. The programmer's job is the validation pipeline.
+> **From the Field:** Programmers who have deployed ML models in production already know this pattern. Nobody validates a neural network by reading the weights. The validation pipeline — test set performance, A/B testing, drift monitoring, rollback triggers — builds confidence through layers of automated evidence. Agentic coding applies the same discipline to code generation. The generated code is the model output. The programmer's job is the validation pipeline.
 
 ## 1.5 What This Book Teaches
 
@@ -155,13 +164,13 @@ The tools will change. The models will change. The APIs will change. The need to
 
 ## Summary
 
-This chapter introduced clauding as the practice of externalizing intent into formal artifacts and verifying agent-generated code through automated layers rather than manual review. The two modes of working with coding agents — human in the loop and human on the loop — differ in whether the programmer is the verification layer or builds it. The six-level autonomy framework (L0–L5) identifies the bottleneck at each level: execution speed at L1–L2, specification quality at L3, architectural documentation at L4, and verification trust at L5. Verification confidence comes from a stack of independent automated layers, each catching a different class of defect. Chapter 2 addresses how to structure the construction process itself — building systems one verified layer at a time rather than generating everything at once. The rest of this book addresses what is required at each autonomy level, in sequence.
+This chapter introduced agentic coding as the practice of externalizing intent into formal artifacts and verifying agent-generated code through automated layers rather than manual review. The two modes of working with coding agents — human in the loop and human on the loop — differ in whether the programmer is the verification layer or builds it. The six-level autonomy framework (L0–L5) identifies the bottleneck at each level: execution speed at L1–L2, specification quality at L3, architectural documentation at L4, and verification trust at L5. Verification confidence comes from a stack of independent automated layers, each catching a different class of defect. Chapter 2 addresses how to structure the construction process itself — building systems one verified layer at a time rather than generating everything at once. The rest of this book addresses what is required at each autonomy level, in sequence.
 
 ## Key Terms
 
 | Term | Definition |
 |---|---|
-| **Clauding** | The practice of externalizing intent into machine-readable artifacts and verifying agent-generated code through automated gates |
+| **Agentic coding** | The practice of externalizing intent into machine-readable artifacts and verifying agent-generated code through automated gates |
 | **Behavioral intent** | Specification of what the software does: inputs, outputs, edge cases, observable behavior |
 | **Constructional intent** | Specification of how the software is built: architecture, module boundaries, coding standards |
 | **Human in the loop** | Programmer instructs the agent, reviews every output, and corrects interactively |

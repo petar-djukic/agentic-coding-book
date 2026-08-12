@@ -21,7 +21,7 @@ parts are outlines. Chapters also run as articles at
 
 **[Introduction](01-introduction.md)**
 
-### [Part I — Agents and Harnesses](02-part-i-what-is-clauding.md)
+### [Part I — Agents and Harnesses](02-part-i-agents-and-harnesses.md)
 
 The LLM never touches the file system; the harness does. Part I is
 mechanism, so that every prescription in Parts II–VI has a fact behind it.
@@ -32,23 +32,32 @@ mechanism, so that every prescription in Parts II–VI has a fact behind it.
 | The Agents You Already Use | outline | OpenCode, Claude Code, LangGraph-flavored agents surveyed against that model |
 | What Is a Harness? | outline | The software around the model: tool execution, file-system access, loop control, policy |
 | How a Harness Touches Your Code | outline | The harness ↔ file system ↔ compiler sequence; generate → verify → feed-back as the heartbeat |
-| [How the LLM Works, and Fails](05-how-the-machine-works.md) | partial | Next-token prediction; tokens and context budgets; the interpolation model; four failure modes |
+| [How the LLM Works, and Fails](03-how-the-machine-works.md) | partial | Next-token prediction; tokens and context budgets; the interpolation model; four failure modes |
 | Externalizing Memory | outline | Carrying state across sessions, and the moment the human leaves the loop |
 
-Chapters [What Is Clauding?](03-what-is-clauding.md),
-[Layered Construction](04-layered-construction.md), and
-[Language Selection](06-language-selection.md) are drafted against the
-previous arc; the file moves and renames land with the resequencing.
+### [Part II — Construction and Requirements](04-part-ii-construction-and-requirements.md)
 
-### Parts II–VI
+| Chapter | State | Subject |
+|---|---|---|
+| [Layered Construction](05-layered-construction.md) | drafted | Inner and outer loops; tracer bullets; verification gates; why agents automate only one loop |
+| [Language Selection](06-language-selection.md) | drafted | Language-model pairing; interpolation density; grammar complexity; the compiler in the inner loop |
+| Where requirements come from · Writing specs for agents · The constitution · Spec defects · Task decomposition | outline | Externalizing intent so agents execute it without guessing |
+
+### Parts III–VI
 
 | Part | State | Subject |
 |---|---|---|
-| [II — Construction and Requirements](07-part-ii-requirements.md) | outline | Construction order and language choice, then externalizing intent so agents execute it without guessing |
-| [III — Testing](08-part-iii-testing.md) | outline | Verifying code no human wrote; differential testing; the generated-test circularity problem |
-| [IV — Correctness](09-part-iv-correctness.md) | outline | What "correct" means when you did not write the code |
-| [V — Orchestration](10-part-v-orchestration.md) | outline | Agent roles, GitHub as coordination substrate, worktrees, failure and recovery |
-| [VI — Instrumentation](11-part-vi-instrumentation.md) | outline | Logging, cost analysis, failure diagnosis |
+| [III — Testing](07-part-iii-testing.md) | outline | Verifying code no human wrote; differential testing; the generated-test circularity problem |
+| [IV — Correctness](08-part-iv-correctness.md) | outline | What "correct" means when you did not write the code |
+| [V — Orchestration](09-part-v-orchestration.md) | outline | Agent roles, GitHub as coordination substrate, worktrees, failure and recovery |
+| [VI — Instrumentation](10-part-vi-instrumentation.md) | outline | Logging, cost analysis, failure diagnosis |
+
+One drafted chapter is parked outside the sequence:
+[Intent, Autonomy, and Verification](unplaced-intent-autonomy-and-verification.md)
+opened the previous Part I and has no slot in the current arc. Three
+concepts in it are still needed — behavioral versus constructional
+intent, the autonomy levels, and the verification stack — and
+`docs/road-map.yaml` tracks where they land.
 
 `outline.yaml` holds the full chapter-level plan; `dictionary.yaml`
 holds the term definitions used across the book.

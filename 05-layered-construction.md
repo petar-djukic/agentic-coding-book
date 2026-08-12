@@ -59,7 +59,7 @@ The outer loop is where the programmer's experience, judgment, and architectural
 
 The failure mode is treating agent-based development as "describe the whole system, let the agent build it." This skips the outer loop. It fails for the same reason that writing an entire system in one pass fails in manual development: parts of the system depend on other parts being correct, and defects in one area are invisible until something else tries to use them.
 
-> **Common Clauding Error:** Skipping the outer loop. The programmer describes the whole system in a single prompt and expects the agent to produce it in one generation pass. The agent produces code that compiles but has never been tested end-to-end. The data model assumes one query pattern, the API assumes another, and the two do not meet. The programmer discovers this only after the entire system has been generated — at which point every piece may need rework.
+> **Common Error:** Skipping the outer loop. The programmer describes the whole system in a single prompt and expects the agent to produce it in one generation pass. The agent produces code that compiles but has never been tested end-to-end. The data model assumes one query pattern, the API assumes another, and the two do not meet. The programmer discovers this only after the entire system has been generated — at which point every piece may need rework.
 
 The cost of a defect increases with the amount of code built on top of it. A wrong assumption is cheap to fix when only one feature depends on it. After ten features depend on it, the fix propagates through all of them. This is true in manual development. It is worse with agents because the agent generates more code faster — which means more code built on a bad assumption before anyone notices.
 
@@ -97,7 +97,7 @@ Some functionality exists to serve other functionality. A caching layer might be
 
 This is normal. The point is not that every increment is the same size or touches every component equally. The point is that every increment works end-to-end. "End-to-end" means whatever it means for the system being built: for a web application, a request that hits the API and returns a correct response. For a CLI tool, a command that reads input and produces correct output. For a library, a test that imports the public API and exercises a real use case.
 
-> **Good Clauding Practice:** Define what "end-to-end" means for the system before starting generation. Then identify the thinnest slice of functionality that exercises it. Build that first. Every subsequent increment adds functionality that also works end-to-end. Write the increment plan down — it is constructional intent, and if it remains unwritten, the agent will not decompose at all.
+> **Good Practice:** Define what "end-to-end" means for the system before starting generation. Then identify the thinnest slice of functionality that exercises it. Build that first. Every subsequent increment adds functionality that also works end-to-end. Write the increment plan down — it is constructional intent, and if it remains unwritten, the agent will not decompose at all.
 
 ## 2.5 Verification Gates Between Increments
 

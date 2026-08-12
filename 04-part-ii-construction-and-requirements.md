@@ -1,6 +1,8 @@
-# Part II — Requirements
+# Part II — Construction and Requirements
 
-*Outline stage — drafting notes are in `brainstorm/`.*
+*Partly drafted. The two construction chapters are written; the requirements chapters are outline stage.*
+
+Two decisions come before any specification: how construction is ordered, and what language the model will be writing. This part opens with those, then turns to the specification itself.
 
 The spec is the source code now. Output quality is bounded by requirement quality, and the failure modes of an incomplete spec are specific and traceable: the agent fills every gap with a guess, and the guesses are consistent with each other while being inconsistent with the intent.
 

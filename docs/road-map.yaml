@@ -70,12 +70,14 @@ releases:
 
   - id: rel01.1
     name: "Resequencing and terminology retirement"
-    status: pending
+    status: complete
     units: [GH-12]
     gate: >
-      Runs alongside rel01.0 rather than after it: the file renumbering and
-      the retirement of "clauding" touch the same chapters being drafted, so
-      the later this lands the more prose it has to rewrite.
+      Completed at GH-12, ahead of rel01.0 rather than alongside it: the
+      files are renumbered to the current arc, the coined term is retired from
+      every chapter, and the sidebar labels are the canonical four. Doing it
+      first meant the Part I chapters get drafted into a sequence that is
+      already correct.
 
   - id: rel02.0
     name: "Part II -- Construction and Requirements"
@@ -279,7 +281,7 @@ parts:
 # is not mistaken for lost work, and so the material is placed deliberately
 # rather than by whoever next opens the file.
 unplaced:
-  - source: 03-what-is-clauding.md
+  - source: unplaced-intent-autonomy-and-verification.md
     status: unplaced
     holds: >
       Behavioral and constructional intent, the six autonomy levels, and the
@@ -288,7 +290,11 @@ unplaced:
       the verification stack as Parts III-IV, and the autonomy levels have no
       settled home: the introduction still frames the whole book on them
       (01-introduction.md, "How the book is arranged").
-    owner: "GH-12, which also retires the term the chapter is named for"
+    owner: >
+      Needs an owner. GH-12 parked the file outside the numbered sequence so
+      the build skips it and the prose survives, and retired the term it was
+      named for, but placing the three concepts is a drafting decision nobody
+      holds yet.
 
 # The migration this file completes.
 supersedes:

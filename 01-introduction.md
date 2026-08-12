@@ -29,8 +29,8 @@ with agent orchestration.
 
 ## How the book is arranged
 
-Each part covers what is required to work at one level of autonomy
-safely.
+Part I is mechanism; the rest is practice derived from it. Each of the
+later parts covers one thing the mechanism makes necessary.
 
 | Part | Subject |
 |---|---|
@@ -45,10 +45,3 @@ safely.
 mechanism-first; the remaining parts are outlines and notes. Chapters
 also run as articles at
 [Mesh Intelligence](https://meshintelligence.substack.com?utm_source=github&utm_campaign=agentic-coding-book). Expect stubs and seams.
-
-## A note on the term
-
-Part I uses the term **clauding** for the practice this book teaches.
-The word is a coinage, tied to the tool the author uses most, and it
-predates the book's current title. Read it as a synonym for agentic
-coding wherever it appears.
