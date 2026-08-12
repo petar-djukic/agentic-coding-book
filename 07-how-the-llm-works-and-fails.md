@@ -122,7 +122,15 @@ The model interpolates from training data. When the target is outside the distri
 
 This failure mode is predictable. If the code you need is similar to code that exists in large quantities on the internet — standard REST APIs, common design patterns, popular frameworks — the model will generate it well. If the code is specific to your organization, your architecture, or your domain — the model will guess. The guesses will compile. They may even pass tests that were generated from the same wrong assumptions. They will not match your intent.
 
-The mitigation is context. Providing examples, interface definitions, and architectural constraints in context moves the interpolation target from "the average pattern in training data" to "the pattern adjacent to what you showed the model." This is why specifications matter more for novel code than for standard code — and why constructional intent must be explicit for anything that deviates from common patterns.
+The mitigation is context. Providing examples, interface definitions, and architectural constraints in context moves the interpolation target from "the average pattern in training data" to "the pattern adjacent to what you showed the model." This is why specifications matter more for novel code than for standard code.
+
+What has to be explicit divides in two, and only one half is usually written down.
+
+> **Definition: Behavioral intent** — the specification of what the software does: inputs, outputs, edge cases, error handling, and observable behavior.
+
+> **Definition: Constructional intent** — the specification of how the software is built: module boundaries, naming conventions, function size limits, design patterns, and architectural constraints.
+
+A programmer writing by hand holds both at once and separates neither, because the same person decides what the code does and how it is put together. An agent receives only what was written. Behavioral intent usually survives that trip, since it is what a task description is about. Constructional intent usually does not, and the model fills the gap by interpolating from the average structure in its training data. That is the mechanism behind the constraint Part II builds on: for anything deviating from common patterns, constructional intent has to be stated rather than assumed.
 
 ### 5.4.2 Sensitivity to Framing
 
@@ -191,4 +199,6 @@ A large language model is a next-token predictor — a neural network that gener
 | **Context window** | The maximum number of tokens a model can process and generate in a single request, including input, output, and reasoning |
 | **Interpolation** | The process by which a model constructs a response by finding the point in its learned space most consistent with the provided context — more than pattern matching, less than reasoning |
 | **Sampling** | The process of selecting the next token from the model's predicted probability distribution, controlled by temperature, top-k, and top-p parameters |
+| **Behavioral intent** | The specification of what the software does: inputs, outputs, edge cases, error handling, and observable behavior |
+| **Constructional intent** | The specification of how the software is built: module boundaries, naming conventions, design patterns, and architectural constraints |
 | **Confident miscalibration** | The failure mode where the model generates fluent, confident output regardless of whether the interpolation is correct — making surface inspection unreliable as a verification method |

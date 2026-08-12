@@ -32,7 +32,7 @@ The inner loop is the one people think about. The outer loop is the one that det
 
 ## 7.2 What Agents Change
 
-When an agent writes the code, the loops split apart — just as behavioral and constructional intent split apart. The inner loop can be automated: give the agent a specification, let it generate code, run the tests, feed errors back. This is what most people mean by "using a coding agent." But the outer loop remains the programmer's responsibility. The agent does not know that the data model must be solid before the business logic layer can be trusted. It does not know that the API contract must be stable before integration tests are meaningful. It does not know the construction order.
+When an agent writes the code, the loops split apart — just as behavioral and constructional intent split apart (Chapter 5). The inner loop can be automated: give the agent a specification, let it generate code, run the tests, feed errors back. This is what most people mean by "using a coding agent." But the outer loop remains the programmer's responsibility. The agent does not know that the data model must be solid before the business logic layer can be trusted. It does not know that the API contract must be stable before integration tests are meaningful. It does not know the construction order.
 
 The inner loop, automated, looks like this:
 
