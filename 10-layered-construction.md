@@ -10,7 +10,7 @@ After reading this chapter, the reader will be able to:
 4. Identify when an increment is sound enough to build the next increment on top of it.
 5. Recognize the failure mode of skipping the outer loop and diagnose it in an ongoing project.
 
-## 2.1 The Two Loops
+## 7.1 The Two Loops
 
 Software has never been built in one pass. A programmer does not sit down with a requirements document and type a finished system from top to bottom. Development is iterative — a spiral where each pass refines the previous one. This has been understood since Boehm formalized the spiral model in 1986 [@boehm1986], and the industry uses variants of it under different names: iterative development, the DevOps inner/outer loop, agile sprints.
 
@@ -22,15 +22,15 @@ The spiral has two concentric cycles.
 
 The inner loop is the one people think about. The outer loop is the one that determines whether the project succeeds.
 
-**Figure 2.1** The inner and outer loops of software construction.
+**Figure 7.1** The inner and outer loops of software construction.
 
-![](figures/fig-2-1-inner-outer-loops.png)
+![](figures/fig-7-1-inner-outer-loops.png)
 
 *The outer loop governs the project: requirements, architecture, decomposition into increments, and verification gates between them. The programmer drives this loop. Within each increment, the inner loop runs one or more tasks: specify, generate, verify. The agent drives this loop. Each increment must pass its verification gate before the next increment builds on top of it. The "fail" path in the inner loop feeds errors back to the agent for correction. The "pass gate" transitions between increments are decisions the programmer makes — or, at L4, decisions the orchestrator proposes and the programmer approves.*
 
-## 2.2 What Agents Change
+## 7.2 What Agents Change
 
-When an agent writes the code, the loops split apart — just as behavioral and constructional intent split apart (Chapter 1, Section 1.1). The inner loop can be automated: give the agent a specification, let it generate code, run the tests, feed errors back. This is what most people mean by "using a coding agent." But the outer loop remains the programmer's responsibility. The agent does not know that the data model must be solid before the business logic layer can be trusted. It does not know that the API contract must be stable before integration tests are meaningful. It does not know the construction order.
+When an agent writes the code, the loops split apart — just as behavioral and constructional intent split apart. The inner loop can be automated: give the agent a specification, let it generate code, run the tests, feed errors back. This is what most people mean by "using a coding agent." But the outer loop remains the programmer's responsibility. The agent does not know that the data model must be solid before the business logic layer can be trusted. It does not know that the API contract must be stable before integration tests are meaningful. It does not know the construction order.
 
 The inner loop, automated, looks like this:
 
@@ -55,7 +55,7 @@ The outer loop is where the programmer's experience, judgment, and architectural
 
 > **From the Field:** The first time I ran an agent on a non-trivial project, I described the whole system and let it go. The code compiled. Some tests passed. But nothing actually worked end-to-end — the data model assumed one query pattern, the API assumed another, and the two did not meet. The second time, I built one feature all the way through: schema, query, endpoint, test. It was thin and incomplete, but it worked. Every subsequent feature built on a foundation I had already verified. The difference was not the agent. The difference was building end-to-end from the start.
 
-## 2.3 Why You Cannot Skip the Outer Loop
+## 7.3 Why You Cannot Skip the Outer Loop
 
 The failure mode is treating agent-based development as "describe the whole system, let the agent build it." This skips the outer loop. It fails for the same reason that writing an entire system in one pass fails in manual development: parts of the system depend on other parts being correct, and defects in one area are invisible until something else tries to use them.
 
@@ -63,7 +63,7 @@ The failure mode is treating agent-based development as "describe the whole syst
 
 The cost of a defect increases with the amount of code built on top of it. A wrong assumption is cheap to fix when only one feature depends on it. After ten features depend on it, the fix propagates through all of them. This is true in manual development. It is worse with agents because the agent generates more code faster — which means more code built on a bad assumption before anyone notices.
 
-### 2.3.1 The One-Shot Illusion
+### 7.3.1 The One-Shot Illusion
 
 Agents are good enough at small tasks that the one-shot approach feels like it works. Describe a function, get a function. Describe a class, get a class. The programmer extrapolates: describe a system, get a system.
 
@@ -71,7 +71,7 @@ The extrapolation fails because systems have internal dependencies that function
 
 The result compiles. The tests that the agent wrote for its own guesses pass. The system is internally consistent but externally wrong. The programmer discovers this only when trying to use the system for its intended purpose — at which point the fix requires reworking multiple components.
 
-## 2.4 Tracer Bullets
+## 7.4 Tracer Bullets
 
 The discipline is incremental construction: build one working increment at a time, verify each increment end-to-end before building the next. Hunt and Thomas called this approach **tracer bullets** [@hunt1999] — fire a round, see where it hits, adjust, fire again. Each round is a thin slice of functionality that works all the way through the system, from input to output.
 
@@ -81,7 +81,7 @@ The tracer bullet approach is the opposite of horizontal layering. Horizontal la
 
 Tracer bullets say: build one feature through all the components. The data model has one table. The business logic has one rule. The API has one endpoint. The test exercises the feature end-to-end. It is thin and incomplete, but it works. The next increment adds the second feature, also end-to-end. Each increment builds on a foundation that has already been verified to work as a system, not just as isolated components.
 
-### 2.4.1 Why Tracer Bullets Work Better With Agents
+### 7.4.1 Why Tracer Bullets Work Better With Agents
 
 Agents generate code fast. This is an advantage when the code is correct and a liability when it is not. Horizontal layering maximizes the liability: the agent generates an entire data model layer — hundreds of lines — before any of it is tested against the layers that will use it. If the assumptions are wrong, hundreds of lines need rework.
 
@@ -89,7 +89,7 @@ Tracer bullets limit the blast radius. Each increment is small. If the agent's a
 
 This also addresses the context problem. An agent working on a tracer bullet has focused context: one feature, the components it touches, the test that proves it works. An agent working on an entire horizontal layer has broad, diffuse context: every table, every column, every relationship — most of which is not relevant to any individual decision the agent is making.
 
-### 2.4.2 Increments Are Lumpy
+### 7.4.2 Increments Are Lumpy
 
 Tracer bullets are not uniform slices. Real systems do not decompose into neat, equal-sized features. Some increments are heavy in one area and light in another. The first increment might require significant data model work and a trivial API endpoint. The second increment might reuse the existing data model and require significant API logic.
 
@@ -99,7 +99,7 @@ This is normal. The point is not that every increment is the same size or touche
 
 > **Good Practice:** Define what "end-to-end" means for the system before starting generation. Then identify the thinnest slice of functionality that exercises it. Build that first. Every subsequent increment adds functionality that also works end-to-end. Write the increment plan down — it is constructional intent, and if it remains unwritten, the agent will not decompose at all.
 
-## 2.5 Verification Gates Between Increments
+## 7.5 Verification Gates Between Increments
 
 Each increment boundary is a verification gate — a set of conditions that must be true before the next increment begins.
 
@@ -121,7 +121,7 @@ The gate for a later increment that adds authentication might include:
 
 The specifics depend on the increment. The principle does not: every increment has a gate, and the gate confirms the system still works end-to-end.
 
-### 2.5.1 What Happens When a Gate Fails
+### 7.5.1 What Happens When a Gate Fails
 
 When a verification gate fails, the response is not to push through to the next increment. The response is to fix the current increment before proceeding. This is where the outer loop earns its value — a defect caught at a gate costs one increment of rework. A defect caught three increments later costs three increments of rework.
 
@@ -133,7 +133,7 @@ In practice, gate failures fall into two categories:
 
 **Generation defects.** The increment does not match the spec. The agent guessed wrong, misinterpreted a requirement, or introduced a structural decision that contradicts the specification. The fix is to improve the specification (make it less ambiguous) and regenerate. This is where the techniques in Part II (Requirements) apply.
 
-### 2.5.2 Structural Quality Over Time
+### 7.5.2 Structural Quality Over Time
 
 Hunt and Thomas describe **software entropy** — the tendency of code to decay over time as changes accumulate [@hunt1999]. In manual development, entropy is a gradual process. A programmer adds a feature, takes a shortcut, leaves a TODO. Over months and years, shortcuts accumulate and the codebase becomes harder to work with. Refactoring — restructuring code without changing behavior — is the normal countermeasure. No one expects the code they write in month one to be the right structure for month twelve. The codebase evolves, and periodic refactoring keeps entropy in check.
 
@@ -147,7 +147,7 @@ Refactoring is not a remedial activity. It is a normal part of software developm
 
 The response is periodic structural review — analyzing the accumulated code for patterns, inconsistencies, and refactoring opportunities. The refactoring proposals feed back into the planning step as new tasks: consolidate the three parsers, extract the common error handling, introduce the abstraction that three modules independently need. With manual development, the programmer does this naturally — noticing duplication during code review, refactoring as they go. With agent-based development, it must be deliberate, because the agent will not notice and will not refactor on its own. Part V covers how an orchestration pipeline automates this review.
 
-## 2.6 Incremental Construction and Autonomy Levels
+## 7.6 Incremental Construction and Autonomy Levels
 
 This maps directly to the autonomy levels defined in Part I, in the chapter on externalizing memory.
 

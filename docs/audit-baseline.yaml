@@ -41,8 +41,11 @@ accepted:
 
   - file: 10-layered-construction.md
     rule: 'voice.yaml: figures.checks'
-    detail: Figure 2.1 is never referenced from the prose
+    detail: Figure 7.1 is never referenced from the prose
     issue: GH-28
+    note: >
+      Renumbered from Figure 2.1 by GH-35; the figure is still unreferenced,
+      which is the part GH-28 clears.
 
   - file: 03-what-is-an-agent.md
     rule: 'voice.yaml: sidebars V-B4 authorship'
