@@ -7,10 +7,9 @@ can execute, verifying generated code you did not write, and
 orchestrating agent loops past the limits of a single context window.
 
 The material comes from production runs rather than demos — 44,628 lines
-of Go generated across 31 pipeline runs, 123 Unix utilities regenerated
-from specification and verified against the GNU reference binaries by
-differential testing, and a $33.29 generation session accounted for
-token by token.
+of Go generated across 31 pipeline runs, and 123 Unix utilities
+regenerated from specification and verified against the GNU reference
+binaries by differential testing.
 
 **Work in progress, written in the open.** Part I is being re-cut
 mechanism-first — the harness is the protagonist — so its four existing
