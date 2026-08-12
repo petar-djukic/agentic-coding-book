@@ -38,6 +38,24 @@ citations:
   - id: tmforum-ig1218
     role: context
     note: governance and policy vocabulary, useful for the policy responsibility
+  - id: bensghaier2026
+    role: anchor
+    note: >
+      Defines the harness as "a middleware layer in between a developer and a
+      large language model that orchestrates system prompts, tool execution,
+      context management, and iterative reasoning loops" -- the four
+      responsibilities this chapter names, from a source outside the book. Then
+      isolates harness evolution from model change across 35 sequential
+      releases of one CLI on 50 SWE-bench Verified tasks with the model held
+      constant.
+  - id: jung2026
+    role: evidence
+    note: >
+      Quantifies the protagonist claim: harnesses change end-to-end performance
+      on a fixed model by as much as six times, and in a layered planning
+      harness the declarative planning layer carries the largest single gain
+      (+24.1pp win rate, zero LLM calls) while LLM-backed revision fires on
+      4.3% of turns. Treats the model's contribution as residual.
 content:
   - say: "The model is a function from context to text. Everything else -- reading files, running commands, deciding when to stop -- is ordinary software someone wrote."
     cites: [latentpatterns-harness]
@@ -67,7 +85,10 @@ links:
   requires: [C1.1, C1.2]
   supports: [C1.4, C1.6]
 gaps:
-  - "latentpatterns-harness is the only harness citation in the corpus and it carries most of this chapter. A chapter resting on one source is thin; the update-references pass should look for harness-layer literature before drafting."
+  - >
+    The harness literature is almost entirely 2026 preprints (GH-23 surveyed
+    it). Re-check for published versions at drafting; a chapter whose central
+    claim rests on preprints should say so.
 acceptance:
   - Every citation id resolves in references.yaml.
   - The four responsibilities are each defined and each illustrated.
