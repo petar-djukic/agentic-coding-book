@@ -80,6 +80,11 @@ func PDF() error {
 	date := time.Now().Format("2006-01-02")
 	out := filepath.Join(outputDir, fmt.Sprintf("%s-v%s.pdf", bookSlug, date))
 
+	// idiomatic, not default: for LaTeX output it is the successor spelling of
+	// the deprecated --listings and emits byte-identical lstlisting blocks
+	// (GH-24). Dropping the flag, or passing default, switches code blocks to
+	// pandoc's own Shaded/Highlighting environment, which the Eisvogel
+	// template also supports but which renders differently.
 	args := []string{
 		"--citeproc",
 		"--csl=" + csl,
@@ -87,7 +92,7 @@ func PDF() error {
 		"--template=" + template,
 		"--from", "markdown",
 		"--pdf-engine=xelatex",
-		"--listings",
+		"--syntax-highlighting=idiomatic",
 	}
 	args = append(args, mds...)
 	args = append(args, "-o", out)
@@ -120,12 +125,13 @@ func Outline() error {
 	}
 
 	// The outline quotes citation ids as literal text rather than pandoc
-	// [@key] markers, so it needs no bibliography pass.
+	// [@key] markers, so it needs no bibliography pass. Highlighting stays
+	// aligned with PDF; see the note there for why idiomatic (GH-24).
 	args := []string{
 		"--template=" + template,
 		"--from", "markdown",
 		"--pdf-engine=xelatex",
-		"--listings",
+		"--syntax-highlighting=idiomatic",
 		src, "-o", out,
 	}
 
