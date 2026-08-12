@@ -862,3 +862,76 @@ clauding:
 		t.Fatalf("a retired term needs no owner, got:\n%v", err)
 	}
 }
+
+// ------------------------------------------- quoted forbidden terms (GH-57)
+
+func chapterWithProse(prose string) string {
+	return `<!-- chapter: C1.1 -->
+
+# What is an agent?
+
+## Learning Objectives
+
+1. Define an agent.
+
+` + prose + `
+
+## Summary
+
+It is a state machine plus tools.
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| **Agent** | A state machine plus tools |
+`
+}
+
+// voice.yaml governs the author's voice. A forbidden term inside a quotation
+// is someone else's word, and C1.5 quotes a naive belief in order to refute it.
+func TestForbiddenTermInsideAQuotationIsAllowed(t *testing.T) {
+	files := cleanTree()
+	files["03-what-is-an-agent.md"] = chapterWithProse(
+		`A programmer who thinks the model "just guesses randomly" will not write specifications [@hunt1999].`)
+	if err := auditTree(t, files); err != nil {
+		t.Fatalf("a quoted forbidden term is not the author's voice, got:\n%v", err)
+	}
+}
+
+// The same word in the author's own voice still fails.
+func TestForbiddenTermOutsideAQuotationStillFails(t *testing.T) {
+	files := cleanTree()
+	files["03-what-is-an-agent.md"] = chapterWithProse(
+		`The model just guesses randomly, which is why specifications matter [@hunt1999].`)
+	err := auditTree(t, files)
+	if err == nil || !strings.Contains(err.Error(), `uses "just"`) {
+		t.Fatalf("authorial voice should still fail, got:\n%v", err)
+	}
+}
+
+// One quoted use does not license an unquoted one elsewhere in the chapter.
+func TestQuotationDoesNotExemptTheRestOfTheChapter(t *testing.T) {
+	files := cleanTree()
+	files["03-what-is-an-agent.md"] = chapterWithProse(
+		`A programmer who thinks the model "just guesses randomly" is wrong.
+
+The model just interpolates, which is different [@hunt1999].`)
+	err := auditTree(t, files)
+	if err == nil || !strings.Contains(err.Error(), `uses "just"`) {
+		t.Fatalf("the unquoted use should still be caught, got:\n%v", err)
+	}
+}
+
+// An unclosed quote must not swallow the document and silence every later use.
+func TestAnUnclosedQuoteDoesNotExemptTheDocument(t *testing.T) {
+	files := cleanTree()
+	files["03-what-is-an-agent.md"] = chapterWithProse(
+		`A stray quotation mark " opens here and never closes.
+
+The model just interpolates [@hunt1999].`)
+	err := auditTree(t, files)
+	if err == nil || !strings.Contains(err.Error(), `uses "just"`) {
+		t.Fatalf("an unclosed quote must not exempt later prose, got:\n%v", err)
+	}
+}

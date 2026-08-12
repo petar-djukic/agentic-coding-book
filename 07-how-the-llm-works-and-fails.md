@@ -6,7 +6,7 @@
 
 After reading this chapter, the reader will be able to:
 
-1. Describe what an LLM does — next-token prediction — and distinguish it from common misconceptions (search engine, database, reasoning engine).
+1. Describe what an LLM does (next-token prediction) and distinguish it from common misconceptions such as a search engine, a database, or a reasoning engine.
 2. Explain what tokens are, how they differ from words, and why this matters for context budgets.
 3. Define the context window and identify its constraints on agent-based development.
 4. Explain the interpolation model of LLM behavior and use it to predict when the model will fail.
@@ -16,11 +16,11 @@ After reading this chapter, the reader will be able to:
 
 Programmers come to coding agents with a mental model of what the model "is." The mental model determines their expectations, and wrong expectations produce wrong results. Four common models are wrong in specific ways.
 
-"It's a search engine." Search engines retrieve existing documents. The model does not retrieve — it generates. It produces text that did not exist before, token by token, conditioned on what is in context. A search engine returns nothing when it has no match. The model always returns something, even when it has no good answer.
+"It's a search engine." Search engines retrieve existing documents. The model does not retrieve; it generates. It produces text that did not exist before, token by token, conditioned on what is in context. A search engine returns nothing when it has no match. The model always returns something, even when it has no good answer.
 
 "It's a database of code." Databases store and retrieve records. The model does not store code and look it up. Its weights encode patterns from training data — statistical regularities, not retrievable records. Asking the model for a specific function from a specific library is not a query. It is a generation task that may or may not produce the correct function, depending on how well the training data covered that library.
 
-"It's like talking to a junior developer." Junior developers have goals, learn from feedback within a conversation, and know what they do not know. The model has none of these properties. It does not learn from the current conversation — its weights are fixed. It does not know what it does not know. It generates the next token regardless of whether it has sufficient information to do so correctly.
+"It's like talking to a junior developer." Junior developers have goals, learn from feedback within a conversation, and know what they do not know. The model has none of those properties. Its weights are fixed, so nothing said in this conversation changes them, and it has no representation of where its own knowledge stops. It generates the next token whether or not it has enough information to generate the right one.
 
 "It's autocomplete on steroids." This is the closest to correct but still misleading. Autocomplete predicts the most likely next word given a short local context. The model predicts the next token given the entire context window — which can include specifications, architectural constraints, conversation history, and tool outputs. The difference in context scope produces a qualitative difference in capability.
 
@@ -28,13 +28,13 @@ What the model actually is: a neural network trained on a large text corpus to p
 
 > **Definition: Large language model (LLM)** — a neural network trained on a large text corpus to predict the next token in a sequence. At inference time, the model generates text by iteratively predicting one token at a time, conditioned on the full context provided.
 
-The model was trained by processing billions of text sequences and adjusting its internal parameters (weights) to become better at predicting what token comes next. The training process ran once. The weights are now fixed. At inference time — when the model generates a response — no learning occurs. The model applies the patterns encoded in its weights to the context it receives, and generates one token at a time.
+The model was trained by processing billions of text sequences and adjusting its internal parameters (weights) to become better at predicting what token comes next. The training process ran once. The weights are now fixed. At inference time, when the model generates a response, no learning occurs. The model applies the patterns encoded in its weights to the context it receives, and generates one token at a time.
 
 The architecture that makes this work is the transformer [@vaswani2017]. A transformer-based LLM has three parts:
 
-1. **An embedding layer** that converts each input token into a high-dimensional vector — a list of hundreds or thousands of numbers that encode the token's meaning in relation to other tokens.
+1. **An embedding layer** that converts each input token into a high-dimensional vector: a list of hundreds or thousands of numbers that encode the token's meaning in relation to other tokens.
 
-2. **A stack of transformer blocks** — dozens to hundreds of them — that process these vectors through two operations: attention (which relates each token to every other token in the sequence) and a feed-forward network (which transforms the representation at each position). Each block refines the internal representation.
+2. **A stack of transformer blocks**, dozens to hundreds of them, that process these vectors through two operations: attention (which relates each token to every other token in the sequence) and a feed-forward network (which transforms the representation at each position). Each block refines the internal representation.
 
 3. **An output layer** that converts the final representation into a probability distribution over every token in the vocabulary — typically over 100,000 tokens. The model selects the next token from this distribution.
 
@@ -56,7 +56,7 @@ Why this matters: the context window is measured in tokens, not words. Everythin
 
 > **Definition: Context window** — the maximum number of tokens a model can process and generate in a single request. The window includes the input (system prompt, conversation history, tool definitions, tool outputs, retrieved documents) and the output (the model's response, including any reasoning).
 
-Context windows have grown rapidly — from 8,000 tokens (early GPT-4) to 128,000 (GPT-4 Turbo) to 200,000 (Claude 3) to over 1,000,000 (current frontier models). These numbers are large but not infinite, and for agent-based development, they are consumed faster than programmers expect.
+Context windows have grown rapidly, from 8,000 tokens (early GPT-4) to 128,000 (GPT-4 Turbo) to 200,000 (Claude 3) to over 1,000,000 (current frontier models). These numbers are large but not infinite, and for agent-based development, they are consumed faster than programmers expect.
 
 Consider what occupies context during a typical coding agent session:
 
@@ -69,7 +69,7 @@ Consider what occupies context during a typical coding agent session:
 | Tool outputs (compiler errors, test results) | 500–5,000 tokens per call |
 | The model's own response | 500–4,000 tokens |
 
-An orchestration pipeline that runs hundreds of tasks, reading source files and processing tool outputs at each step, can exhaust even a million-token context window. Context management — deciding what enters the window and what is evicted — is an engineering problem addressed in Part V.
+An orchestration pipeline that runs hundreds of tasks, reading source files and processing tool outputs at each step, can exhaust even a million-token context window. Context management, deciding what enters the window and what is evicted, is an engineering problem addressed in Part V.
 
 Two properties of context that affect agent behavior:
 
@@ -85,21 +85,21 @@ How should a programmer think about what the model "does" when it generates code
 
 "All models are wrong, but some are useful" — a line usually attributed to the statistician George Box, who published it in this form with Draper [@boxdraper1987]; the 1976 paper it is often credited to argues the point without containing the sentence [@box1976]. The point is not that models are bad. The point is that the value of a model lies not in whether it is true but in whether it helps you make better decisions. The question for this section is not "what is the LLM really doing inside?" — that question is open and may remain open. The question is: which mental model of LLM behavior helps a programmer get better results from it?
 
-The answer matters because the mental model determines what the programmer does. A programmer who thinks the model "understands" the problem will trust the output and skip verification. A programmer who thinks the model "just guesses randomly" will not bother writing specifications, since random processes do not respond to better inputs. Both models are wrong, and both lead to worse outcomes. The right mental model should predict when the model will succeed, when it will fail, and — most importantly — what the programmer can change to shift the outcome.
+The answer matters because the mental model determines what the programmer does. A programmer who thinks the model "understands" the problem will trust the output and skip verification. A programmer who thinks the model "just guesses randomly" will not bother writing specifications, since random processes do not respond to better inputs. Both models are wrong, and both lead to worse outcomes. A useful mental model predicts when the model will succeed and when it will fail, and tells the programmer what to change to shift the outcome.
 
-The model is not retrieving memorized code. It is not executing logic. It is not reasoning about the problem the way a programmer reasons. It is doing something that has no clean everyday analogy, but the closest productive metaphor is **interpolation**.
+Retrieval of memorized code, execution of logic, reasoning of the kind a programmer does — all three are the wrong picture. What the model does instead has no clean everyday analogy, and the closest productive metaphor is **interpolation**.
 
 Given the context — the specification, the architectural constraints, the conversation history, the tool outputs — the model constructs a response by interpolating across the patterns it learned during training. "Interpolation" here means: the model finds the point in its learned space that is most consistent with the context it was given, and generates text from that point.
 
 This metaphor is supported by three theoretical accounts of how in-context learning works. None is fully settled. Together, they provide a productive framework — not because they are true, but because they are useful.
 
-**Pattern completion.** The most mechanistically concrete account comes from work on induction heads — specific attention patterns that implement a pattern-completion algorithm [@olsson2022]. If the sequence [A][B] has appeared in context, and [A] appears again, the model predicts [B]. These patterns develop during training through a detectable phase transition — a sudden jump in in-context learning ability that coincides with the formation of these attention structures. The patterns generalize beyond literal copying to abstract pattern matching, which begins to explain why a model can complete novel task patterns from a few examples.
+**Pattern completion.** The most mechanistically specific account comes from work on induction heads — specific attention patterns that implement a pattern-completion algorithm [@olsson2022]. If the sequence [A][B] has appeared in context, and [A] appears again, the model predicts [B]. These patterns develop during training through a detectable phase transition — a sudden jump in in-context learning ability that coincides with the formation of these attention structures. The patterns generalize beyond literal copying to abstract pattern matching, which begins to explain why a model can complete novel task patterns from a few examples.
 
 **Implicit learning.** A second account proposes that the forward pass of a transformer implements something equivalent to gradient descent on the in-context examples [@akyurek2022; @vonoswald2023]. The model has learned, during pre-training, to run a learning algorithm inside its forward pass. This explains why more examples in context improve performance (more gradient steps) and why the model generalizes to new tasks (gradient descent is task-agnostic).
 
 **Task inference.** A third account frames in-context learning as Bayesian inference over a latent task variable [@xie2021]. The pre-training corpus contains text from many different "tasks" (writing styles, subject domains, instruction types). At inference time, in-context examples update the model's posterior over which task is being requested, and the model generates text that is likely under the inferred task. This predicts a specific failure mode: when the task is far outside the pre-training distribution, the model has no prior to update, and in-context learning fails.
 
-These accounts are not mutually exclusive. The productive synthesis: the model has, through training on a vast corpus, developed internal mechanisms for recognizing task structure from examples, abstracting patterns beyond literal copying, and generating responses consistent with inferred task structure.
+The three accounts overlap more than they compete, and together they describe a model that has, through training on a vast corpus, developed internal mechanisms for recognizing task structure from examples, abstracting patterns beyond literal copying, and generating responses consistent with the structure it infers.
 
 The interpolation metaphor captures what matters for agentic coding:
 
@@ -114,7 +114,7 @@ The interpolation metaphor captures what matters for agentic coding:
 
 ## 5.4 What the Model Cannot Do
 
-The interpolation model predicts specific failure modes. These are not edge cases — they are structural properties of how the model works. Understanding them before relying on agent-generated code is not optional.
+The interpolation model predicts specific failure modes. They are structural properties of how the model works rather than edge cases, which is what makes them worth understanding before relying on agent-generated code.
 
 ### 5.4.1 Out-of-Distribution Extrapolation
 
@@ -138,15 +138,15 @@ Everything in context is treated as evidence. The model does not distinguish bet
 
 This failure mode is insidious because it accumulates. In a short conversation, context is fresh and consistent. In a long agent session — dozens of tool calls, hundreds of messages — the context accumulates stale information, superseded decisions, and contradictory state. The model interpolates from all of it, weighting recent context more heavily but not ignoring the rest.
 
-Context hygiene — actively curating what is and is not in the model's window — is a design discipline, not an afterthought. The orchestration techniques in Part V include context management strategies: clearing stale state between tasks, isolating sub-agents with focused context, and compressing history to preserve relevant information while evicting noise.
+Context hygiene, actively curating what is and is not in the model's window, is a design discipline, not an afterthought. The orchestration techniques in Part V include context management strategies: clearing stale state between tasks, isolating sub-agents with focused context, and compressing history to preserve relevant information while evicting noise.
 
 ### 5.4.4 Confident Miscalibration
 
-The model does not know what it does not know. When interpolation fails — when the target is out of distribution, when context is poisoned, when framing has shifted the output — the model generates a response that is fluent, well-structured, and confident. There is no hesitation, no uncertainty signal, no indication that the interpolation was bad.
+The model does not know what it does not know. When interpolation fails — when the target is out of distribution, when context is poisoned, when framing has shifted the output — the model generates a response that is fluent, well-structured, and confident. The output carries no hesitation and no uncertainty signal; nothing in it marks the interpolation as a bad one.
 
 This is the most dangerous failure mode for agent-based development. A programmer reviewing generated code sees code that looks correct. The variable names are sensible. The structure is clean. The comments explain the logic coherently. Nothing in the surface appearance reveals that the underlying approach is wrong — that the data model does not match the actual schema, that the API contract contradicts the specification, that the concurrency model has a race condition the model has no mechanism to detect.
 
-This is why verification is not optional. The verification stack — compiler, linter, tests, coverage, specification conformance, intent conformance — exists because the model's confidence is not evidence of correctness. Plausible is not the same as correct.
+This is what verification exists for. The verification stack — compiler, linter, tests, coverage, specification conformance, intent conformance — exists because the model's confidence is not evidence of correctness. Plausible is not the same as correct.
 
 > **Good Practice:** Assume the model is wrong until verification proves otherwise. The interpolation machine produces plausible output by design. The verification stack exists because the model cannot verify its own output. Trust the verification results. Do not trust the code's appearance.
 
@@ -162,7 +162,7 @@ When the model generates a token, it does not produce a single answer. It produc
 
 **Top-p** (nucleus sampling) filters differently: keep the smallest set of tokens whose combined probability exceeds p, discard the rest, and re-normalize. This adapts to the shape of the distribution — when the model is confident (one token dominates), few tokens survive. When the model is uncertain (probability is spread), more tokens survive.
 
-For agentic coding, the practical implication is that code generation tasks — where the specification defines what the output should be — benefit from low temperature. The specification constrains the correct output; high temperature introduces unnecessary variation. Creative tasks — brainstorming names, generating documentation, exploring alternative approaches — tolerate higher temperature because there is no single correct answer.
+For agentic coding, the practical implication is that code generation tasks, where the specification defines what the output should be, benefit from low temperature. The specification constrains the correct output; high temperature introduces unnecessary variation. Creative tasks — brainstorming names, generating documentation, exploring alternative approaches — tolerate higher temperature because there is no single correct answer.
 
 Most coding agent frameworks set sampling parameters automatically. The reader does not need to tune them for routine work. The concept matters because it reveals something about what the model is doing: it is not producing "the answer." It is producing a distribution and sampling from it. Every response is one draw from a space of possibilities. A different random seed would produce a different response. The verification stack must hold regardless of which draw the model produced.
 
@@ -174,13 +174,13 @@ The mental model in this chapter — the model as an interpolation machine worki
 
 **The model cannot verify its own output.** Interpolation produces plausible output regardless of correctness. External verification is the only mechanism for establishing that generated code is correct. Part III (Testing) addresses how to test code that was not written by a human. Part IV (How Do You Know Your Code Is Correct?) addresses what "correct" means when the programmer did not write the code.
 
-**The model interpolates from training patterns.** Novel constructional decisions — the architectural choices that define how software is built — are exactly the kind of thing the model will get wrong, because they are specific to the programmer's intent and rarely appear in training data. Externalizing constructional intent and defining the construction order are not optional practices for ambitious projects — they are the mechanisms that prevent the model from filling architectural gaps with training-data averages.
+**The model interpolates from training patterns.** Novel constructional decisions, the architectural choices that define how software is built, are exactly the kind of thing the model will get wrong, because they are specific to the programmer's intent and rarely appear in training data. Externalizing constructional intent and defining the construction order are not optional practices for ambitious projects — they are the mechanisms that prevent the model from filling architectural gaps with training-data averages.
 
 **The model runs inside a loop it does not control.** The previous chapter traced that loop: the harness assembles context, applies what comes back, verifies it, and feeds the result in as the next input. Everything in this chapter is a property of the part inside that loop. Part V addresses what happens when one loop is not enough.
 
 ## Summary
 
-A large language model is a next-token predictor — a neural network that generates text one token at a time by interpolating across patterns learned during training. The context window is the fixed-size buffer of tokens the model can see; everything the model knows about the current task must fit within it, and context is consumed by input, output, and reasoning alike. The interpolation model explains both the model's capabilities (generating correct code for common patterns) and its failure modes (out-of-distribution extrapolation, sensitivity to framing, context poisoning, and confident miscalibration). Sampling parameters control the tradeoff between predictability and variety, but do not eliminate the fundamental property that every response is one draw from a distribution. Verification is not optional because the model cannot distinguish good interpolation from bad.
+A large language model is a next-token predictor — a neural network that generates text one token at a time by interpolating across patterns learned during training. The context window is the fixed-size buffer of tokens the model can see; everything the model knows about the current task must fit within it, and context is consumed by input, output, and reasoning alike. The interpolation model explains both the model's capabilities (generating correct code for common patterns) and its failure modes (out-of-distribution extrapolation, sensitivity to framing, context poisoning, and confident miscalibration). Sampling parameters control the tradeoff between predictability and variety, but do not eliminate the underlying property that every response is one draw from a distribution. Verification is not optional because the model cannot distinguish good interpolation from bad.
 
 ## Key Terms
 

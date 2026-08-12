@@ -927,8 +927,50 @@ var benignConstructions = map[string][]string{
 func usesForbiddenTerm(prose, term string) bool {
 	re := regexp.MustCompile(`(?i)\b` + regexp.QuoteMeta(term) + `\b`)
 	benign := benignConstructions[strings.ToLower(term)]
+	quoted := quotedSpans(prose)
 	for _, loc := range re.FindAllStringIndex(prose, -1) {
-		if !inBenignConstruction(prose, loc, benign) {
+		if inBenignConstruction(prose, loc, benign) || inAnySpan(quoted, loc) {
+			continue
+		}
+		return true
+	}
+	return false
+}
+
+// quotedSpans returns the half-open ranges covered by double-quoted passages.
+//
+// voice.yaml governs the author's voice. A forbidden term inside a quotation is
+// someone else's word -- C1.5 quotes the naive belief that a model "just
+// guesses randomly" in order to refute it, and rewriting that to satisfy a
+// grep would damage the sentence to no purpose (GH-57). Straight and curly
+// pairs both count; an unclosed quote covers nothing, so a stray apostrophe
+// cannot silence the rest of a chapter.
+func quotedSpans(prose string) [][2]int {
+	var spans [][2]int
+	var open = -1
+	for i, r := range prose {
+		switch r {
+		case '"', '\u201c', '\u201d':
+			if open < 0 {
+				open = i
+			} else {
+				spans = append(spans, [2]int{open, i + len(string(r))})
+				open = -1
+			}
+		case '\n':
+			// A quotation does not span a blank line; reset at paragraph breaks
+			// so an unmatched quote cannot swallow the document.
+			if open >= 0 && i+1 < len(prose) && prose[i+1] == '\n' {
+				open = -1
+			}
+		}
+	}
+	return spans
+}
+
+func inAnySpan(spans [][2]int, loc []int) bool {
+	for _, s := range spans {
+		if loc[0] >= s[0] && loc[1] <= s[1] {
 			return true
 		}
 	}
