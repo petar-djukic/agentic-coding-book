@@ -49,6 +49,7 @@ goals:
 `,
 		"docs/definitions.yaml": `
 agent:
+  introduced: C1.1
   definition: A state machine plus tools.
 `,
 		"docs/constitutions/argument.yaml": `
@@ -821,5 +822,43 @@ func TestTermMatchingIgnoresSeparatorStyle(t *testing.T) {
 			t.Errorf("%q and %q should normalize alike, got %q and %q",
 				c.key, c.row, normalizeTerm(c.key), normalizeTerm(c.row))
 		}
+	}
+}
+
+// -------------------------------------------- term ownership (GH-53)
+
+// The introduced field is what arbitrates where a term belongs, so an entry
+// without one leaves that question unanswerable.
+func TestDefinitionsRequireAnIntroducedField(t *testing.T) {
+	files := cleanTree()
+	files["docs/definitions.yaml"] = `
+agent:
+  definition: A state machine plus tools.
+`
+	err := auditTree(t, files)
+	if err == nil {
+		t.Fatal("a definition with no introduced field should be a finding")
+	}
+	if !strings.Contains(err.Error(), "no introduced field") {
+		t.Errorf("finding should name the missing field, got:\n%v", err)
+	}
+}
+
+// A retired term is recorded so the vocabulary of earlier drafts resolves.
+// Nothing introduces it, so requiring the field would force a false answer.
+func TestRetiredDefinitionsAreExemptFromOwnership(t *testing.T) {
+	files := cleanTree()
+	files["docs/definitions.yaml"] = `
+agent:
+  introduced: C1.1
+  definition: A state machine plus tools.
+
+clauding:
+  status: retired
+  definition: A coined term the book no longer uses.
+  superseded_by: agentic_coding
+`
+	if err := auditTree(t, files); err != nil {
+		t.Fatalf("a retired term needs no owner, got:\n%v", err)
 	}
 }

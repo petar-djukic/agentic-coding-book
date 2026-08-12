@@ -21,6 +21,14 @@
 # cannot check itself; so intent is EXTERNALIZED into a SPECIFICATION and
 # checked by a VERIFICATION STACK.
 
+# Every entry records `introduced`: the chapter or part where a reader first
+# meets the term defined. That field arbitrates where a term belongs -- GH-50
+# settled every disputed key term with it -- and `mage audit` requires it.
+#
+# The one exemption is `status: retired`. A retired term is recorded so the
+# vocabulary of earlier drafts and published articles still resolves; nothing
+# introduces it, so demanding an owner would force a false answer (GH-53).
+
 # --- Retired terminology -------------------------------------------------
 
 clauding:
@@ -37,6 +45,11 @@ clauding:
 # --- Core concepts -------------------------------------------------------
 
 agentic_coding:
+  introduced: Introduction
+  introduced_note: >
+    The book states its subject in the front matter. The introduction does not
+    yet carry a boxed definition of the term, which is a gap worth closing when
+    the front matter is next revised (GH-53).
   definition: >
     The practice of externalizing both behavioral and constructional intent
     into machine-readable artifacts -- specifications, constitutions,
@@ -47,12 +60,20 @@ agentic_coding:
   see_also: [behavioral_intent, constructional_intent, specification, verification_stack]
 
 behavioral_intent:
+  introduced: C2.4
+  introduced_note: >
+    Placement follows road-map.yaml, which reads the intent pair as Part II
+    material. GH-43 owns actually placing the parked prose and may move it.
   definition: >
     The specification of what the software does: inputs, outputs, edge cases,
     error handling, and observable behavior.
   see_also: [constructional_intent, specification]
 
 constructional_intent:
+  introduced: C2.4
+  introduced_note: >
+    Placement follows road-map.yaml, which reads the intent pair as Part II
+    material. GH-43 owns actually placing the parked prose and may move it.
   definition: >
     The specification of how the software is built: module boundaries, naming
     conventions, function size limits, design patterns, and architectural
@@ -62,6 +83,7 @@ constructional_intent:
   see_also: [behavioral_intent, architecture_document, interpolation]
 
 specification:
+  introduced: C2.4
   definition: >
     The complete declarative definition of what the software does and how it
     is structured. Comprises requirements, architecture document, use cases,
@@ -85,6 +107,7 @@ specification_delta:
 # --- Specification layers ------------------------------------------------
 
 requirements:
+  introduced: C2.3
   full_name: Product Requirements Document (PRD)
   definition: >
     The architectural layer of a specification. Defines the structural
@@ -97,6 +120,7 @@ requirements:
   see_also: [specification, architecture_document]
 
 architecture_document:
+  introduced: C2.4
   definition: >
     The structural decisions that persist across regeneration cycles: module
     boundaries, naming conventions, patterns, constraints. The architecture
@@ -107,6 +131,7 @@ architecture_document:
   see_also: [constructional_intent, requirements]
 
 use_case:
+  introduced: C2.4
   definition: >
     A structured, machine-parseable declaration of functionality. Specifies
     dependencies (forming a DAG), priority, preconditions, scenarios,
@@ -117,6 +142,9 @@ use_case:
   see_also: [specification, increment]
 
 test_suite:
+  introduced: C2.4
+  introduced_note: >
+    Introduced as a specification layer; Part III treats testing itself.
   definition: >
     The executable specification of correctness: unit, integration, and
     acceptance tests. Half or more of a generated codebase. Grows
@@ -139,6 +167,7 @@ constitution:
   see_also: [guardian, specification]
 
 domain_knowledge:
+  introduced: C2.4
   definition: >
     External context grounding the agent in the project's domain: API
     documentation, protocol specifications, library documentation,
@@ -479,6 +508,10 @@ fsm_constrained_decoding:
 # --- Verification --------------------------------------------------------
 
 verification_stack:
+  introduced: P3
+  introduced_note: >
+    Part-level because the stack spans Parts III and IV, the way
+    knowledge_manager spans P5. GH-43 owns placing the parked prose.
   definition: >
     Multiple independent automated layers, each catching a different class of
     defect: compilation for syntax and types, linting for structure, tests

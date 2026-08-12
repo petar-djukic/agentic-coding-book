@@ -253,12 +253,28 @@ func loadSpec(root string) (*spec, []finding) {
 		collectRuleIDs(raw, s.ruleIDs)
 	}
 
-	var defs map[string]any
+	var defs map[string]struct {
+		Definition string `yaml:"definition"`
+		Introduced string `yaml:"introduced"`
+		Status     string `yaml:"status"`
+	}
 	if err := readYAML(filepath.Join(docs, "definitions.yaml"), &defs); err != nil {
 		fail("docs/definitions.yaml", err)
 	}
-	for k := range defs {
+	for k, v := range defs {
 		s.definitions[k] = true
+		// Every defined term records the chapter or part that introduces it.
+		// That field is what arbitrates where a term belongs -- GH-50 used it to
+		// settle every disputed key term -- so an entry without one leaves the
+		// question unanswerable. A retired term is exempt: it is recorded so the
+		// vocabulary of earlier drafts still resolves, and nothing introduces it.
+		if v.Definition != "" && v.Introduced == "" && v.Status != "retired" {
+			findings = append(findings, finding{
+				File:   "docs/definitions.yaml",
+				Rule:   "definitions: introduced",
+				Detail: fmt.Sprintf("%s has no introduced field naming the chapter or part that defines it", k),
+			})
+		}
 	}
 
 	for _, id := range referenceIDs(filepath.Join(root, "references.yaml"), fail) {
