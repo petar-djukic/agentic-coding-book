@@ -11,9 +11,9 @@ of Go generated across 31 pipeline runs, and 123 Unix utilities
 regenerated from specification and verified against the GNU reference
 binaries by differential testing.
 
-**Work in progress, written in the open.** Part I is being drafted
-mechanism-first — the harness is the protagonist. Five of its six chapters
-are written; the remaining parts are outlines. Chapters also run as articles at
+**Work in progress, written in the open.** Part I is drafted
+mechanism-first — the harness is the protagonist. All six chapters are
+written; the remaining parts are outlines. Chapters also run as articles at
 [Mesh Intelligence](https://meshintelligence.substack.com?utm_source=github&utm_campaign=agentic-coding-book). Star or watch to follow the drafts.
 
 ## Contents
@@ -32,24 +32,24 @@ mechanism, so that every prescription in Parts II–VI has a fact behind it.
 | [What Is a Harness?](05-what-is-a-harness.md) | drafted | The software around the model: tool execution, file-system access, loop control, policy |
 | [How a Harness Touches Your Code](06-how-a-harness-touches-your-code.md) | drafted | The harness ↔ file system ↔ compiler sequence; generate → verify → feed-back as the heartbeat |
 | [How the LLM Works, and Fails](07-how-the-llm-works-and-fails.md) | drafted | Next-token prediction; tokens and context budgets; the interpolation model; four failure modes |
-| Externalizing Memory | outline | Carrying state across sessions, and the moment the human leaves the loop |
+| [Externalizing Memory](08-externalizing-memory.md) | drafted | Carrying state across sessions; in-the-loop vs on-the-loop as wiring; autonomy levels |
 
-### [Part II — Construction and Requirements](08-part-ii-construction-and-requirements.md)
+### [Part II — Construction and Requirements](09-part-ii-construction-and-requirements.md)
 
 | Chapter | State | Subject |
 |---|---|---|
-| [Layered Construction](09-layered-construction.md) | drafted | Inner and outer loops; tracer bullets; verification gates; why agents automate only one loop |
-| [Language Selection](10-language-selection.md) | drafted | Language-model pairing; interpolation density; grammar complexity; the compiler in the inner loop |
+| [Layered Construction](10-layered-construction.md) | drafted | Inner and outer loops; tracer bullets; verification gates; why agents automate only one loop |
+| [Language Selection](11-language-selection.md) | drafted | Language-model pairing; interpolation density; grammar complexity; the compiler in the inner loop |
 | Where requirements come from · Writing specs for agents · The constitution · Spec defects · Task decomposition | outline | Externalizing intent so agents execute it without guessing |
 
 ### Parts III–VI
 
 | Part | State | Subject |
 |---|---|---|
-| [III — Testing](11-part-iii-testing.md) | outline | Verifying code no human wrote; differential testing; the generated-test circularity problem |
-| [IV — Correctness](12-part-iv-correctness.md) | outline | What "correct" means when you did not write the code |
-| [V — Orchestration](13-part-v-orchestration.md) | outline | Agent roles, GitHub as coordination substrate, worktrees, failure and recovery |
-| [VI — Instrumentation](14-part-vi-instrumentation.md) | outline | Logging, cost analysis, failure diagnosis |
+| [III — Testing](12-part-iii-testing.md) | outline | Verifying code no human wrote; differential testing; the generated-test circularity problem |
+| [IV — Correctness](13-part-iv-correctness.md) | outline | What "correct" means when you did not write the code |
+| [V — Orchestration](14-part-v-orchestration.md) | outline | Agent roles, GitHub as coordination substrate, worktrees, failure and recovery |
+| [VI — Instrumentation](15-part-vi-instrumentation.md) | outline | Logging, cost analysis, failure diagnosis |
 
 One drafted chapter is parked outside the sequence:
 [Intent, Autonomy, and Verification](unplaced-intent-autonomy-and-verification.md)

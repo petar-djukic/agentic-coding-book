@@ -149,7 +149,7 @@ The response is periodic structural review — analyzing the accumulated code fo
 
 ## 2.6 Incremental Construction and Autonomy Levels
 
-This maps directly to the autonomy levels defined in Chapter 1.
+This maps directly to the autonomy levels defined in Part I, in the chapter on externalizing memory.
 
 At L2, the programmer runs both loops manually — typing code in the inner loop, applying architectural judgment in the outer loop. The programmer decides the increment order, writes each increment, tests it end-to-end, and proceeds when satisfied.
 

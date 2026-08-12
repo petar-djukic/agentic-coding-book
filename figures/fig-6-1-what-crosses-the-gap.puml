@@ -1,0 +1,51 @@
+@startuml
+' Figure 6.1 -- What crosses the gap between two sessions.
+' Anything written where the harness can read it back survives. Everything
+' held in the conversation or in the programmer's head does not, and nothing
+' in the loop reports the loss.
+
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam ArrowFontSize 11
+skinparam rectangle {
+  BorderThickness 1
+  BackgroundColor white
+  BorderColor black
+  FontColor black
+}
+skinparam note {
+  BackgroundColor white
+  BorderColor black
+  FontColor black
+}
+skinparam package {
+  BorderColor black
+  BackgroundColor white
+  FontColor black
+}
+
+package "Session 1" as S1 {
+  rectangle "Conversation\ncorrections, explanations,\nthe reasoning behind them" as C1
+  rectangle "Written down\nspec, constitution, issue,\ncommitted code" as W1 #lightgray
+}
+
+package "Session 2" as S2 {
+  rectangle "Context assembled\nby the harness" as CTX #lightgray
+  rectangle "Absent\nand not reported as absent" as GONE
+}
+
+rectangle "  T H E   G A P  \nprocess ends; model retains nothing" as GAP
+
+C1 -down-> GAP
+W1 -down-> GAP
+
+GAP -down-> CTX : the harness reads\nthese back
+GAP -down-> GONE : everything else
+
+note right of GONE
+  The loop does not
+  notice the difference.
+  It interpolates instead.
+end note
+
+@enduml

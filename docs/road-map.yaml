@@ -64,9 +64,18 @@ releases:
 
   - id: rel01.0
     name: "Part I -- Agents and Harnesses"
-    status: in_progress
+    status: complete
     units: [C1.1, C1.2, C1.3, C1.4, C1.5, C1.6]
     gate: "rel00.1 complete (the Part I SRDs are the drafting contracts). C1.5 additionally waits on GH-12, which frees the material it splits from."
+    completed: >
+      All six chapters drafted against their SRDs under EPIC GH-4 (GH-6, GH-7,
+      GH-8, GH-9, GH-10, GH-11), 2026-08-11. Sections run 1.x to 6.x and the
+      figures are 1.1, 2.1, 3.1, 4.1 and 6.1; C1.5 carries no figure. Known
+      debt at completion: GH-35 (section and figure numbers collide with Part
+      II, since C1.N -> section N.x is not injective across parts), GH-28
+      (voice conformance in the pre-constitution drafts), and two From the
+      Field sidebars written on the author's behalf that need replacing with
+      the real incidents (C1.1 section 1.3, C1.6 section 6.3).
 
   - id: rel01.1
     name: "Resequencing and terminology retirement"
@@ -118,7 +127,7 @@ parts:
 
   - id: P1
     title: Agents and Harnesses
-    status: outline
+    status: drafted
     chapters:
       - id: C1.1
         title: What is an agent?
@@ -155,7 +164,7 @@ parts:
   # C1.6 closes Part I and opens the practice parts.
       - id: C1.6
         title: Externalizing memory
-        status: outline
+        status: drafted
         issue: GH-11
 
   - id: P2
@@ -290,12 +299,21 @@ unplaced:
   - source: unplaced-intent-autonomy-and-verification.md
     status: unplaced
     holds: >
-      Behavioral and constructional intent, the six autonomy levels, and the
-      verification stack -- three concepts the book still needs, in a chapter
-      whose framing GH-5 retired. The intent pair reads as Part II material,
-      the verification stack as Parts III-IV, and the autonomy levels have no
-      settled home: the introduction still frames the whole book on them
-      (01-introduction.md, "How the book is arranged").
+      Behavioral and constructional intent, and the verification stack -- two
+      concepts the book still needs, in a chapter whose framing GH-5 retired.
+      The intent pair reads as Part II material and the verification stack as
+      Parts III-IV.
+
+      The autonomy levels are no longer homeless: GH-11 placed the boxed
+      definition and the L0/L5 endpoints in C1.6 section 6.5, which also
+      resolves the dangling "defined in Chapter 1" reference in C2.1 section
+      2.6. What is still parked is the per-level walkthrough (L0-L5 one at a
+      time) and the two tables -- bottleneck by level, and programmer's role by
+      level -- which read as Part II material.
+
+      Correction: this entry previously said the introduction frames the whole
+      book on the autonomy levels. It does not, and did not at the time of
+      checking -- 01-introduction.md is 379 words and never mentions them.
     owner: >
       Needs an owner. GH-12 parked the file outside the numbered sequence so
       the build skips it and the prose survives, and retired the term it was
