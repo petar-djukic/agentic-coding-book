@@ -4,11 +4,14 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 
 	"gopkg.in/yaml.v3"
@@ -35,6 +38,7 @@ func audit(root string, figures, build func() error) error {
 	if spec != nil {
 		findings = append(findings, checkSpec(spec)...)
 		findings = append(findings, checkProse(root, spec)...)
+		findings = append(findings, checkSidebarAuthorship(root, spec)...)
 	}
 
 	if figures != nil {
@@ -172,6 +176,7 @@ type voiceDoc struct {
 		Types []struct {
 			Label       string `yaml:"label"`
 			FormerLabel string `yaml:"former_label"`
+			Authorship  string `yaml:"authorship"`
 		} `yaml:"types"`
 	} `yaml:"sidebars"`
 }
@@ -553,6 +558,124 @@ func checkProse(root string, s *spec) []finding {
 		}
 	}
 	return out
+}
+
+// sidebarLabelRe matches a sidebar's opening line and captures its label, the
+// same `> **Label:**` shape checkProse relies on.
+var sidebarLabelRe = regexp.MustCompile(`^\s*>\s*\*\*([^:*]+):\*\*`)
+
+// skillTrailerRe finds the git trailer that gh-issue-pop and do-work stamp on
+// every commit they author.
+var skillTrailerRe = regexp.MustCompile(`(?m)^Skill:\s*\S`)
+
+// checkSidebarAuthorship enforces voice.yaml's author_only marking on sidebar
+// types. A first-person note about the author's own experience is the one kind
+// of content an agent cannot supply, and an invented incident that reads
+// plausibly is indistinguishable from a real one to everyone but the author.
+//
+// The discriminator is the `Skill:` git trailer, not the commit author: agent
+// commits in this repository carry the author's own name and address, so
+// identity proves nothing, while the skill-tracing trailers are stamped only
+// by the skills. Blame reports the commit that *last* touched the line, which
+// is the semantics wanted here -- an agent editing the author's sidebar needs
+// the same look as an agent inventing one.
+//
+// Outside a git repository the check yields nothing rather than failing, so
+// scratch trees and fresh exports audit clean.
+func checkSidebarAuthorship(root string, s *spec) []finding {
+	authorOnly := map[string]bool{}
+	for _, t := range s.voice.Sidebars.Types {
+		if t.Authorship == "author_only" {
+			authorOnly[t.Label] = true
+		}
+	}
+	if len(authorOnly) == 0 || !isGitRepo(root) {
+		return nil
+	}
+
+	var out []finding
+	for _, path := range chapterFiles(root) {
+		data, err := os.ReadFile(filepath.Join(root, path))
+		if err != nil {
+			continue
+		}
+		// Findings are located by the sidebar's ordinal within its file rather
+		// than by line number, because the triple is also the baseline key: a
+		// line number would make an accepted finding go stale on any edit
+		// above it, and the churn would train readers to ignore the file.
+		seen := map[string]int{}
+		for i, line := range strings.Split(string(data), "\n") {
+			m := sidebarLabelRe.FindStringSubmatch(line)
+			if m == nil {
+				continue
+			}
+			label := strings.TrimSpace(m[1])
+			if !authorOnly[label] {
+				continue
+			}
+			seen[label]++
+			skill, ok := blameSkill(root, path, i+1)
+			if !ok || skill == "" {
+				continue
+			}
+			out = append(out, finding{
+				File:   path,
+				Rule:   "voice.yaml: sidebars V-B4 authorship",
+				Detail: fmt.Sprintf("%s sidebar #%d was last touched by the %s skill; V-B4 is author_only", strconv.Quote(label), seen[label], skill),
+			})
+		}
+	}
+	return out
+}
+
+// isGitRepo reports whether root sits inside a working tree.
+func isGitRepo(root string) bool {
+	out, err := gitOutput(root, "rev-parse", "--is-inside-work-tree")
+	return err == nil && strings.TrimSpace(out) == "true"
+}
+
+// blameSkill returns the Skill trailer of the commit that last touched line of
+// path. ok is false when the line has no commit yet -- uncommitted or
+// untracked -- which is not a finding, since nothing has been recorded to
+// judge.
+func blameSkill(root, path string, line int) (skill string, ok bool) {
+	out, err := gitOutput(root, "blame", "--porcelain", "-L", fmt.Sprintf("%d,%d", line, line), "--", path)
+	if err != nil {
+		return "", false
+	}
+	fields := strings.Fields(out)
+	if len(fields) == 0 {
+		return "", false
+	}
+	sha := fields[0]
+	// An all-zero sha is blame's marker for a not-yet-committed line.
+	if strings.Trim(sha, "0") == "" {
+		return "", false
+	}
+	msg, err := gitOutput(root, "log", "-1", "--format=%B", sha)
+	if err != nil {
+		return "", false
+	}
+	if !skillTrailerRe.MatchString(msg) {
+		return "", true
+	}
+	name, err := gitOutput(root, "log", "-1", "--format=%(trailers:key=Skill,valueonly,separator=%x20)", sha)
+	if err != nil {
+		return "", false
+	}
+	return strings.TrimSpace(name), true
+}
+
+func gitOutput(root string, args ...string) (string, error) {
+	cmd := exec.Command("git", args...)
+	cmd.Dir = root
+	var stdout bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = nil
+	if err := cmd.Run(); err != nil {
+		return "", err
+	}
+	return stdout.String(), nil
 }
 
 // benignConstructions records phrasings in which a forbidden term is doing
