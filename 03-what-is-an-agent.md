@@ -9,6 +9,7 @@ After reading this chapter, the reader will be able to:
 1. Define an agent as a state machine paired with tools, and apply that definition to a system they have used.
 2. Identify the loop, the state, and the tool boundary in any system presented to them as an agent.
 3. Explain why the model alone is not an agent.
+4. Implement the skeleton in Go: the states, the transitions, and a tool table.
 
 ## 1.1 A Word That Stopped Selecting
 
@@ -70,9 +71,119 @@ It does not hold the state, because it has no memory between requests. It does n
 
 Calling a system an agent, then, is a claim about wiring. Whether it is a good agent depends on which states exist, what the tools can reach, and what happens on failure — all questions with inspectable answers, which is why the rest of this book can be about engineering rather than about prompting.
 
+## 1.5 Build: The Skeleton in Go
+
+A structural definition makes a claim that can be tested by construction: name the parts, and the thing can be built from them. This book runs that test on itself. Each part closes by building a piece of the program its chapters explained — a few dozen lines of Go at a time, starting here with the skeleton and ending, in Part V, with an orchestrator running many copies of it at once. The listings are pedagogical; the production evidence stays with the repositories the introduction names.
+
+Listing 1.1 is Figure 1.1 as code.
+
+**Listing 1.1** The agent skeleton: four states, a tool table, and one interface where the model plugs in.
+
+```go
+type State int
+
+const (
+	Deciding State = iota
+	Executing
+	Verifying
+	Done
+)
+
+// Tool is the only path from the process to anything outside it.
+type Tool interface {
+	Name() string
+	Run(args map[string]string) (string, error)
+}
+
+// Model supplies one signal per step: the next call, or done.
+type Model interface {
+	Decide(transcript []string) (call Call, done bool)
+}
+
+type Call struct {
+	Tool string
+	Args map[string]string
+}
+
+type Agent struct {
+	state      State
+	transcript []string
+	pending    Call
+	tools      map[string]Tool
+	model      Model
+}
+
+func (a *Agent) Run(task string) []string {
+	a.transcript = append(a.transcript, task)
+	a.state = Deciding
+	for a.state != Done {
+		switch a.state {
+		case Deciding:
+			call, done := a.model.Decide(a.transcript)
+			if done {
+				a.state = Done
+				break
+			}
+			a.pending = call
+			a.state = Executing
+		case Executing:
+			a.transcript = append(a.transcript, a.execute(a.pending))
+			a.state = Verifying
+		case Verifying:
+			// Nothing checks the work yet; a later chapter's Build
+			// section wires the gate in here.
+			a.state = Deciding
+		}
+	}
+	return a.transcript
+}
+
+func (a *Agent) execute(c Call) string {
+	tool, ok := a.tools[c.Tool]
+	if !ok {
+		return "no such tool: " + c.Tool
+	}
+	result, err := tool.Run(c.Args)
+	if err != nil {
+		return "error: " + err.Error()
+	}
+	return result
+}
+```
+
+*The states are an enum, the transitions are the assignments to `a.state`, and the transcript is the state the machine carries between steps. The model appears once, behind an interface, supplying the signal that section 1.4 said was its whole contribution.*
+
+Everything in the listing is ordinary Go. The loop is a `for`, the machine is a `switch`, and a failed tool lookup becomes a string in the transcript — which the model reads on its next turn, the same way it reads everything else. The one non-ordinary element is quarantined behind the `Model` interface, and the listing works identically whether the implementation calls a vendor API or a table of canned responses, which is what the definition predicted: the model is a component, not the agent.
+
+Listing 1.2 supplies a tool and the table that holds it.
+
+**Listing 1.2** One tool, and the table that is the tool boundary.
+
+```go
+type ReadFile struct{ root string }
+
+func (t ReadFile) Name() string { return "read_file" }
+
+func (t ReadFile) Run(args map[string]string) (string, error) {
+	data, err := os.ReadFile(filepath.Join(t.root, args["path"]))
+	return string(data), err
+}
+
+func NewAgent(m Model, root string) *Agent {
+	return &Agent{
+		model: m,
+		tools: map[string]Tool{"read_file": ReadFile{root}},
+	}
+}
+```
+
+*The map in `NewAgent` is the complete answer to what this agent can touch. Deleting an entry removes the capability; nothing else has to change.*
+
+Section 1.3's observation about declarative agents is sitting in this listing: the states, the transitions, and that table could be listed in a data file and interpreted by a fixed runtime, and the Go above is the same machine with the skeleton compiled in rather than read at startup. The skeleton cannot yet write a file, check its work, or remember having run. Each of those gaps is a later chapter's Build section.
+
 ## Summary
 
-An agent is a state machine paired with a set of tools. The state machine decides what to do next; the tools are how it acts on anything outside itself. State is what the agent carries between steps, a transition is the rule that moves it forward given a signal, and a tool is the only path from the process to a file, a command, or a network. The term needed defining because it had stopped selecting: it was contested in the research literature in 1995, and the autonomy scales published since grade how much freedom a system is given without saying what the system is. Most agents hide the skeleton inside a loop of conditionals, where the states are implicit in the branches; declarative agents keep it written down, which is why they serve as the lens here. The model sits at one point in the machine, supplying the signal that selects a transition, and holds neither the state nor the tools nor the loop.
+An agent is a state machine paired with a set of tools. The state machine decides what to do next; the tools are how it acts on anything outside itself. State is what the agent carries between steps, a transition is the rule that moves it forward given a signal, and a tool is the only path from the process to a file, a command, or a network. The term needed defining because it had stopped selecting: it was contested in the research literature in 1995, and the autonomy scales published since grade how much freedom a system is given without saying what the system is. Most agents hide the skeleton inside a loop of conditionals, where the states are implicit in the branches; declarative agents keep it written down, which is why they serve as the lens here. The model sits at one point in the machine, supplying the signal that selects a transition, and holds neither the state nor the tools nor the loop. The Build section renders the definition as a few dozen lines of Go — a switch, a map, and one interface where the model plugs in — beginning the harness this book constructs part by part.
 
 ## Key Terms
 
