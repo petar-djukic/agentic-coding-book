@@ -82,7 +82,11 @@ apparatus:
       about: attributing a harness decision to the model, and trying to fix it with prompting
     - type: Good Practice
       about: reading a harness's configuration surface before its documentation
-  key_terms: [agent_harness, tool, agentic_loop, orchestrator]
+  key_terms: [agent_harness, orchestrator]
+  key_terms_note: >
+    tool and agentic_loop dropped at GH-50, introduced at C1.1 and C1.4. This
+    chapter names loop control as one of the four responsibilities without
+    defining the loop, which C1.4 owns.
 figures:
   - shows: "The harness's four responsibilities drawn as a boundary around the model, with the model's only outputs being text and structured tool calls."
     status: drawn

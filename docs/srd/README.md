@@ -26,11 +26,24 @@ namespace with the book's real metadata, while a comment renders to nothing in
 every output format (GH-25).
 
 With the binding in place, `mage audit` checks the mechanical half of the
-contract: every `apparatus.key_terms` entry appears in the chapter's Key Terms
-table, and every citation with `role: anchor` is actually cited. Terms and
-sources the SRD merely lists as `context` or `evidence` are not required to
-appear -- an anchor is the source the SRD says carries the chapter, so its
-absence is a defect rather than a choice.
+contract: every `apparatus.key_terms` entry appears as a row in the chapter's
+Key Terms table, and every citation with `role: anchor` is actually cited.
+Terms and sources the SRD merely lists as `context` or `evidence` are not
+required to appear -- an anchor is the source the SRD says carries the chapter,
+so its absence is a defect rather than a choice.
+
+Matching is against the table's term column, not the section text. A term named
+inside another row's definition is not a term the table defines, and the looser
+reading hid three real gaps until GH-50. A trailing gloss is ignored, so
+`**Large language model (LLM)**` satisfies `large_language_model`.
+
+**What belongs in `apparatus.key_terms`.** Only terms the chapter itself
+introduces, which `definitions.yaml` records per term in its `introduced`
+field. A chapter's table may repeat a term defined elsewhere for the reader's
+convenience, but the SRD should not require it: listing a term owned by another
+chapter is how five of the six gaps in GH-50 arose -- `srd-1.1` and `srd-1.3`
+demanded `agentic_loop`, which C1.4 introduces, and `srd-1.6` demanded
+`knowledge_manager` and `constitution`, owned by P5 and C2.5.
 
 | Field | Content |
 |-------|---------|

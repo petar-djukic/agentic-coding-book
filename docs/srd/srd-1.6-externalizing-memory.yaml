@@ -86,7 +86,12 @@ apparatus:
       about: assuming a correction made in one session persists into the next
     - type: From the Field
       about: the run that failed because state was never committed, and what it cost
-  key_terms: [externalized_memory, context_window, knowledge_manager, specification, constitution]
+  key_terms: [externalized_memory, context_window]
+  key_terms_note: >
+    knowledge_manager, specification, and constitution dropped at GH-50.
+    definitions.yaml puts knowledge_manager at P5 and constitution at C2.5, and
+    specification has no owner yet (GH-53). The chapter refers to all three as
+    things that cross the session gap; Part II and Part V define them.
 figures:
   - shows: "Two sessions separated by a gap, showing what crosses it -- committed artifacts and tracker state -- and what does not: conversation, corrections, and the programmer's unwritten intent."
     status: drawn

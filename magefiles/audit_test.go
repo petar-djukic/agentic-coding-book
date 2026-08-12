@@ -732,3 +732,33 @@ func TestBindingCatchesADraftedChapterWithNoFile(t *testing.T) {
 		t.Fatalf("a drafted chapter with no file should be a finding, got:\n%v", err)
 	}
 }
+
+// The leniency GH-50 removed: a term is "present" only if the table has a row
+// defining it, not because it appears inside another term's definition cell.
+func TestBindingIgnoresATermMentionedOnlyInsideADefinition(t *testing.T) {
+	files := cleanTree()
+	files["03-what-is-an-agent.md"] = strings.Replace(
+		files["03-what-is-an-agent.md"],
+		"| **Agent** | A state machine plus tools |",
+		"| **Harness** | The software around a model, distinct from an agent |", 1)
+	err := auditTree(t, files)
+	if err == nil {
+		t.Fatal(`"agent" appearing only inside another row's definition should still be a finding`)
+	}
+	if !strings.Contains(err.Error(), `key term "agent"`) {
+		t.Errorf("finding should name the absent term, got:\n%v", err)
+	}
+}
+
+// ...without flagging a table term that carries a parenthetical gloss, which
+// is how the LLM chapter writes its first row.
+func TestBindingAcceptsATableTermWithAGloss(t *testing.T) {
+	files := cleanTree()
+	files["03-what-is-an-agent.md"] = strings.Replace(
+		files["03-what-is-an-agent.md"],
+		"| **Agent** | A state machine plus tools |",
+		"| **Agent (autonomous)** | A state machine plus tools |", 1)
+	if err := auditTree(t, files); err != nil {
+		t.Fatalf("a trailing gloss should not unmatch a key term, got:\n%v", err)
+	}
+}
