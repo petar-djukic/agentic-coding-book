@@ -1,0 +1,40 @@
+@startuml
+' Figure 3.1 -- The harness as a boundary around the model.
+' The four responsibilities are the boundary. The model sits inside it and
+' reaches nothing directly: the only things that leave it are text and
+' structured tool calls. Everything the programmer can change is on the
+' outside of the inner box.
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam ArrowFontSize 11
+skinparam rectangle {
+  BorderThickness 1
+}
+
+actor "Programmer" as P
+
+rectangle "THE HARNESS\nordinary software, and the part that is yours to change" as H {
+
+  rectangle "Policy\nwhich tools exist,\nwhich paths are reachable,\nwhat needs approval" as PO
+  rectangle "Loop control\nwhen to iterate,\nwhen to stop" as L
+  rectangle "Tool execution\nparse the call,\nrun it, return the result" as T
+  rectangle "File-system access\nread files in,\nwrite edits out" as F
+
+  rectangle "THE MODEL\nweights fixed; no file handle,\nno process, no memory of last turn" as M
+}
+
+database "Your codebase" as CB
+
+P -down-> H : configuration\n(tools, paths, limits, approvals)
+
+M -up-> T : structured tool calls
+M -up-> L : text
+
+PO -[#black,dashed]-> T : permits or refuses
+L -down-> M : next request
+F -down-> CB
+T -right-> F
+
+@enduml

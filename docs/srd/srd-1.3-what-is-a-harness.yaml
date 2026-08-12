@@ -51,11 +51,16 @@ citations:
   - id: jung2026
     role: evidence
     note: >
-      Quantifies the protagonist claim: harnesses change end-to-end performance
-      on a fixed model by as much as six times, and in a layered planning
-      harness the declarative planning layer carries the largest single gain
-      (+24.1pp win rate, zero LLM calls) while LLM-backed revision fires on
-      4.3% of turns. Treats the model's contribution as residual.
+      Measures a planning harness layer by layer: the declarative planning
+      layer carries the largest single gain (+24.1pp win rate, zero LLM calls)
+      while LLM-backed revision fires on 4.3% of turns, so the model's
+      contribution reads as residual. Two cautions, both verified against the
+      v4 abstract at drafting (GH-8). The domain is noisy Collaborative
+      Battleship, not software engineering, so the figures do not transfer to a
+      coding task -- cite the method and the shape of the result, not the
+      numbers as coding-agent numbers. And the "six times on a fixed model"
+      line is the paper's characterization of prior work in its opening
+      sentence, not its own measurement; do not attribute it to this study.
 content:
   - say: "The model is a function from context to text. Everything else -- reading files, running commands, deciding when to stop -- is ordinary software someone wrote."
     cites: [latentpatterns-harness]
@@ -80,15 +85,27 @@ apparatus:
   key_terms: [agent_harness, tool, agentic_loop, orchestrator]
 figures:
   - shows: "The harness's four responsibilities drawn as a boundary around the model, with the model's only outputs being text and structured tool calls."
-    status: planned
+    status: drawn
+    path: figures/fig-3-1-harness-boundary.puml
+    label: "Figure 3.1"
+
 links:
   requires: [C1.1, C1.2]
   supports: [C1.4, C1.6]
 gaps:
   - >
-    The harness literature is almost entirely 2026 preprints (GH-23 surveyed
-    it). Re-check for published versions at drafting; a chapter whose central
-    claim rests on preprints should say so.
+    Re-checked at drafting (GH-8, 2026-08-11): both anchors are still
+    preprints -- bensghaier2026 at v2 (2026-07-20) and jung2026 at v4
+    (2026-04-28), neither showing a journal-ref or acceptance. The chapter
+    says so in a paragraph of its own in section 3.3. Re-check again before
+    the book ships.
+  - >
+    The book's four responsibilities (tool execution, file-system access, loop
+    control, policy) are not the four in bensghaier2026's definition (system
+    prompts, tool execution, context management, iterative reasoning loops).
+    Two of the four coincide. The chapter states the divergence rather than
+    implying the external source ratifies the book's taxonomy; if a later
+    source matches the book's cut more closely, prefer it as the anchor.
 acceptance:
   - Every citation id resolves in references.yaml.
   - The four responsibilities are each defined and each illustrated.
