@@ -572,8 +572,28 @@ func checkProse(root string, s *spec) []finding {
 var chapterMarkerRe = regexp.MustCompile(`(?m)^<!--\s*chapter:\s*(\S+)\s*-->`)
 
 // keyTermsRe isolates the Key Terms table, which is where apparatus.key_terms
-// promises the terms will be.
-var keyTermsRe = regexp.MustCompile(`(?ms)^## Key Terms\s*$(.*)`)
+// promises the terms will be. keyTermRowRe then picks out the bolded term from
+// each row, and parenGlossRe strips a trailing gloss like "(LLM)".
+//
+// Matching is against the term column rather than the section text, because a
+// term mentioned inside another term's definition cell is not a term the table
+// defines -- that leniency hid three real gaps until GH-50.
+var (
+	keyTermsRe   = regexp.MustCompile(`(?ms)^## Key Terms\s*$(.*)`)
+	keyTermRowRe = regexp.MustCompile(`(?m)^\|\s*\*\*(.+?)\*\*`)
+	parenGlossRe = regexp.MustCompile(`\s*\([^)]*\)\s*$`)
+)
+
+// tableDefines reports whether the Key Terms table has a row defining term.
+func tableDefines(rows []string, term string) bool {
+	want := strings.ReplaceAll(strings.ToLower(term), "_", " ")
+	for _, r := range rows {
+		if r == want {
+			return true
+		}
+	}
+	return false
+}
 
 // checkChapterBinding resolves each drafted chapter to the SRD that governs it
 // and checks the mechanically checkable half of that contract.
@@ -639,12 +659,14 @@ func checkChapterBinding(root string, s *spec) []finding {
 			add(path, "GH-25 binding", "ARCHITECTURE points %s at %s, which did not load", id, srdPath)
 			continue
 		}
-		terms := ""
+		var rows []string
 		if km := keyTermsRe.FindStringSubmatch(body); km != nil {
-			terms = strings.ToLower(km[1])
+			for _, m := range keyTermRowRe.FindAllStringSubmatch(km[1], -1) {
+				rows = append(rows, strings.TrimSpace(strings.ToLower(parenGlossRe.ReplaceAllString(m[1], ""))))
+			}
 		}
 		for _, t := range d.Apparatus.KeyTerms {
-			if !strings.Contains(terms, strings.ReplaceAll(t, "_", " ")) {
+			if !tableDefines(rows, t) {
 				add(path, "GH-25 binding", "%s lists key term %q, absent from the Key Terms table", srdPath, t)
 			}
 		}

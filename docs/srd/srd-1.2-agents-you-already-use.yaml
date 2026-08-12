@@ -77,7 +77,12 @@ apparatus:
       about: choosing an agent on interface impressions rather than on what it decides for you
     - type: Performance Observation
       about: the measured productivity effect that runs against the intuition
-  key_terms: [agent, agent_harness, tool]
+  key_terms: [agent_harness]
+  key_terms_note: >
+    agent and tool dropped at GH-50: C1.1 introduces both, and this chapter
+    uses them without redefining them. The chapter's table additionally defines
+    packaging difference, capability difference, and context policy, which
+    cannot be listed here until they exist in definitions.yaml (GH-52).
 figures:
   - shows: "The same skeleton across three tools, with the components each one exposes to the user shaded and the components each one hides left blank."
     status: drawn

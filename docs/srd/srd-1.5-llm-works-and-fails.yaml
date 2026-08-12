@@ -98,7 +98,11 @@ apparatus:
       about: reading fluent output as correct output
     - type: Good Practice
       about: treating sparse-interpolation territory as requiring more specification, not more prompting
-  key_terms: [large_language_model, token, context_window, interpolation, interpolation_density, confident_miscalibration, sampling]
+  key_terms_note: >
+    interpolation_density dropped at GH-50: definitions.yaml marks it
+    introduced at C2.2, where language choice makes it load-bearing. This
+    chapter defines interpolation itself, which is the term it owns.
+  key_terms: [large_language_model, token, context_window, interpolation, confident_miscalibration, sampling]
 figures:
   - shows: "The four failure modes arranged by whether the mechanism or the context produces them, with the verification layer that catches each."
     status: planned

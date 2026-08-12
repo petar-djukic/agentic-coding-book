@@ -566,6 +566,7 @@ drift:
 # --- Autonomy ------------------------------------------------------------
 
 autonomy_level:
+  introduced: C1.6
   definition: >
     A classification of how much of the plan-and-execute cycle a system
     handles without human direction, from L0 (fully manual) to L5 (fully

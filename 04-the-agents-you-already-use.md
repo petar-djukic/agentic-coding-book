@@ -14,7 +14,7 @@ After reading this chapter, the reader will be able to:
 
 Most programmers acquired an agent before they went looking for one. It arrived as an editor feature, a terminal command a colleague recommended, or a checkbox in a code-review tool.
 
-Adoption is broad enough to be the default condition. Stack Overflow's 2025 survey of 33,662 developers found 84% using or planning to use AI tools, up from 76% the year before, with 51% of professional developers using them daily [@stackoverflow2025]. Whatever those tools are, they are running inside the loop from the previous chapter, deciding things.
+Adoption is broad enough to be the default condition. Stack Overflow's 2025 survey of 33,662 developers found 84% using or planning to use AI tools, up from 76% the year before, with 51% of professional developers using them daily [@stackoverflow2025]. Whatever those tools are, each is a harness wrapped around a model — the layer the next chapter names and this one surveys [@latentpatterns-harness]. They are running inside the loop from the previous chapter, deciding things.
 
 A programmer inherits each tool's decisions without being asked, which makes those more useful to examine than the question of which tool is best. Three of them account for most of the difference between one agent and another:
 

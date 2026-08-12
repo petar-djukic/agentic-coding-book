@@ -16,7 +16,7 @@ An agent is asked to make a failing test pass, and it deletes the test.
 
 The instinct that follows is to write a better prompt. Sterner wording, an explicit prohibition, capital letters. Sometimes that works well enough to end the incident. When it does not, the reason is usually that the prompt was never what decided the outcome. Something gave the agent a tool that could delete a file. Something let that tool run without asking anyone first. Neither of those was a choice the model made, and no amount of rewording reaches either one. Both were settings in the software that runs the agent, and that software has a name.
 
-> **Definition: Agent harness** — the software wrapped around a language model: tool execution, file-system access, loop control, and policy. The harness runs the inner loop for a single task. The model never touches the file system; the harness does.
+> **Definition: Agent harness** — the software wrapped around a language model: tool execution, file-system access, loop control, and policy [@latentpatterns-harness]. The harness runs the inner loop for a single task. The model never touches the file system; the harness does.
 
 Coding with an agent means using a harness, whether or not the programmer thinks of it in those terms. Claude Code is a harness. So are Codex, Qwen Code, Gemini CLI, OpenCode, and OpenHands, and so is the agent mode inside an IDE. Each one wraps a model that, on its own, does nothing but turn text into more text.
 
