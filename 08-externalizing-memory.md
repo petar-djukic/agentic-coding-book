@@ -9,6 +9,7 @@ After reading this chapter, the reader will be able to:
 1. Explain why nothing survives a session unless it is written where the harness can read it back.
 2. Identify what in their own practice is carried in their head and invisible to the harness.
 3. Name the moment the human leaves the loop, and what has to be true before that is safe.
+4. Give the skeleton from the earlier chapters a memory that survives the session gap: state written at exit and read back at the next start.
 
 ## 6.1 Nothing Survives the Gap
 
@@ -84,9 +85,48 @@ What the scale makes visible is that each step up has a prerequisite, and the pr
 
 That is the hinge this part has been building toward. The mechanism is established: the model retains nothing, the window is bounded and uneven, the harness reads only what was written, and the programmer has been silently making up the difference. Everything that follows is about what to write, how to verify what comes back, and how to run the loop when nobody is sitting in it.
 
+## 6.6 Build: What the Skeleton Writes Down
+
+The skeleton assembled across this part holds everything it knows in one slice: the transcript. The process exits, the slice is garbage-collected, and the next run starts empty — section 6.1's gap, reproduced in a single variable. Closing it takes less code than any earlier Build section, because the mechanism is nothing more than reading a file at the start and appending to it at the end.
+
+Listing 6.1 closes the gap Figure 6.1 draws.
+
+**Listing 6.1** Externalized memory: a notes file loaded before the task and appended at session end.
+
+```go
+const notesPath = "NOTES.md"
+
+// Start runs before Run: externalized state enters the transcript
+// first, so the notes precede the task Run appends.
+func (a *Agent) Start() {
+	notes, err := os.ReadFile(filepath.Join(a.root, notesPath))
+	if err == nil {
+		a.transcript = append(a.transcript, string(notes))
+	}
+}
+
+// End writes what the next session is allowed to know.
+func (a *Agent) End(decision string) error {
+	f, err := os.OpenFile(filepath.Join(a.root, notesPath),
+		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	_, err = f.WriteString(decision + "\n")
+	return err
+}
+```
+
+*Everything that crosses the gap passes through `End`; everything else dies with the transcript. The `if err == nil` on the read is the first session's whole experience of the file not existing yet.*
+
+The load-bearing element is the `decision` argument, and the listing cannot supply it. Something has to choose which sentence is worth carrying forward, and in this skeleton that something is whoever calls `End` — which makes section 6.4's wiring question visible in a call site. A programmer typing the sentence at the end of each session is in the loop, serving as the selector. A specification committed to the repository, read by `Start` the same way the notes are, is that selection done in advance, and the programmer who wrote it has left this particular loop.
+
+The part's Build sections now add up to the machine Part I described: a tool boundary, a policy check on writes, a gate feeding consequences back, and a memory that survives the process. What the skeleton does not have is anything to remember — it has never been given a specification or a constitution. Writing those artifacts is the practice the next part opens with, and the skeleton is ready to read them.
+
 ## Summary
 
-A session ends and the model retains nothing; the next session begins with whatever the harness assembles from disk. In-session memory is no substitute, because the context window is bounded and attention within it is uneven, and the five families of memory mechanism a 2026 survey identifies each decide what to lose rather than removing the bound. What crosses the gap is what was written where the harness reads: specifications, constitutions, trackers, committed artifacts. That is why the rest of this book asks for those artifacts — not as process discipline, but because they are the only memory the system has. The reason the gap stays hidden is that the programmer fills it, answering in real time what was never written down, which makes in-the-loop and on-the-loop a wiring question, not a matter of trust. Autonomy levels describe how far that transition has gone, and each step up requires moving another decision out of a person's head and into a file.
+A session ends and the model retains nothing; the next session begins with whatever the harness assembles from disk. In-session memory is no substitute, because the context window is bounded and attention within it is uneven, and the five families of memory mechanism a 2026 survey identifies each decide what to lose rather than removing the bound. What crosses the gap is what was written where the harness reads: specifications, constitutions, trackers, committed artifacts. That is why the rest of this book asks for those artifacts — not as process discipline, but because they are the only memory the system has. The reason the gap stays hidden is that the programmer fills it, answering in real time what was never written down, which makes in-the-loop and on-the-loop a wiring question, not a matter of trust. Autonomy levels describe how far that transition has gone, and each step up requires moving another decision out of a person's head and into a file. The Build section closes the part's running skeleton with the property this chapter is about: a notes file read at session start and appended at session end, which is the only part of a session the next one sees.
 
 ## Key Terms
 

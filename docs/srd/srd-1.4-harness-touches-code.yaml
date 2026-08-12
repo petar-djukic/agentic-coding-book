@@ -13,13 +13,15 @@ goals:
     goal: The reader can explain why a specification must be self-contained, deriving it from how the harness assembles context.
   - id: G1.9
     goal: The reader can describe the generate-verify-feed-back loop as the harness's heartbeat and say what happens when the verifier is absent.
+  - id: G6.2
+    goal: The reader can extend the build-thread skeleton with edit application behind policy and a verification gate whose output re-enters context (added at GH-63).
 chain:
   - id: Q3
     owns: full
 constitutions:
   - file: ../constitutions/voice.yaml
-    rules: [V-S2, V-S5, V-P1, V-P3, V-V1]
-    note: "The figure carries this chapter; voice.yaml figures rules bind, and the diagram_language question (GH-21) must be settled before drafting."
+    rules: [V-S2, V-S5, V-S7, V-P1, V-P3, V-V1]
+    note: "The figure carries this chapter; voice.yaml figures rules bind, and the diagram_language question (GH-21) must be settled before drafting. V-S7 governs the Build section added at GH-63."
   - file: ../constitutions/argument.yaml
     rules: [A-C1, A-C4, A-X1]
 objective: >
@@ -53,11 +55,14 @@ content:
     cites: []
   - say: "Without the verify step the loop still runs; it just has no way to notice it is wrong, and fluent incorrect output persists."
     cites: [wang2024]
+  - say: "The Build section adds both mechanisms to the build-thread skeleton: a write tool whose policy check runs in the harness's code path rather than in the model's context, and a verify step that appends compiler output to the transcript. Evidence type is mechanism; the deletable a.verify() call makes the verifier-absent case concrete."
+    cites: []
 apparatus:
   objectives:
     - Trace the sequence from a request to a changed file, naming each component.
     - Explain why a specification must be self-contained, from the mechanism rather than as a rule.
     - Describe the generate-verify-feed-back loop and what its absence costs.
+    - Extend the skeleton with edit application behind policy and a verification gate whose output re-enters context.
   sidebars:
     - type: Common Error
       about: writing a specification that cross-references another document the harness will never read

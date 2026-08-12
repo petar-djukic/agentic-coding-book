@@ -9,6 +9,7 @@ After reading this chapter, the reader will be able to:
 1. Trace the sequence from a request to a changed file, naming every component that touches the code.
 2. Explain why a specification must be self-contained, deriving it from how the harness assembles context rather than accepting it as a rule.
 3. Describe the generate-verify-feed-back cycle as the harness's heartbeat, and say what happens when the verifier is absent.
+4. Extend the skeleton from the first chapter with edit application behind policy and a verification gate whose output re-enters context.
 
 ## 4.1 The Model Never Opens a File
 
@@ -92,9 +93,64 @@ The verifier is what turns a proposal into evidence. Without it the loop is a te
 
 This is the fact that the verification half of this book rests on. Parts III and IV are long because this step is load-bearing and because building it well is harder than it looks — a test suite generated from the same misunderstanding as the code will pass. The mechanism is here: the loop has exactly one channel through which reality reaches the model, and if nothing is connected to it, the loop cannot tell a working change from a broken one.
 
+## 4.6 Build: The Write and the Gate
+
+The skeleton built in the first chapter executes whatever the model proposes and checks nothing afterwards — its `Verifying` state passes straight through. Those are the two gaps this chapter traced, and this section closes both: a write that sits behind policy, and a gate whose output re-enters the transcript. The agent gains one field for the work — the repository root it is given at construction, shared with its tools — and `WriteFile` enters the table in `NewAgent` beside `read_file`.
+
+Listing 4.1 writes out the stage section 4.3 described.
+
+**Listing 4.1** Edit application: the policy check runs before the write, and a refusal is a result like any other.
+
+```go
+type WriteFile struct{ root string }
+
+func (t WriteFile) Name() string { return "write_file" }
+
+func (t WriteFile) Run(args map[string]string) (string, error) {
+	path := filepath.Clean(args["path"])
+	if filepath.IsAbs(path) || path == ".." || strings.HasPrefix(path, "../") {
+		return "", fmt.Errorf("write refused: %s is outside the root", args["path"])
+	}
+	full := filepath.Join(t.root, path)
+	if err := os.WriteFile(full, []byte(args["content"]), 0o644); err != nil {
+		return "", err
+	}
+	return "wrote " + path, nil
+}
+```
+
+*The refusal happens in the harness's code path, not in the model's context. A call that fails the check never reaches the file system, whatever the request contained.*
+
+The check is four lines, and its placement is the point. Section 4.3 called removing a tool arithmetic, against an instruction that competes with everything else in the context; the same arithmetic is available inside a tool. The path test does not compete with anything, because the model never sees it — the model sees the refusal string afterwards, appended to the transcript as one more consequence. Listing 1.2's `ReadFile` needs the same test; the write carries it here because the write is what this chapter traced.
+
+Listing 4.2 fills the empty state.
+
+**Listing 4.2** The gate: the compiler's opinion becomes the next request's evidence.
+
+```go
+func (a *Agent) verify() string {
+	cmd := exec.Command("go", "build", "./...")
+	cmd.Dir = a.root
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		return "build failed:\n" + string(out)
+	}
+	return "build ok"
+}
+
+// In Run's switch, the empty state from Listing 1.1 becomes:
+		case Verifying:
+			a.transcript = append(a.transcript, a.verify())
+			a.state = Deciding
+```
+
+*One append is the whole mechanism: the compiler's verdict lands in the transcript, and the next `Decide` is conditioned on it.*
+
+The two-line case is the heartbeat of section 4.4, reduced to its mechanism: the harness converts consequences into context by appending them. Section 4.5's verifier-absent loop is now reachable from working code: deleting the `a.verify()` call leaves a loop that runs every stage, reports completion, and cannot tell a working change from a broken one. The skeleton still forgets — the transcript dies with the process. The chapter that closes this part takes that up, in prose and in its Build section.
+
 ## Summary
 
-A language model produces text and touches nothing. Every operation that reaches a codebase — reading a file, writing an edit, running a compiler — is performed by the harness, which assembles a request, sends it, applies what comes back, and verifies the result. Context assembly is lossy and positional: the harness copies a chosen subset of the repository into a fixed window, and what is not in the window does not exist for that request, which is why a specification that cross-references another document conveys nothing an agent can act on. Between the model's proposal and the file system sits validation and policy, where a removed tool is a different kind of constraint than an instruction not to use one. After the write comes the verifier, whose output re-enters the context as the next input; that cycle is the loop's heartbeat, and it is the mechanism by which consequences become context. Remove the verifier and every stage still executes, producing confident output that nothing has checked — which is the reason verification occupies a third of this book.
+A language model produces text and touches nothing. Every operation that reaches a codebase — reading a file, writing an edit, running a compiler — is performed by the harness, which assembles a request, sends it, applies what comes back, and verifies the result. Context assembly is lossy and positional: the harness copies a chosen subset of the repository into a fixed window, and what is not in the window does not exist for that request, which is why a specification that cross-references another document conveys nothing an agent can act on. Between the model's proposal and the file system sits validation and policy, where a removed tool is a different kind of constraint than an instruction not to use one. After the write comes the verifier, whose output re-enters the context as the next input; that cycle is the loop's heartbeat, and it is the mechanism by which consequences become context. Remove the verifier and every stage still executes, producing confident output that nothing has checked — which is the reason verification occupies a third of this book. The Build section adds both stages to the running skeleton: a write tool that checks its path against policy before touching disk, and a verify step that appends the compiler's output to the transcript.
 
 ## Key Terms
 

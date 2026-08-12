@@ -13,14 +13,16 @@ goals:
     goal: The reader can identify what in their own practice is carried in their head and would have to be externalized.
   - id: G1.15
     goal: The reader can name the moment the human leaves the loop, and what has to be true before that is safe.
+  - id: G6.3
+    goal: The reader can give the build-thread skeleton externalized memory -- state written at session end and read back at the next start -- closing Part I's increment (added at GH-63).
 chain:
   - id: Q5
     owns: partial
     note: "Owns the mechanism half -- that memory has to live somewhere reachable. Part II owns what to write in it."
 constitutions:
   - file: ../constitutions/voice.yaml
-    rules: [V-S2, V-S4, V-S6, V-P3, V-V4]
-    note: "V-V4 binds hardest: this chapter is the hinge into practice and will pull toward instruction. It must stay observation."
+    rules: [V-S2, V-S4, V-S6, V-S7, V-P3, V-V4]
+    note: "V-V4 binds hardest: this chapter is the hinge into practice and will pull toward instruction. It must stay observation. V-S7 governs the Build section added at GH-63, which sits after the hinge and closes the part's increment."
   - file: ../constitutions/argument.yaml
     rules: [A-C1, A-C4, A-X1]
     note: "A-X1: the hinge chapter is where prescription most easily leaks into Part I. It establishes the fact; Part II prescribes from it."
@@ -76,11 +78,14 @@ content:
     cites: []
   - say: "The moment the human leaves the loop is the moment that stops. What was carried in their head is either written down or it is gone, and the loop proceeds on what remains."
     cites: [hunt1999]
+  - say: "The Build section gives the skeleton a notes file read at Start and appended at End, making the gap an if-statement. The unsupplied decision argument locates the wiring question of 6.4 in a call site, and the closing paragraph hands the part to Part II: the skeleton can read; the artifacts worth reading are the practice parts' subject. Evidence type is mechanism."
+    cites: []
 apparatus:
   objectives:
     - Explain why nothing survives a session unless it is externalized.
     - Identify what you currently carry in your head that the harness cannot see.
     - Name what must be true before the human can leave the loop.
+    - Give the skeleton a memory that survives the session gap, written at exit and read back at the next start.
   sidebars:
     - type: Common Error
       about: assuming a correction made in one session persists into the next

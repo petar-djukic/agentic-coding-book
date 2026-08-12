@@ -11,14 +11,16 @@ goals:
     goal: The reader can state what an agent is in terms that survive a change of vendor -- a state machine plus a set of tools.
   - id: G1.2
     goal: The reader can identify the loop, the state, and the tool boundary in any system presented to them as an agent.
+  - id: G6.1
+    goal: The reader can implement the skeleton -- states, transitions, and a tool table -- in Go, as the first increment of the build thread (outline.yaml, added at GH-63).
 chain:
   - id: Q1
     owns: partial
     note: "Answers the first half -- what the thing is. C1.2 answers the second half, that real agents are this skeleton in different clothes."
 constitutions:
   - file: ../constitutions/voice.yaml
-    rules: [V-S1, V-S2, V-S4, V-V1, V-V2]
-    note: "V-V1 matters most here: the chapter must open on the problem -- 'agent' is used for everything and therefore means nothing -- not on a definition."
+    rules: [V-S1, V-S2, V-S4, V-S7, V-V1, V-V2]
+    note: "V-V1 matters most here: the chapter must open on the problem -- 'agent' is used for everything and therefore means nothing -- not on a definition. V-S7 governs the Build section added at GH-63."
   - file: ../constitutions/argument.yaml
     rules: [A-C1, A-C4, A-X2]
     note: "A-X2 is the live risk: a chapter naming real agent frameworks slides into advocacy easily."
@@ -57,11 +59,14 @@ content:
     cites: [latentpatterns-harness]
   - say: "Industry vocabulary grades autonomy without settling what an agent is, which is why a structural definition is worth more than a taxonomy."
     cites: [tmforum-ig1218]
+  - say: "The definition survives construction: the Build section implements the skeleton in Go -- states as an enum, transitions as assignments, the tool table as a map, the model behind an interface -- and opens the build thread the later parts extend. Evidence type is mechanism; the listing demonstrates the chapter's own claim."
+    cites: []
 apparatus:
   objectives:
     - Define an agent as a state machine plus tools, and apply the definition to a system you have used.
     - Identify the loop, the state, and the tool boundary in a system presented as an agent.
     - Explain why the model alone is not an agent.
+    - Implement the skeleton in Go -- the states, the transitions, and a tool table.
   sidebars:
     - type: Common Error
       about: treating the model as the agent, and therefore attributing the loop's behavior to the model

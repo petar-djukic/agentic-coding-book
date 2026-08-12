@@ -45,6 +45,24 @@ structure_rules:
     rule: "Every chapter ends with a summary restating what the reader can now do, matching the learning objectives, and a key-terms table with one-line definitions."
     check: "Final two sections are 'Summary' and a key-terms table; every term defined in the chapter appears in the table, and the summary covers each learning objective."
     source: "book-voice.md rule 6"
+  - id: V-S7
+    name: build_sections
+    rule: >
+      A chapter that carries the build thread closes its technical body with
+      a Build section: the last numbered section before the summary, its
+      heading beginning "Build:", constructing the piece of the part's build
+      deliverable (outline.yaml: build_thread) that the chapter's mechanism
+      explains. Listings follow the figure apparatus: a bold "Listing N.M"
+      line above a fenced code block with a language tag, an italic caption
+      below, and a reference from the prose. The section demonstrates the
+      mechanism as running code; it does not prescribe practice, so
+      argument.yaml A-X1 binds inside it the same as outside.
+    check: >
+      Where a section heading contains "Build:", it is the last numbered
+      section before Summary; every "Listing N.M" is followed by a fenced
+      code block with a language tag and an italic caption, and is
+      referenced from the section's prose.
+    source: "GH-62 (build thread); GH-63 applies it to Part I"
 
 prose_rules:
   - id: V-P1

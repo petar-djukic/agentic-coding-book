@@ -104,7 +104,7 @@ established. Parts II–VI do not yet, and are follow-on work:
 | P2 — Construction and Requirements | C2.1–C2.7 | to write; C2.1 and C2.2 are drafted prose needing SRDs written against the existing text |
 | P3 — Testing | C3.1–C3.5 | to write |
 | P4 — Correctness | C4.1–C4.5 | to write |
-| P5 — Agent Orchestration | C5.1–C5.8 | to write; C5.4 and C5.5 are blocked on missing background material |
+| P5 — Agent Orchestration | C5.1–C5.9 | to write; C5.4 and C5.5 are blocked on missing background material |
 | P6 — Instrumentation | C6.1–C6.7 | to write |
 
 The Parts II–VI SRDs wait on those parts stabilizing rather than on effort:
