@@ -146,9 +146,33 @@ sidebars:
     throughout. The labels above are canonical; GH-12 applies the rename to
     the drafted chapters.
 
+section_numbering:
+  rule: >
+    Chapters are numbered by their position in the whole book, counting from
+    the first chapter after the front matter and ignoring part boundaries.
+    Sections carry that chapter number: chapter 7 has sections 7.1, 7.2, and
+    subsections 7.3.1, 7.3.2. Part dividers, the introduction, and the
+    references are not chapters and are not counted.
+  rationale: >
+    Decided at GH-35. The book previously numbered Part I's sections by
+    position within the part while Part II kept absolute positions from an
+    earlier arc, which put two section 2.1s and two section 4.1s in the same
+    PDF. Any scheme keyed on position within a part collides across parts --
+    C1.2 and C2.1 both reduce to 2 -- so the chapter number has to be
+    book-wide. This also matches the Deitel apparatus the book already
+    follows, and the figure numbering below, which was always book-wide.
+  tradeoff: >
+    Inserting a chapter renumbers every chapter after it, across parts. That
+    is the accepted cost: it is the convention readers expect, and `mage
+    audit` catches a stale number rather than leaving it to be noticed in a
+    built PDF.
+  check: >
+    Every `## N.M` and `### N.M.K` heading in a chapter uses that chapter's
+    book-wide position as N, and figure numbers agree.
+
 figures:
   rule: "Every figure has three parts: a bold figure number above, the diagram, and an italic caption below."
-  numbering: "Sequential within the chapter -- Figure 1.1, Figure 1.2, Figure 3.4. First number is the chapter, second the position."
+  numbering: "Sequential within the chapter -- Figure 1.1, Figure 1.2, Figure 3.4. First number is the chapter's book-wide position (section_numbering), second the position within the chapter."
   caption: "Self-contained: a reader scanning the chapter understands the figure from the caption alone."
   checks:
     - "No figure without a caption."

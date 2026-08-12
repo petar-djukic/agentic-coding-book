@@ -39,6 +39,7 @@ func audit(root string, figures, build func() error) error {
 		findings = append(findings, checkSpec(spec)...)
 		findings = append(findings, checkProse(root, spec)...)
 		findings = append(findings, checkSidebarAuthorship(root, spec)...)
+		findings = append(findings, checkSectionNumbering(root)...)
 	}
 
 	if figures != nil {
@@ -555,6 +556,71 @@ func checkProse(root string, s *spec) []finding {
 		}
 		if !headings["summary"] {
 			add(path, "V-S6", "no Summary section")
+		}
+	}
+	return out
+}
+
+// sectionHeadingRe matches a numbered section or subsection heading and
+// captures the leading chapter number.
+var sectionHeadingRe = regexp.MustCompile(`(?m)^#{2,3} +(\d+)\.(\d+(?:\.\d+)?) `)
+
+// checkSectionNumbering enforces voice.yaml's section_numbering rule: a
+// chapter's sections carry that chapter's book-wide position, counting from
+// the first chapter after the front matter and ignoring part boundaries.
+//
+// The rule exists because any scheme keyed on position *within a part*
+// collides across parts -- the second chapter of Part I and the first chapter
+// of Part II both reduce to 2 -- which is how the book ended up with two
+// section 2.1s and two section 4.1s in one PDF (GH-35). Figure numbers share
+// the chapter number, so they are checked against the same position.
+func checkSectionNumbering(root string) []finding {
+	// The introduction is front matter, not chapter 1, so it is dropped before
+	// positions are assigned rather than skipped inside the loop -- skipping it
+	// in place would still consume a number and shift every chapter by one.
+	type chapter struct {
+		path string
+		body string
+	}
+	var chapters []chapter
+	for _, path := range chapterFiles(root) {
+		data, err := os.ReadFile(filepath.Join(root, path))
+		if err != nil {
+			continue
+		}
+		if isIntroduction(string(data)) {
+			continue
+		}
+		chapters = append(chapters, chapter{path, string(data)})
+	}
+
+	var out []finding
+	for i, ch := range chapters {
+		path, body := ch.path, ch.body
+		want := i + 1
+		reported := map[string]bool{}
+		for _, m := range sectionHeadingRe.FindAllStringSubmatch(body, -1) {
+			if m[1] == fmt.Sprint(want) || reported[m[1]] {
+				continue
+			}
+			reported[m[1]] = true
+			out = append(out, finding{
+				File:   path,
+				Rule:   "voice.yaml: section_numbering",
+				Detail: fmt.Sprintf("sections are numbered %s.x but this is chapter %d", m[1], want),
+			})
+		}
+		for _, m := range figureRe.FindAllStringSubmatch(body, -1) {
+			chapter := strings.SplitN(m[1], ".", 2)[0]
+			if chapter == fmt.Sprint(want) || reported["fig"+chapter] {
+				continue
+			}
+			reported["fig"+chapter] = true
+			out = append(out, finding{
+				File:   path,
+				Rule:   "voice.yaml: section_numbering",
+				Detail: fmt.Sprintf("Figure %s is numbered for chapter %s but this is chapter %d", m[1], chapter, want),
+			})
 		}
 	}
 	return out

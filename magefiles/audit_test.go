@@ -4,6 +4,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -496,5 +497,108 @@ func TestSidebarAuthorshipSkipsUncommittedLines(t *testing.T) {
 	}
 	if err := audit(root, nil, nil); err != nil {
 		t.Fatalf("an uncommitted sidebar has no commit to judge; got:\n%v", err)
+	}
+}
+
+// ------------------------------------------------ section numbering (GH-35)
+
+// numberedChapter is a minimal chapter whose sections carry the given number.
+func numberedChapter(title string, n int) string {
+	return fmt.Sprintf(`# %s
+
+## Learning Objectives
+
+1. Do the thing.
+
+## %d.1 First
+
+Prose that cites something [@hunt1999].
+
+### %d.1.1 A subsection
+
+More prose.
+
+## Summary
+
+Done.
+`, title, n, n)
+}
+
+// twoChapterTree adds a second chapter so positions can actually be wrong.
+func twoChapterTree(firstNum, secondNum int) tree {
+	files := cleanTree()
+	files["03-what-is-an-agent.md"] = numberedChapter("What is an agent?", firstNum)
+	files["04-second-chapter.md"] = numberedChapter("Second chapter", secondNum)
+	return files
+}
+
+func TestSectionNumberingAcceptsBookWidePositions(t *testing.T) {
+	if err := auditTree(t, twoChapterTree(1, 2)); err != nil {
+		t.Fatalf("chapters 1 and 2 numbered 1.x and 2.x should pass, got:\n%v", err)
+	}
+}
+
+// The defect GH-35 fixed: a second chapter numbered as though it restarted in
+// a new part, which is what put two 2.1s in one PDF.
+func TestSectionNumberingRejectsPerPartRestart(t *testing.T) {
+	err := auditTree(t, twoChapterTree(1, 1))
+	if err == nil {
+		t.Fatal("a second chapter numbered 1.x should be a finding")
+	}
+	for _, want := range []string{"section_numbering", "numbered 1.x", "chapter 2"} {
+		if !strings.Contains(err.Error(), want) {
+			t.Errorf("finding should mention %q, got:\n%v", want, err)
+		}
+	}
+}
+
+// The introduction is front matter. Counting it would shift every chapter by
+// one, which is the bug this test pins.
+func TestSectionNumberingDoesNotCountTheIntroduction(t *testing.T) {
+	files := twoChapterTree(1, 2)
+	files["01-introduction.md"] = `# Introduction
+
+Front matter, not a chapter.
+`
+	if err := auditTree(t, files); err != nil {
+		t.Fatalf("the introduction must not consume a chapter number, got:\n%v", err)
+	}
+}
+
+// Part dividers and the references are not chapters either.
+func TestSectionNumberingSkipsPartDividersAndReferences(t *testing.T) {
+	files := twoChapterTree(1, 2)
+	files["02-part-i.md"] = "# Part I -- Agents\n\nA divider.\n"
+	files["05-references.md"] = "# References\n"
+	if err := auditTree(t, files); err != nil {
+		t.Fatalf("dividers and references must not consume chapter numbers, got:\n%v", err)
+	}
+}
+
+// Figures share the chapter number, so a stale figure is caught even when the
+// section headings are right.
+func TestSectionNumberingCatchesAStaleFigureNumber(t *testing.T) {
+	files := twoChapterTree(1, 2)
+	files["04-second-chapter.md"] = strings.Replace(
+		numberedChapter("Second chapter", 2),
+		"## Summary",
+		"**Figure 3.1** A caption.\n\n![](figures/fig-3-1-x.png)\n\nFigure 3.1 is referenced here.\n\n## Summary", 1)
+	err := auditTree(t, files)
+	if err == nil {
+		t.Fatal("Figure 3.1 in chapter 2 should be a finding")
+	}
+	if !strings.Contains(err.Error(), "Figure 3.1 is numbered for chapter 3") {
+		t.Errorf("finding should name the mismatch, got:\n%v", err)
+	}
+}
+
+// One finding per wrong chapter number, not one per heading.
+func TestSectionNumberingReportsOncePerChapter(t *testing.T) {
+	err := auditTree(t, twoChapterTree(1, 1))
+	if err == nil {
+		t.Fatal("expected a finding")
+	}
+	if got := strings.Count(err.Error(), "voice.yaml: section_numbering"); got != 1 {
+		t.Errorf("a chapter with several wrong headings should report once, got %d", got)
 	}
 }

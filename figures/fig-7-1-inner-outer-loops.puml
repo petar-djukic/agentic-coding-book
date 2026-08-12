@@ -1,5 +1,5 @@
 @startuml
-' Figure 2.1 -- The inner and outer loops of software construction.
+' Figure 7.1 -- The inner and outer loops of software construction.
 ' The outer loop is the programmer's: requirements, architecture, decomposition,
 ' and a verification gate between increments. The inner loop is the agent's:
 ' specify, generate, verify, and back on failure.
