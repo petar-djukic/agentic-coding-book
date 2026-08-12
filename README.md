@@ -79,7 +79,8 @@ follow, that is a defect — open an issue.
 ## Building the PDF
 
 Requires [mage](https://magefile.org/), pandoc, xelatex, and plantuml
-for figures. The PDF renders through the vendored
+for figures. Diagrams are PlantUML sources under `figures/`; `mage figures`
+renders them to PNGs, which are build artifacts rather than committed files. The PDF renders through the vendored
 [Eisvogel](https://github.com/Wandmalfarbe/pandoc-latex-template)
 template.
 

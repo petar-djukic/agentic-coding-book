@@ -143,15 +143,31 @@ figures:
     - "Every figure is referenced from the prose."
     - "A diagram with more than twelve nodes is decomposed into several figures."
   diagram_language:
-    status: unresolved
-    detail: >
-      book-voice.md states that all figures are written in Mermaid, and the
-      two drafted chapters carry inline mermaid blocks. The build renders
-      PlantUML from figures/*.puml and the pandoc path has no mermaid
-      filter, so those blocks currently reach the PDF as literal code. This
-      rule is deliberately left unbound rather than picking a side that the
-      build or the drafted chapters would then contradict.
-    owner: "GH-21; ARCHITECTURE.yaml open_questions.Q1"
+    status: resolved
+    rule: >
+      Diagrams are PlantUML. The source is a versioned file under figures/,
+      named fig-<chapter>-<figure>-<slug>.puml; mage figures renders it to a
+      PNG beside it, and the chapter references the PNG with an image link
+      between the bold figure number and the italic caption. Rendered PNGs
+      are build artifacts and are not committed.
+    rationale: >
+      book-voice.md said Mermaid, and the two drafted chapters were written
+      that way, but nothing rendered them: the build reads figures/*.puml and
+      the pandoc path has no mermaid filter, so those blocks reached the PDF
+      as literal code. Rendering Mermaid instead would have put a headless
+      browser in the build chain for everyone who clones the book --
+      mermaid-filter drives mermaid-cli through puppeteer, which needs its
+      own Chromium. PlantUML needs only the plantuml and java the README
+      already requires, it was already wired into mage figures, and it is the
+      convention the author's other document repositories use
+      (declarative-agents/design-patterns commits 33 .puml sources and
+      gitignores their PNGs). Resolved at GH-21.
+    tradeoff: >
+      GitHub renders inline mermaid natively and does not render an
+      uncommitted PNG, so figures no longer appear when reading a chapter on
+      GitHub. The rendered book and the article versions are unaffected. If
+      that becomes the binding constraint, commit the PNGs rather than
+      switching the source format back.
 
 register_test:
   statement: >
