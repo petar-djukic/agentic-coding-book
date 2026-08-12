@@ -9,9 +9,8 @@ This book teaches experienced programmers how to work across the full
 range of that shift — from a single interactive session to autonomous
 pipelines running hundreds of tasks. The material draws on production
 runs rather than demos: 44,628 lines of Go generated across 31 pipeline
-runs, 123 Unix utilities regenerated from specification and verified
-against the GNU reference binaries by differential testing, and a
-$33.29 generation session accounted for token by token. Two open
+runs, and 123 Unix utilities regenerated from specification and verified
+against the GNU reference binaries by differential testing. Two open
 repositories — [cobbler-scaffold](https://github.com/petar-djukic/cobbler-scaffold)
 and [go-unix-utils](https://github.com/petar-djukic/go-unix-utils) —
 serve as both the subject and the laboratory.
