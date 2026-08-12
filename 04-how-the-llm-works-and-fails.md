@@ -1,4 +1,4 @@
-# How the Machine Works
+# How the LLM Works, and Fails
 
 ## Learning Objectives
 
@@ -8,10 +8,9 @@ After reading this chapter, the reader will be able to:
 2. Explain what tokens are, how they differ from words, and why this matters for context budgets.
 3. Define the context window and identify its constraints on agent-based development.
 4. Explain the interpolation model of LLM behavior and use it to predict when the model will fail.
-5. Describe the agentic loop: how a next-token predictor becomes an agent that takes actions through tool calls and a harness.
-6. Identify the four failure modes of in-context generalization and explain why each makes external verification necessary.
+5. Identify the four failure modes of in-context generalization and explain why each makes external verification necessary.
 
-## 3.1 What an LLM Is (and Is Not)
+## 5.1 What an LLM Is (and Is Not)
 
 Programmers come to coding agents with a mental model of what the model "is." The mental model determines their expectations, and wrong expectations produce wrong results. Four common models are wrong in specific ways.
 
@@ -41,7 +40,7 @@ The model generates one token, appends it to the sequence, and runs the process 
 
 > **Performance Observation:** The generation process has two phases that programmers observe directly. The **prefill** phase processes the entire input at once — this is the initial pause before output begins. The **decode** phase generates tokens one at a time — this is the streaming text that follows. Long inputs produce long prefill pauses. Long outputs produce long decode times. These are different bottlenecks with different costs.
 
-## 3.2 Tokens and the Context Budget
+## 5.2 Tokens and the Context Budget
 
 A token is not a word.
 
@@ -78,7 +77,7 @@ Two properties of context that affect agent behavior:
 
 > **Good Practice:** Place stable, reusable context (system prompts, constitutions, architectural constraints) at the beginning of the window, and task-specific, variable content (the current file, the current requirement) at the end. The beginning earns the stable material twice over: it is well attended, and it is the only position that can be cached — prefix caching lets the serving infrastructure reuse the computation for the unchanging head of the context, cutting latency and cost on every subsequent request. The end earns the current task because recency favors it. What lands in the middle is what you can most afford to lose.
 
-## 3.3 The Interpolation Machine
+## 5.3 The Interpolation Machine
 
 How should a programmer think about what the model "does" when it generates code?
 
@@ -111,40 +110,11 @@ The interpolation metaphor captures what matters for agentic coding:
 
 > **From the Field:** The interpolation model changed how I write specifications. When I described architecture in prose — "use the repository pattern with dependency injection" — the model interpolated from the average repository pattern in its training data, which was not my repository pattern. When I included a concrete example — an actual interface definition with the function signatures I wanted — the model interpolated from that example. The closer the context is to what I want, the closer the interpolation lands. Specifications are interpolation anchors.
 
-## 3.4 How Tokens Become Actions
-
-A next-token predictor cannot compile code, run tests, read files, or push to GitHub. It predicts text. The mechanism that turns text prediction into action is the **agentic loop** — a cycle where the model generates structured tool calls, an external system executes them, and the results are fed back into context for the next prediction.
-
-> **Definition: Agentic loop** — the cycle by which a language model takes actions: the model generates a response that includes structured tool calls, a harness executes those calls, the results are appended to context, and the model generates the next response conditioned on the updated context. The cycle repeats until the model signals completion or a stop condition is reached.
-
-The loop has five steps:
-
-1. The model receives context: a task description, conversation history, and a set of tool definitions describing what tools are available and what arguments they accept.
-2. The model generates a response. If the response includes a structured tool call (typically formatted as JSON), generation pauses.
-3. The harness intercepts the tool call, validates it, and executes it — compiling code, running a test, reading a file, making an API call.
-4. The tool's output is appended to the context as a new message.
-5. The model generates its next response, now conditioned on the original context plus the tool result.
-
-This cycle repeats. A coding agent session might loop dozens or hundreds of times: read a file, propose a change, write the change, run the compiler, read the errors, fix the code, run the tests, read the results, fix the failing test, run again.
-
-> **Definition: Agent harness** — the orchestration layer around a language model that manages prompts, tool execution, policy checks, and loop control for autonomous agent behavior [@latentpatterns-harness].
-
-The harness is the machinery that makes the loop work. It is not the model. It is the software around the model. Claude Code is a harness. The Anthropic Agent SDK builds harnesses. The distinction matters because the harness controls things the model cannot control:
-
-- **What tools are available.** The model can only call tools the harness provides. Removing a dangerous tool from the harness is more reliable than instructing the model not to use it.
-- **What happens when a tool fails.** The harness decides whether to retry, report the error, or stop the loop. The model sees only the result the harness feeds back.
-- **When to stop.** The model may signal completion, but the harness enforces stop conditions — maximum iterations, timeout limits, budget caps. Without these, the loop can run indefinitely.
-- **Policy enforcement.** The harness can intercept tool calls before execution and reject those that violate constraints — blocking writes to protected files, preventing destructive operations, enforcing scope boundaries.
-
-The model's role in the loop is to predict what text (including tool calls) comes next, given everything in context. It selects which tool to call the same way it selects every other token — by interpolation from patterns in training data. This means it can call the wrong tool, call the right tool with wrong arguments, or fail to call a tool when one is needed. The harness cannot fix wrong tool selection, but it can constrain the blast radius.
-
-> **Good Practice:** When building or configuring a harness, limit the available tools to those the task requires. Every tool definition consumes context tokens. Every unnecessary tool is an opportunity for the model to select incorrectly. A focused tool set produces better tool selection and leaves more context for the task itself.
-
-## 3.5 What the Model Cannot Do
+## 5.4 What the Model Cannot Do
 
 The interpolation model predicts specific failure modes. These are not edge cases — they are structural properties of how the model works. Understanding them before relying on agent-generated code is not optional.
 
-### 3.5.1 Out-of-Distribution Extrapolation
+### 5.4.1 Out-of-Distribution Extrapolation
 
 The model interpolates from training data. When the target is outside the distribution — a proprietary API the model has never seen, a novel architectural pattern, a domain-specific convention that does not appear in public code — the interpolation anchors are wrong. The model generates something plausible from the nearest in-distribution examples, which may be the wrong analogy entirely.
 
@@ -152,7 +122,7 @@ This failure mode is predictable. If the code you need is similar to code that e
 
 The mitigation is context. Providing examples, interface definitions, and architectural constraints in context moves the interpolation target from "the average pattern in training data" to "the pattern adjacent to what you showed the model." This is why specifications matter more for novel code than for standard code — and why constructional intent must be explicit for anything that deviates from common patterns.
 
-### 3.5.2 Sensitivity to Framing
+### 5.4.2 Sensitivity to Framing
 
 The model's output is sensitive to how context is structured in ways that are not always predictable. The order of examples matters — position carries weight, in the pattern described earlier in this chapter: the ends of the window are attended to more reliably than the middle, so the same example moved from the end to the middle of a long context can stop influencing the output. The format of instructions matters — numbered lists produce different behavior than prose paragraphs. The verbosity of specifications matters — terse specifications leave more room for interpolation (more guessing), while verbose specifications constrain the output more tightly.
 
@@ -160,7 +130,7 @@ This sensitivity is a property of interpolation: small changes to the interpolat
 
 For agentic coding, the practical response is not to chase the perfect prompt. It is to build verification that catches the cases where framing shifts the output in unintended directions. The verification stack exists because no prompt is reliable enough to make verification unnecessary.
 
-### 3.5.3 Context Poisoning
+### 5.4.3 Context Poisoning
 
 Everything in context is treated as evidence. The model does not distinguish between correct and incorrect information in its context window. Stale code from earlier in a long agent session, conflicting instructions from different sources, incorrect tool outputs from a flaky test — all of these shift the interpolation.
 
@@ -168,7 +138,7 @@ This failure mode is insidious because it accumulates. In a short conversation, 
 
 Context hygiene — actively curating what is and is not in the model's window — is a design discipline, not an afterthought. The orchestration techniques in Part V include context management strategies: clearing stale state between tasks, isolating sub-agents with focused context, and compressing history to preserve relevant information while evicting noise.
 
-### 3.5.4 Confident Miscalibration
+### 5.4.4 Confident Miscalibration
 
 The model does not know what it does not know. When interpolation fails — when the target is out of distribution, when context is poisoned, when framing has shifted the output — the model generates a response that is fluent, well-structured, and confident. There is no hesitation, no uncertainty signal, no indication that the interpolation was bad.
 
@@ -178,7 +148,7 @@ This is why verification is not optional. The verification stack — compiler, l
 
 > **Good Practice:** Assume the model is wrong until verification proves otherwise. The interpolation machine produces plausible output by design. The verification stack exists because the model cannot verify its own output. Trust the verification results. Do not trust the code's appearance.
 
-## 3.6 Sampling: Controlling the Interpolation
+## 5.5 Sampling: Controlling the Interpolation
 
 When the model generates a token, it does not produce a single answer. It produces a probability distribution over every token in its vocabulary — over 100,000 candidates. The next token is selected from this distribution, and three parameters control how that selection happens.
 
@@ -194,9 +164,9 @@ For agentic coding, the practical implication is that code generation tasks — 
 
 Most coding agent frameworks set sampling parameters automatically. The reader does not need to tune them for routine work. The concept matters because it reveals something about what the model is doing: it is not producing "the answer." It is producing a distribution and sampling from it. Every response is one draw from a space of possibilities. A different random seed would produce a different response. The verification stack must hold regardless of which draw the model produced.
 
-## 3.7 Why This Matters for the Rest of the Book
+## 5.6 Why This Matters for the Rest of the Book
 
-The mental model in this chapter — the model as an interpolation machine, operating within a fixed context window, taking actions through a harness-managed loop — connects to every subsequent part of the book.
+The mental model in this chapter — the model as an interpolation machine working inside a fixed context window — connects to every subsequent part of the book.
 
 **The model is an interpolator.** What is in context determines what it interpolates from. This means context engineering is a discipline, not a convenience. Specifications, constitutions, and architectural constraints are not documentation — they are the programming interface for the model's behavior. Part II (Construction and Requirements) addresses how to write specifications that produce reliable interpolation. Part V (Agent Orchestration) addresses how to manage context across hundreds of tasks.
 
@@ -204,11 +174,11 @@ The mental model in this chapter — the model as an interpolation machine, oper
 
 **The model interpolates from training patterns.** Novel constructional decisions — the architectural choices that define how software is built — are exactly the kind of thing the model will get wrong, because they are specific to the programmer's intent and rarely appear in training data. Externalizing constructional intent and defining the construction order are not optional practices for ambitious projects — they are the mechanisms that prevent the model from filling architectural gaps with training-data averages.
 
-**The model operates in a loop with tools.** The loop needs management — tool selection, error handling, stop conditions, context budgets. The harness manages the loop for a single task. The orchestrator manages the loop across tasks. Part V addresses both.
+**The model runs inside a loop it does not control.** The previous chapter traced that loop: the harness assembles context, applies what comes back, verifies it, and feeds the result in as the next input. Everything in this chapter is a property of the part inside that loop. Part V addresses what happens when one loop is not enough.
 
 ## Summary
 
-A large language model is a next-token predictor — a neural network that generates text one token at a time by interpolating across patterns learned during training. The context window is the fixed-size buffer of tokens the model can see; everything the model knows about the current task must fit within it, and context is consumed by input, output, and reasoning alike. The interpolation model explains both the model's capabilities (generating correct code for common patterns) and its failure modes (out-of-distribution extrapolation, sensitivity to framing, context poisoning, and confident miscalibration). The agentic loop — model generates tool calls, harness executes them, results return to context — is the mechanism that turns text prediction into action. The harness controls the loop; the model predicts within it. Sampling parameters control the tradeoff between predictability and variety, but do not eliminate the fundamental property that every response is one draw from a distribution. Verification is not optional because the model cannot distinguish good interpolation from bad.
+A large language model is a next-token predictor — a neural network that generates text one token at a time by interpolating across patterns learned during training. The context window is the fixed-size buffer of tokens the model can see; everything the model knows about the current task must fit within it, and context is consumed by input, output, and reasoning alike. The interpolation model explains both the model's capabilities (generating correct code for common patterns) and its failure modes (out-of-distribution extrapolation, sensitivity to framing, context poisoning, and confident miscalibration). Sampling parameters control the tradeoff between predictability and variety, but do not eliminate the fundamental property that every response is one draw from a distribution. Verification is not optional because the model cannot distinguish good interpolation from bad.
 
 ## Key Terms
 
@@ -218,7 +188,5 @@ A large language model is a next-token predictor — a neural network that gener
 | **Token** | The atomic unit of text a language model processes, produced by a deterministic tokenizer that maps text strings to numerical identifiers |
 | **Context window** | The maximum number of tokens a model can process and generate in a single request, including input, output, and reasoning |
 | **Interpolation** | The process by which a model constructs a response by finding the point in its learned space most consistent with the provided context — more than pattern matching, less than reasoning |
-| **Agentic loop** | The cycle of model generation, tool execution by the harness, result injection into context, and next-step prediction that enables LLMs to take actions |
-| **Agent harness** | The orchestration layer around a language model that manages prompts, tool execution, policy checks, and loop control |
 | **Sampling** | The process of selecting the next token from the model's predicted probability distribution, controlled by temperature, top-k, and top-p parameters |
 | **Confident miscalibration** | The failure mode where the model generates fluent, confident output regardless of whether the interpolation is correct — making surface inspection unreliable as a verification method |

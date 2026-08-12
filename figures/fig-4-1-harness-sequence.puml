@@ -1,0 +1,53 @@
+@startuml
+' Figure 4.1 -- One request, traced from the programmer to a changed file.
+' The model appears once, in the middle, and touches nothing. Every arrow that
+' reaches the file system or the compiler leaves the harness.
+
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam sequenceMessageAlign left
+skinparam ArrowFontSize 11
+
+actor "Programmer" as P
+participant "Harness" as H
+participant "Model" as M
+database "File system" as F
+participant "Compiler\nand tests" as C
+
+P -> H : "add retry to the uploader"
+
+group Assemble context
+  H -> F : read uploader.go
+  F --> H : file contents
+  H -> H : build the request:\nsystem prompt, tools,\nfiles, prior turns
+end
+
+H -> M : context
+M --> H : text, including a\nstructured tool call
+
+group Apply
+  H -> H : validate the tool call\nagainst policy
+  H -> F : write uploader.go
+  F --> H : written
+end
+
+group Verify
+  H -> C : build and test
+  C --> H : errors, failures, output
+end
+
+alt verification failed
+  H -> H : append the output\nto the context
+  H -> M : context, now including\nwhat broke
+  M --> H : a corrected edit
+  note right of H
+    The loop repeats from
+    Apply. This is the
+    harness's heartbeat.
+  end note
+else verification passed
+  H -> P : done, with what changed
+end
+
+@enduml
