@@ -33,13 +33,13 @@ accepted:
       chapter is reporting, not the minimizer the rule bars. May survive as a
       permanent exception; GH-28 decides.
 
-  - file: 10-language-selection.md
+  - file: 11-language-selection.md
     rule: 'voice.yaml: forbidden_terms'
     detail: 'uses "powerful"'
     issue: GH-28
     note: '"C++ is a powerful language precisely because it offers choice."'
 
-  - file: 09-layered-construction.md
+  - file: 10-layered-construction.md
     rule: 'voice.yaml: figures.checks'
     detail: Figure 2.1 is never referenced from the prose
     issue: GH-28

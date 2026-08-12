@@ -48,6 +48,12 @@ citations:
   - id: hunt1999
     role: context
     note: the practitioner lineage for writing things down; cited to place the idea, not to derive it
+  - id: tmforum-ig1218
+    role: context
+    note: >
+      Added at GH-11. The published autonomy scale section 6.5 uses as
+      vocabulary. Same source C1.1 uses to make the opposite point, which the
+      two passages reconcile explicitly.
   - id: du2026
     role: anchor
     note: >
@@ -83,12 +89,34 @@ apparatus:
   key_terms: [externalized_memory, context_window, knowledge_manager, specification, constitution]
 figures:
   - shows: "Two sessions separated by a gap, showing what crosses it -- committed artifacts and tracker state -- and what does not: conversation, corrections, and the programmer's unwritten intent."
-    status: planned
+    status: drawn
+    path: figures/fig-6-1-what-crosses-the-gap.puml
+    label: "Figure 6.1"
+
 links:
   requires: [C1.3, C1.4, C1.5]
   supports: [C2.3, C2.4, C2.5, C5.3, C5.6]
 gaps:
-  - "The human-leaves-the-loop framing overlaps the autonomy-levels material parked in unplaced-intent-autonomy-and-verification.md (road-map.yaml: unplaced). Decide at drafting whether the levels arrive here or in Part II, and record it -- the introduction still frames the book on them."
+  - >
+    Answered at GH-11. The autonomy levels arrive HERE, in section 6.5, not in
+    Part II. Three reasons. C2.1 section 2.6 already depends on them being
+    defined in Part I and uses L2/L3/L4 substantively, so A-C4 needs a Part I
+    fact for it to point at. G1.15 asks the reader to name the moment the human
+    leaves the loop, and the levels are the scale for exactly that. And the
+    levels measure how much context has been externalized, which is this
+    chapter's subject. Only the boxed definition and the L0/L5 endpoints are
+    given here; the per-level walkthrough and the two bottleneck tables stay
+    parked and need a Part II home.
+  - >
+    Correction to the premise of the gap above: the introduction does NOT frame
+    the book on the autonomy levels. 01-introduction.md is 379 words with three
+    sections and does not mention them. The road-map `unplaced` entry asserting
+    otherwise was stale and is corrected under GH-11.
+  - >
+    C1.1 section 1.1 cites tmforum-ig1218 to set the autonomy scales aside as a
+    definition of what an agent is. Section 6.5 picks that up explicitly and
+    distinguishes the two jobs -- useless as a definition, right-shaped as a
+    measure of delegation. If either passage is edited, keep them in agreement.
 acceptance:
   - Every citation id resolves in references.yaml.
   - The chapter establishes the mechanism without prescribing what to write (A-X1); Part II owns that.
