@@ -136,21 +136,6 @@ func Outline() error {
 	return nil
 }
 
-// Critic runs an LLM critic over a drafted chapter and reports findings
-// against the constitutions and the chapter's SRD. Pass a chapter file, or
-// "all" to critique every drafted chapter. It never edits the prose, and it
-// skips rather than fails when ANTHROPIC_API_KEY is unset.
-func Critic(chapter string) error {
-	args := []string{"run", "./cmd/critic"}
-	if chapter != "" && chapter != "all" {
-		args = append(args, chapter)
-	}
-	if err := sh.RunV("go", args...); err != nil {
-		return fmt.Errorf("critic: %w", err)
-	}
-	return nil
-}
-
 // Clean removes generated PNGs and PDFs.
 func Clean() error {
 	pngs, _ := filepath.Glob(filepath.Join(figuresDir, "*.png"))

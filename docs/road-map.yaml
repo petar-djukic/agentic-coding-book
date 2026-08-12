@@ -16,12 +16,12 @@ meta:
   gates: >
     A drafting release opens once its SRDs exist under docs/srd/ and the
     constitutions it is checked against are in place. Each drafted chapter
-    passes mage critic (GH-19) against constitutions/voice.yaml and
-    constitutions/argument.yaml before its release closes, and every claim
-    resolves to a citation in references.yaml.
+    passes mage audit before its release closes -- no unaccepted finding
+    against constitutions/voice.yaml -- and every claim resolves to a
+    citation in references.yaml.
 
 status_values:
-  drafted: "full draft in the repository, cited, passing the critic"
+  drafted: "full draft in the repository, cited, passing mage audit"
   partial: "draft material exists but does not yet match the chapter as specified"
   outline: "described in outline.yaml and ARCHITECTURE.yaml; no prose"
   unplaced: "drafted prose whose home in the current structure is unsettled"
@@ -55,10 +55,12 @@ releases:
     status: complete
     units: [GH-18, GH-19]
     gate: >
-      Completed under EPIC GH-13: mage outline renders the SRDs to a PDF and
-      mage critic reports findings by constitution rule id. The critic's model
-      call is gated on ANTHROPIC_API_KEY and has not been exercised against
-      the live API -- first run with a key is the real test (GH-19).
+      Completed under EPIC GH-13 and corrected at GH-27: mage outline renders
+      the SRDs to a PDF, and mage audit checks specification consistency,
+      prose conformance, and the build together, reporting every finding by
+      rule id. GH-19 first shipped the second half as an LLM API client; that
+      was the wrong shape -- documentation checking here is deterministic, and
+      the persona critique belongs in a skill the harness runs.
 
   - id: rel01.0
     name: "Part I -- Agents and Harnesses"

@@ -11,7 +11,7 @@ meta:
   version: 1
 
 drafting_pipeline:
-  name: "srd-draft-critic-revise"
+  name: "srd-draft-audit-revise"
   rule: "A section is not drafted before its SRD exists. The SRD is the contract; the draft is checked against it and against the constitutions, not against taste."
   steps:
     - id: srd
@@ -29,13 +29,25 @@ drafting_pipeline:
         glossary lacks is added there first.
     - id: de_ai
       rule: "Scan the draft before committing (voice.yaml: de_ai). A flag is a prompt to look, not a verdict; accepted residuals are recorded in the unit's completion comment."
-    - id: critic
-      rule: "Run mage critic (GH-19) over the draft. It reports findings by constitution rule id against the section's SRD and never edits the prose."
+    - id: audit
+      rule: >
+        Run mage audit over the draft. It reports every mechanically checkable
+        breach by rule id -- forbidden terms, missing chapter apparatus,
+        retired sidebar labels, unresolved citations, unreferenced figures --
+        and fails on anything not accepted in docs/audit-baseline.yaml. It
+        never edits the prose.
+    - id: critique
+      rule: >
+        Run the review-chapter skill over the draft for what no checker can
+        judge: clarity, honesty, pedagogy, whether the argument holds. The
+        skill runs in the harness and needs no API key of its own. Its output
+        is advice for the drafter, not a gate.
     - id: revise
       rule: "Fix blocking findings. A finding dismissed as an accepted residual is recorded with its reason, not silently ignored."
 
 build_gate:
   commands:
+    - "mage audit -- specification consistency, prose conformance, and the build, reported together."
     - "mage all -- renders figures, then builds the PDF through the Eisvogel pandoc path into generated-files/."
     - "mage outline (GH-18) -- regenerates the outline PDF from the SRDs; it must run clean after any structural change."
   additional_checks:

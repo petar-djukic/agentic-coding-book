@@ -86,7 +86,7 @@ template.
 ```bash
 mage all      # figures + PDF into generated-files/
 mage outline  # outline PDF from docs/srd/ into generated-files/
-mage critic   # LLM critic over a drafted chapter (see below)
+mage audit    # specification consistency, prose conformance, build
 mage clean    # remove generated artifacts
 ```
 
@@ -98,23 +98,26 @@ spine, figures, and gaps. Chapters with no SRD are listed with their status,
 so the outline doubles as a coverage report. It needs at least one SRD and
 fails with a message naming the directory otherwise.
 
-`mage critic <chapter>` reads a drafted chapter, the binding rule sets under
-`docs/constitutions/`, and the chapter's SRD when one can be paired, then asks
-the model for findings: a constitution rule id, a line anchor, the text being
-objected to, and what is wrong. Pass `all` to critique every drafted chapter.
-It exits non-zero when any finding is blocking, and it never edits the prose —
-revision is a separate step.
+`mage audit` checks three things and reports every finding together, each
+naming the rule or document field it comes from. **Specification consistency**:
+every constitution rule an SRD cites exists, every derivation-chain link it
+claims is owned by that chapter, every subgoal hangs off a book goal, every
+citation and key term resolves, and chapter ids agree across `outline.yaml`,
+`docs/ARCHITECTURE.yaml`, and `docs/road-map.yaml`. **Prose conformance**: the
+mechanically checkable subset of `docs/constitutions/voice.yaml` — forbidden
+terms, the chapter apparatus, sidebar labels, citations that resolve, figures
+referenced from the prose. **Build integrity**: every referenced figure exists
+and the book still compiles.
 
-```bash
-mage critic all                          # every drafted chapter
-mage critic 05-how-the-machine-works.md  # one chapter
-```
+It runs no model and needs no credentials. Judgment the checks cannot make —
+clarity, honesty, pedagogy, whether the argument holds — is the job of the
+`review-chapter` skill, which the coding agent runs against a draft.
 
-The model call is gated on `ANTHROPIC_API_KEY`. Without it the target reports
-that it is skipping and exits zero, so a CI run with no credentials does not
-fail the build. Chapters are paired to their SRD by title; when no SRD matches,
-the chapter is checked against the constitutions alone and the mismatch is
-reported. Pass `-srd` to `cmd/critic` to pair one explicitly.
+`docs/audit-baseline.yaml` records findings that are known and not yet fixed,
+each naming the issue that clears it. Those are printed but do not fail the
+audit; anything else does. An entry with no issue, or one that no longer
+matches a finding, is itself a finding — so the file cannot decay into a
+blanket exemption.
 
 ## Author
 
