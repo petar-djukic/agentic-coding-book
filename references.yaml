@@ -359,3 +359,60 @@ references:
     IG1252 operationalizes them into a scored evaluation methodology. Date and
     version confirmed indirectly via ETSI White Paper No. 40, not the TM Forum
     resource page.
+
+- id: wooldridge1995
+  type: article-journal
+  title: "Intelligent agents: theory and practice"
+  author:
+  - family: Wooldridge
+    given: Michael
+  - family: Jennings
+    given: Nicholas R.
+  container-title: The Knowledge Engineering Review
+  volume: 10
+  issue: 2
+  page: 115-152
+  DOI: 10.1017/S0269888900008122
+  issued:
+    year: 1995
+
+- id: bensghaier2026
+  type: article
+  title: "Don't Blame the Large Language Model: How Agent Harness Evolution Shapes Coding Agent Quality"
+  author:
+  - family: Ben Sghaier
+    given: Oussama
+  - family: Li
+    given: Hao
+  - family: Adams
+    given: Bram
+  - family: Hassan
+    given: Ahmed E.
+  container-title: arXiv preprint arXiv:2607.03691
+  URL: https://arxiv.org/abs/2607.03691
+  issued:
+    year: 2026
+
+- id: jung2026
+  type: article
+  title: "How Much Heavy Lifting Can an Agent Harness Do? Measuring the LLM's Residual Role in a Planning Agent"
+  author:
+  - family: Jung
+    given: Sungwoo
+  - family: Son
+    given: Seonil
+  container-title: arXiv preprint arXiv:2604.07236
+  URL: https://arxiv.org/abs/2604.07236
+  issued:
+    year: 2026
+
+- id: du2026
+  type: article
+  title: "Memory for Autonomous LLM Agents: Mechanisms, Evaluation, and Emerging Frontiers"
+  author:
+  - family: Du
+    given: Pengfei
+  container-title: arXiv preprint arXiv:2603.07670
+  URL: https://arxiv.org/abs/2603.07670
+  issued:
+    year: 2026

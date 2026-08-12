@@ -39,6 +39,13 @@ citations:
   - id: tmforum-ig1218
     role: context
     note: an industry definition of autonomy levels and agency, useful as the counterexample of how loosely the word is used
+  - id: wooldridge1995
+    role: anchor
+    note: >
+      The definitional anchor. Separates the weak notion of agency -- autonomy,
+      social ability, reactivity, pro-activeness -- from the strong notion that
+      adds mentalistic attributes, and shows the term was already contested
+      thirty years before it was applied to coding tools.
 content:
   - say: "The word 'agent' is applied to autocomplete, to chat wrappers, and to systems that rewrite a codebase overnight. A definition that covers all three carries no information."
     cites: []
@@ -68,7 +75,6 @@ links:
   requires: []
   supports: [C1.2, C1.3]
 gaps:
-  - "No agent-definition citation in references.yaml. The corpus has no Wooldridge, Russell & Norvig, or comparable definitional anchor, so the structural definition currently rests on assertion plus the harness reference. Fill before drafting."
   - "declarative-agents is cited as a repository rather than a publication; check whether the design-patterns monograph is citable by then."
 acceptance:
   - Every citation id resolves in references.yaml.

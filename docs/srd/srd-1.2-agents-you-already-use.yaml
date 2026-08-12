@@ -46,6 +46,12 @@ citations:
   - id: latentpatterns-harness
     role: anchor
     note: the vocabulary the survey uses to describe what each tool wraps
+  - id: bensghaier2026
+    role: survey
+    note: >
+      Examines five major open-source agent harnesses across their release
+      histories -- a citable survey of the class, even though no single tool in
+      it has a citable source of its own.
 content:
   - say: "Programmers are already running agents, usually without calling them that; the question is what each one is doing on their behalf."
     cites: [stackoverflow2025]
@@ -73,7 +79,11 @@ links:
   requires: [C1.1]
   supports: [C1.3]
 gaps:
-  - "No citable source for the specific tools. OpenCode, Claude Code, and LangGraph are documented in their own repositories and docs, none of which is in references.yaml; decide at drafting whether to cite documentation with an access date (VN-6) or describe behavior observed directly and say so."
+  - >
+    Decided at GH-23: the individual tools get no citation. Their documentation
+    churns faster than the book and a dated URL rots, so the chapter reports
+    behavior observed directly and says so, with a version-and-date line per
+    tool (VN-6). bensghaier2026 carries the claim about harnesses as a class.
   - "The survey dates immediately. Whatever is drafted needs a version-and-date line per tool, and a note in road-map.yaml that this chapter is the first to need revision."
 acceptance:
   - Every citation id resolves in references.yaml.

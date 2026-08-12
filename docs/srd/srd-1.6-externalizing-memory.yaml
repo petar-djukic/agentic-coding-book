@@ -48,6 +48,15 @@ citations:
   - id: hunt1999
     role: context
     note: the practitioner lineage for writing things down; cited to place the idea, not to derive it
+  - id: du2026
+    role: anchor
+    note: >
+      Survey of agent memory, 2022 to early 2026. Formalizes memory as a
+      write-manage-read loop coupled to perception and action, and names five
+      mechanism families -- context-resident compression, retrieval-augmented
+      stores, reflective self-improvement, hierarchical virtual context,
+      policy-learned management. Supplies the vocabulary this chapter needs for
+      what harnesses actually do about the context bound.
 content:
   - say: "A session ends and the model retains nothing. The next session begins with whatever the harness puts in context and nothing else."
     cites: [latentpatterns-harness]
@@ -79,7 +88,6 @@ links:
   requires: [C1.3, C1.4, C1.5]
   supports: [C2.3, C2.4, C2.5, C5.3, C5.6]
 gaps:
-  - "No citation for memory or context engineering as a technique. The corpus has liu2023 for the bound but nothing on what harnesses do about it; this is the largest single hole for Part I."
   - "The human-leaves-the-loop framing overlaps the autonomy-levels material parked in unplaced-intent-autonomy-and-verification.md (road-map.yaml: unplaced). Decide at drafting whether the levels arrive here or in Part II, and record it -- the introduction still frames the book on them."
 acceptance:
   - Every citation id resolves in references.yaml.
