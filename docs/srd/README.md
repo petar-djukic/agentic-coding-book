@@ -57,7 +57,7 @@ demanded `agentic_loop`, which C1.4 introduces, and `srd-1.6` demanded
 | `meta` | chapter id, title, parent part |
 | `section_goal` | one phrase, rendered as "The goal of this chapter is to ..." |
 | `goals` | list of `{id, goal}`: the subgoals that lead to `section_goal`. Each `id` is `G<n>.<m>`, a subgoal of book goal `G<n>` from [../VISION.yaml](../VISION.yaml) |
-| `chain` | the derivation-chain links this chapter owns, from [../constitutions/argument.yaml](../constitutions/argument.yaml). Every chapter owns at least one; a chapter owning none is not carrying argument |
+| `chain` | the derivation-chain links this chapter owns, from [../constitutions/argument.yaml](../constitutions/argument.yaml). Every chapter owns at least one; a chapter owning none is not carrying argument. `mage audit` enforces this in both directions since GH-86 — a link may not name a chapter ARCHITECTURE does not define, and a chapter may not go unowned. Link ids are permanent and never renumbered, because SRDs cite them |
 | `constitutions` | the rule sets this chapter is checked against, as `{file, rules}`. Required — a chapter with no rule set has nothing to fail |
 | `objective` | one sentence: how the goals are achieved |
 | `prior_material` | list of `{path, offers}`: material to quarry. The corpus-to-part map lives in ARCHITECTURE `material_sources` |

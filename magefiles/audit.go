@@ -401,12 +401,28 @@ func checkSpec(s *spec) []finding {
 	// The derivation chain must be owned by real chapters, and every part must
 	// carry an obligation.
 	chainOwners := map[string][]string{}
+	ownedByChain := map[string]bool{}
 	for _, q := range s.argument.DerivationChain {
 		chainOwners[q.ID] = q.Owners
 		for _, owner := range q.Owners {
+			ownedByChain[owner] = true
 			if !chapterIDs[owner] {
 				add("docs/constitutions/argument.yaml", q.ID, "owns unknown chapter %s", owner)
 			}
+		}
+	}
+	// The rule runs the other way too: docs/srd/README.md says every chapter
+	// owns at least one link, since a chapter answering no question in the
+	// chain is not carrying argument. That rule was written down and unenforced,
+	// which is how four chapters came to break it unnoticed (GH-86).
+	chapterList := make([]string, 0, len(chapterIDs))
+	for id := range chapterIDs {
+		chapterList = append(chapterList, id)
+	}
+	sort.Strings(chapterList)
+	for _, id := range chapterList {
+		if !ownedByChain[id] {
+			add("docs/constitutions/argument.yaml", "derivation_chain", "no link is owned by chapter %s; every chapter answers at least one", id)
 		}
 	}
 	oblParts := map[string]bool{}

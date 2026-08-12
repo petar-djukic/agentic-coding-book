@@ -29,6 +29,12 @@ thesis:
     inverse order -- prescribe the habit, justify it later, or never -- is
     the failure this structure exists to prevent.
 
+# Link ids are permanent: assigned when a link is added, never reused or
+# renumbered, because every SRD's `chain` field cites them. List order is the
+# argument's order, which is why Q9 sits between Q5 and Q6. Q5 brackets Q9 on
+# purpose -- it is answered at the Part I/II hinge by C1.6 and continued by
+# Part II's specification chapters, while Q9 is answered by the construction
+# chapters that open Part II (GH-86).
 derivation_chain:
   - id: Q1
     question: "What is the thing that writes the code?"
@@ -50,6 +56,10 @@ derivation_chain:
     question: "What has to be written down, and where?"
     answer: "Everything that must survive a session: intent as specification, constraints as constitution, state where the harness can read it back. This is also where the human leaves the loop."
     owners: [C1.6, C2.3, C2.4, C2.5, C2.6, C2.7]
+  - id: Q9
+    question: "How is a system built when an agent writes the code?"
+    answer: "In verified increments, with the inner loop automated and the outer loop still the programmer's: skipping the outer loop produces code that is internally consistent and externally wrong. The language is part of the construction decision rather than a matter of taste, because it sets how often the model's first attempt is correct and how quickly a wrong one is caught."
+    owners: [C2.1, C2.2]
   - id: Q6
     question: "How do you verify code you did not write and cannot read in full?"
     answer: "In layers, each catching a different class of defect, none sufficient alone -- and mechanically, because Q4 rules out review by eye at volume."
@@ -57,7 +67,7 @@ derivation_chain:
   - id: Q7
     question: "How does this run past one context window?"
     answer: "Multiple agents coordinated through shared state the harness can reach, which turns the work into a distributed system and imports its failure modes."
-    owners: [C5.1, C5.2, C5.3, C5.6, C5.7, C5.8, C5.9]
+    owners: [C5.1, C5.2, C5.3, C5.4, C5.5, C5.6, C5.7, C5.8, C5.9]
   - id: Q8
     question: "How do you know what the agents did?"
     answer: "By instrumenting the loop. Without measurement the pipeline is changed on guesswork; with it, on evidence."
@@ -94,7 +104,7 @@ part_obligations:
     - id: P1
       owes: "Establishes Q1-Q5 as fact, with no prescription. Every mechanism the rest of the book invokes is defined here, and any fact a later part needs but Part I omits is a gap in Part I."
     - id: P2
-      owes: "Derives the construction order and the specification from Q3 and Q5. Shows a spec defect traced to the generated code it caused."
+      owes: "Answers Q9 and the Part II half of Q5: derives the construction order from Q3 and the specification from Q5. Shows a spec defect traced to the generated code it caused."
     - id: P3
       owes: "Derives verification from Q4. States the circularity problem when the tests are generated too, rather than assuming it away."
     - id: P4
