@@ -60,20 +60,24 @@ agentic_coding:
   see_also: [behavioral_intent, constructional_intent, specification, verification_stack]
 
 behavioral_intent:
-  introduced: C2.4
+  introduced: C1.5
   introduced_note: >
-    Placement follows road-map.yaml, which reads the intent pair as Part II
-    material. GH-43 owns actually placing the parked prose and may move it.
+    Defined in C1.5 section 5.4.1 at GH-43, where the pair is first used.
+    V-S4 puts a definition at first appearance, and C1.5 precedes C2.1, which
+    also uses the terms. The fuller treatment -- the worked example, the
+    figure, and the Common Error -- is still parked and belongs to Part II.
   definition: >
     The specification of what the software does: inputs, outputs, edge cases,
     error handling, and observable behavior.
   see_also: [constructional_intent, specification]
 
 constructional_intent:
-  introduced: C2.4
+  introduced: C1.5
   introduced_note: >
-    Placement follows road-map.yaml, which reads the intent pair as Part II
-    material. GH-43 owns actually placing the parked prose and may move it.
+    Defined in C1.5 section 5.4.1 at GH-43, where the pair is first used.
+    V-S4 puts a definition at first appearance, and C1.5 precedes C2.1, which
+    also uses the terms. The fuller treatment -- the worked example, the
+    figure, and the Common Error -- is still parked and belongs to Part II.
   definition: >
     The specification of how the software is built: module boundaries, naming
     conventions, function size limits, design patterns, and architectural

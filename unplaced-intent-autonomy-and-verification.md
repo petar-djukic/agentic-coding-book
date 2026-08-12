@@ -47,27 +47,6 @@ This creates a problem that does not exist in manual development. Agents guess c
 
 A programmer writes code. A clauder writes specifications that code is generated from. The difference is not the tool. The difference is that the specification must now be explicit, because the person who holds the intent is no longer the person who types the code.
 
-## 1.2 Human in the Loop vs. Human on the Loop
-
-The software industry uses several terms for working with coding agents — "vibe coding," "AI-assisted coding," "agentic development" — without distinguishing between fundamentally different modes of operation. The distinction that determines whether agent-based development scales is simpler than any of these terms suggest.
-
-> **Definition: Human in the loop** — a mode of operation where the programmer instructs the agent, reviews every output, and corrects mistakes interactively. The programmer is the verification layer.
-
-> **Definition: Human on the loop** — a mode of operation where the programmer provides specifications and constraints in advance, the agent executes autonomously across many tasks, and the programmer verifies results through automated testing and instrumentation. The programmer builds the verification layer.
-
-The two modes differ in what they require from the programmer:
-
-| | Human in the loop | Human on the loop |
-|---|---|---|
-| Verification | Manual review of every output | Automated gates (compiler, linter, tests, differential comparison) |
-| Intent communication | Conversational, per-task | Formal specifications written in advance |
-| Scales to | Small tasks, single files | Thousands of lines across hundreds of tasks |
-| Risk | Low — programmer catches errors in real time | Black box — code ships without line-by-line review |
-
-Human-in-the-loop development works when the task scope fits within a single conversation and the programmer can read every generated line. It does not work when the scope exceeds what one person can review. An orchestration pipeline that generates 44,628 lines across 241 tasks over four days produces more code than any programmer can read line by line. At that scale, the programmer must have built verification infrastructure before generation starts — or the output cannot be trusted.
-
-> **From the Field:** Most programmers start in the loop. Open a chat, describe what you want, read what comes back. It feels productive because the code appears fast. It breaks down on anything complex because the agent's guesses diverge from your intent in ways you do not catch until later. The shift to on-the-loop is not about a different tool. It is about writing things down that you used to keep in your head.
-
 ## 1.3 Levels of Autonomy
 
 The question of how much a system can handle without human direction needs precise vocabulary. Without it, a team using autocomplete and a team running an autonomous pipeline both describe their workflow as "AI-assisted development." These are not the same thing, and confusing them leads to misdirected investment.
@@ -153,14 +132,6 @@ Each part of this book addresses what is required to advance one autonomy level 
 **Part V: Agent Orchestration.** The machinery that makes on-the-loop development work at scale. Multiple agents with different roles, coordination through GitHub issues and state files, failure modes and recovery, orchestration loop design. This is the engineering of L3–L4 systems.
 
 **Part VI: Instrumentation.** Observing what the agents are doing. Logging, cost analysis, failure mode diagnosis, building the intuition that feeds back into better specifications. This is what turns an autonomous pipeline from an experiment into a repeatable process.
-
-## 1.6 The Compounding Advantage
-
-Coding agents generate code — including code that improves the agents themselves. The cobbler-scaffold orchestrator was built with Claude. It generates code using Claude. It was improved using data it generates about its own performance. Each improvement to the pipeline reduces cost and increases output quality on the next run.
-
-The programmer who builds this loop — who writes the specifications, builds the verification infrastructure, instruments the pipeline, and improves the tooling based on what the instrumentation reveals — has a compounding advantage over the programmer who waits for a vendor to ship a product that does it.
-
-The tools will change. The models will change. The APIs will change. The need to specify intent precisely, verify output rigorously, and build infrastructure that earns trust in what ships — that does not change. Those skills compound regardless of which model is behind the cursor.
 
 ## Summary
 

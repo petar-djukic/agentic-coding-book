@@ -299,21 +299,28 @@ unplaced:
   - source: unplaced-intent-autonomy-and-verification.md
     status: unplaced
     holds: >
-      Behavioral and constructional intent, and the verification stack -- two
-      concepts the book still needs, in a chapter whose framing GH-5 retired.
-      The intent pair reads as Part II material and the verification stack as
-      Parts III-IV.
+      Three concepts still needing a home, in a chapter whose framing GH-5
+      retired. GH-43 narrowed this entry: what remains is the fuller treatment
+      of behavioral and constructional intent (the worked notification-system
+      example, its Strategy-pattern figure, a Common Error sidebar, and the
+      boxed definition of agentic_coding, which no drafted chapter carries);
+      the per-level autonomy walkthrough with its bottleneck-by-level and
+      programmer-role-by-level tables; and the six-layer verification stack
+      with its Good Practice and From the Field sidebars.
 
-      The autonomy levels are no longer homeless: GH-11 placed the boxed
-      definition and the L0/L5 endpoints in C1.6 section 6.5, which also
-      resolves the dangling "defined in Chapter 1" reference in C2.1 section
-      2.6. What is still parked is the per-level walkthrough (L0-L5 one at a
-      time) and the two tables -- bottleneck by level, and programmer's role by
-      level -- which read as Part II material.
+      Placement is blocked rather than undecided. The intent material belongs
+      to C2.3 or C2.4 and the verification stack to Parts III-IV, and none of
+      those chapters is drafted or has an SRD. Prose cannot be placed into a
+      chapter that does not exist, so this waits on the drafting order rather
+      than on a decision.
 
-      Correction: this entry previously said the introduction frames the whole
-      book on the autonomy levels. It does not, and did not at the time of
-      checking -- 01-introduction.md is 379 words and never mentions them.
+      Already resolved and removed from the file: the in-the-loop and
+      on-the-loop definitions went to C1.6 section 6.4 at GH-11; the
+      compounding-advantage passage was already in 01-introduction.md; the
+      autonomy_level definition and the L0/L5 endpoints went to C1.6 section
+      6.5 at GH-11; and the boxed definitions of behavioral and constructional
+      intent went to C1.5 section 5.4.1 at GH-43, closing a V-S4 gap where the
+      terms were used in two chapters and defined in none.
     owner: >
       Needs an owner. GH-12 parked the file outside the numbered sequence so
       the build skips it and the prose survives, and retired the term it was
