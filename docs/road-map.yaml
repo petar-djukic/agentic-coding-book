@@ -64,7 +64,7 @@ releases:
 
   - id: rel01.0
     name: "Part I -- Agents and Harnesses"
-    status: pending
+    status: in_progress
     units: [C1.1, C1.2, C1.3, C1.4, C1.5, C1.6]
     gate: "rel00.1 complete (the Part I SRDs are the drafting contracts). C1.5 additionally waits on GH-12, which frees the material it splits from."
 
@@ -134,17 +134,17 @@ parts:
         issue: GH-8
       - id: C1.4
         title: How a harness touches your code
-        status: outline
+        status: drafted
         issue: GH-9
       - id: C1.5
         title: How the LLM works, and fails
-        status: partial
+        status: drafted
         issue: GH-10
         note: >
-          05-how-the-machine-works.md is drafted and cited, but it was written
-          as one chapter covering the model and the agentic loop together. The
-          loop material belongs to C1.4 under the new arc, so this chapter is
-          a split of an existing draft rather than new prose.
+          Split from the old machine chapter at GH-10. The agentic-loop
+          material it carried moved to C1.4, which now owns the harness's
+          execution path; what remains is the model and its failure modes.
+          Sections renumbered to this chapter's position in the part.
 
   # C1.6 closes Part I and opens the practice parts.
       - id: C1.6
