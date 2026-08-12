@@ -43,3 +43,21 @@ accepted:
     rule: 'voice.yaml: figures.checks'
     detail: Figure 2.1 is never referenced from the prose
     issue: GH-28
+
+  - file: 03-what-is-an-agent.md
+    rule: 'voice.yaml: sidebars V-B4 authorship'
+    detail: '"From the Field" sidebar #1 was last touched by the do-work skill; V-B4 is author_only'
+    issue: GH-44
+    note: >
+      Section 1.3, on the skeleton becoming visible while rebuilding an agent.
+      Written by an agent during GH-6 because srd-1.1 required the apparatus,
+      and grounded in the declarative-agents work but not in a verified
+      incident. GH-44 replaces it with the real one or cuts it.
+
+  - file: 08-externalizing-memory.md
+    rule: 'voice.yaml: sidebars V-B4 authorship'
+    detail: '"From the Field" sidebar #1 was last touched by the do-work skill; V-B4 is author_only'
+    issue: GH-44
+    note: >
+      Section 6.3, on a generation run that rebuilt a component against
+      different assumptions. Same provenance, from GH-11.

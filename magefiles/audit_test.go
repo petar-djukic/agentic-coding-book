@@ -360,3 +360,141 @@ func replace(f tree, old, new string) string {
 func replace2(f tree, old, new string) string {
 	return strings.Replace(f["docs/constitutions/argument.yaml"], old, new, 1)
 }
+
+// ------------------------------------------- V-B4 sidebar authorship (GH-46)
+
+// gitTree writes files into a scratch repository and commits them, so blame
+// has something to report. The existing tree fixture is a plain directory,
+// which is deliberate: it proves the check stays quiet outside a repository.
+func gitTree(t *testing.T, files tree, commitMessage string) string {
+	t.Helper()
+	root := write(t, files)
+	run := func(args ...string) {
+		t.Helper()
+		if out, err := gitOutput(root, args...); err != nil {
+			t.Fatalf("git %s: %v (%s)", strings.Join(args, " "), err, out)
+		}
+	}
+	run("init", "--quiet")
+	run("config", "user.email", "author@example.com")
+	run("config", "user.name", "Author")
+	run("add", "-A")
+	run("commit", "--quiet", "-m", commitMessage)
+	return root
+}
+
+// voiceWithAuthorOnly is the fixture's voice.yaml with From the Field marked
+// author_only, matching the real constitution.
+const voiceWithAuthorOnly = `
+structure_rules:
+  - id: V-S1
+    name: learning_objectives
+    rule: Every chapter opens with learning objectives.
+forbidden_terms:
+  terms: [powerful, just]
+sidebars:
+  types:
+    - id: V-B1
+      label: Common Error
+      former_label: Common Clauding Error
+    - id: V-B4
+      label: From the Field
+      authorship: author_only
+`
+
+func chapterWithSidebar(label string) string {
+	return `# What is an agent?
+
+## Learning Objectives
+
+1. Define an agent.
+
+Prose that cites something [@hunt1999].
+
+> **` + label + `:** Something that happened once.
+
+## Summary
+
+It is a state machine plus tools.
+`
+}
+
+func TestSidebarAuthorshipFlagsAgentAuthoredFromTheField(t *testing.T) {
+	files := cleanTree()
+	files["docs/constitutions/voice.yaml"] = voiceWithAuthorOnly
+	files["03-what-is-an-agent.md"] = chapterWithSidebar("From the Field")
+
+	root := gitTree(t, files, "Add the chapter\n\nSkill: do-work\nCalled-by: gh-issue-pop")
+	err := audit(root, nil, nil)
+	if err == nil {
+		t.Fatal("a From the Field sidebar committed by a skill should be a finding")
+	}
+	for _, want := range []string{"V-B4 authorship", "do-work", "author_only"} {
+		if !strings.Contains(err.Error(), want) {
+			t.Errorf("finding should mention %q, got:\n%v", want, err)
+		}
+	}
+}
+
+func TestSidebarAuthorshipAcceptsAuthorWrittenFromTheField(t *testing.T) {
+	files := cleanTree()
+	files["docs/constitutions/voice.yaml"] = voiceWithAuthorOnly
+	files["03-what-is-an-agent.md"] = chapterWithSidebar("From the Field")
+
+	root := gitTree(t, files, "Add the chapter")
+	if err := audit(root, nil, nil); err != nil {
+		t.Fatalf("a commit with no Skill trailer is the author's; got:\n%v", err)
+	}
+}
+
+// Only types marked author_only are governed; the other three are fair game
+// for an agent, which is why the marking lives in voice.yaml per type.
+func TestSidebarAuthorshipIgnoresUnmarkedSidebarTypes(t *testing.T) {
+	files := cleanTree()
+	files["docs/constitutions/voice.yaml"] = voiceWithAuthorOnly
+	files["03-what-is-an-agent.md"] = chapterWithSidebar("Common Error")
+
+	root := gitTree(t, files, "Add the chapter\n\nSkill: do-work")
+	if err := audit(root, nil, nil); err != nil {
+		t.Fatalf("Common Error is not author_only; got:\n%v", err)
+	}
+}
+
+// Without the marking the check is inert, so adopting it is opt-in per type.
+func TestSidebarAuthorshipInertWithoutTheMarking(t *testing.T) {
+	files := cleanTree()
+	files["03-what-is-an-agent.md"] = chapterWithSidebar("From the Field")
+
+	root := gitTree(t, files, "Add the chapter\n\nSkill: do-work")
+	if err := audit(root, nil, nil); err != nil {
+		t.Fatalf("unmarked voice.yaml should not govern authorship; got:\n%v", err)
+	}
+}
+
+// A scratch export or a fresh unpack is not a repository. The check yields
+// nothing there rather than failing, which is what keeps every other test in
+// this file working on a plain directory.
+func TestSidebarAuthorshipSilentOutsideAGitRepository(t *testing.T) {
+	files := cleanTree()
+	files["docs/constitutions/voice.yaml"] = voiceWithAuthorOnly
+	files["03-what-is-an-agent.md"] = chapterWithSidebar("From the Field")
+
+	if err := auditTree(t, files); err != nil {
+		t.Fatalf("no repository means no blame and no finding; got:\n%v", err)
+	}
+}
+
+// An uncommitted sidebar has no commit to judge, so it is not yet a finding.
+func TestSidebarAuthorshipSkipsUncommittedLines(t *testing.T) {
+	files := cleanTree()
+	files["docs/constitutions/voice.yaml"] = voiceWithAuthorOnly
+
+	root := gitTree(t, files, "Add the spec\n\nSkill: do-work")
+	chapter := filepath.Join(root, "03-what-is-an-agent.md")
+	if err := os.WriteFile(chapter, []byte(chapterWithSidebar("From the Field")), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if err := audit(root, nil, nil); err != nil {
+		t.Fatalf("an uncommitted sidebar has no commit to judge; got:\n%v", err)
+	}
+}

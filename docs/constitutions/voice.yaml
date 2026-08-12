@@ -128,6 +128,19 @@ sidebars:
     - id: V-B4
       label: "From the Field"
       contains: "A short first-person note from the author's experience -- an anecdote, an honest failure, the moment something worked."
+      authorship: author_only
+      rule: >
+        The author writes these. A first-person claim about what happened to
+        the author is the one kind of content an agent cannot supply, because
+        an invented incident that reads plausibly is indistinguishable from a
+        real one to every reader except the author.
+      check: >
+        git blame on the sidebar line: if the commit that last touched it
+        carries a `Skill:` trailer, an agent wrote or edited it. Commit author
+        does not discriminate, because agent commits carry the author's
+        identity; the skill-tracing trailers do (GH-46). Last-touch rather
+        than first-write is deliberate -- an agent editing the author's
+        sidebar needs the same review as one inventing a sidebar.
   renaming_note: >
     The first two labels drop "Clauding" per GH-12, which retires the term
     throughout. The labels above are canonical; GH-12 applies the rename to
