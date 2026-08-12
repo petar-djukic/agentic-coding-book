@@ -74,9 +74,9 @@ Two properties of context that affect agent behavior:
 
 **Context is consumed by both input and output.** A 200,000-token window does not mean 200,000 tokens of input. The model's response, including any internal reasoning, also occupies context. A model that "thinks" extensively before responding may consume tens of thousands of tokens on reasoning alone.
 
-**Information in the middle of the context is recalled less reliably than information at the beginning or end.** This "lost in the middle" effect [@liu2023] means that how context is structured matters, not just what is in it. Placing specifications and constraints at the beginning of context, where they are most reliably attended to, is not a stylistic choice — it is an engineering decision.
+**Attention is strongest at both ends of the context and weakest in the middle.** Recall is highest for material at the beginning of the window and for material at the end; what sits between them is recalled least reliably. This "lost in the middle" effect [@liu2023] means that how context is structured matters, not just what is in it. Position is an engineering decision rather than a stylistic one — and the two strong positions are not interchangeable, because they are strong for different reasons.
 
-> **Good Clauding Practice:** Place stable, reusable context (system prompts, constitutions, architectural constraints) at the beginning of the context window. Place task-specific, variable content (the current file, the current requirement) at the end. This ordering maximizes both the reliability of attention and the efficiency of prefix caching — a mechanism where the serving infrastructure reuses computations for the unchanging prefix of the context, reducing latency and cost on subsequent requests.
+> **Good Clauding Practice:** Place stable, reusable context (system prompts, constitutions, architectural constraints) at the beginning of the window, and task-specific, variable content (the current file, the current requirement) at the end. The beginning earns the stable material twice over: it is well attended, and it is the only position that can be cached — prefix caching lets the serving infrastructure reuse the computation for the unchanging head of the context, cutting latency and cost on every subsequent request. The end earns the current task because recency favors it. What lands in the middle is what you can most afford to lose.
 
 ## 3.3 The Interpolation Machine
 
@@ -150,15 +150,15 @@ The model interpolates from training data. When the target is outside the distri
 
 This failure mode is predictable. If the code you need is similar to code that exists in large quantities on the internet — standard REST APIs, common design patterns, popular frameworks — the model will generate it well. If the code is specific to your organization, your architecture, or your domain — the model will guess. The guesses will compile. They may even pass tests that were generated from the same wrong assumptions. They will not match your intent.
 
-The mitigation is context. Providing examples, interface definitions, and architectural constraints in context moves the interpolation target from "the average pattern in training data" to "the pattern adjacent to what you showed the model." This is why specifications matter more for novel code than for standard code — and why constructional intent (Chapter 1) must be explicit for anything that deviates from common patterns.
+The mitigation is context. Providing examples, interface definitions, and architectural constraints in context moves the interpolation target from "the average pattern in training data" to "the pattern adjacent to what you showed the model." This is why specifications matter more for novel code than for standard code — and why constructional intent must be explicit for anything that deviates from common patterns.
 
 ### 3.5.2 Sensitivity to Framing
 
-The model's output is sensitive to how context is structured in ways that are not always predictable. The order of examples matters — examples placed later in context receive more attention due to recency bias. The format of instructions matters — numbered lists produce different behavior than prose paragraphs. The verbosity of specifications matters — terse specifications leave more room for interpolation (more guessing), while verbose specifications constrain the output more tightly.
+The model's output is sensitive to how context is structured in ways that are not always predictable. The order of examples matters — position carries weight, in the pattern described earlier in this chapter: the ends of the window are attended to more reliably than the middle, so the same example moved from the end to the middle of a long context can stop influencing the output. The format of instructions matters — numbered lists produce different behavior than prose paragraphs. The verbosity of specifications matters — terse specifications leave more room for interpolation (more guessing), while verbose specifications constrain the output more tightly.
 
 This sensitivity is a property of interpolation: small changes to the interpolation anchors shift the output. It is the reason prompt engineering exists as a discipline, and it is the reason prompt engineering feels fragile — because it is. A prompt that works for one task may fail for a similar task because the interpolation landed differently.
 
-For clauding, the practical response is not to chase the perfect prompt. It is to build verification that catches the cases where framing shifts the output in unintended directions. The verification stack (Chapter 1, Section 1.4) exists because no prompt is reliable enough to make verification unnecessary.
+For clauding, the practical response is not to chase the perfect prompt. It is to build verification that catches the cases where framing shifts the output in unintended directions. The verification stack exists because no prompt is reliable enough to make verification unnecessary.
 
 ### 3.5.3 Context Poisoning
 
@@ -176,7 +176,7 @@ This is the most dangerous failure mode for agent-based development. A programme
 
 This is why verification is not optional. The verification stack — compiler, linter, tests, coverage, specification conformance, intent conformance — exists because the model's confidence is not evidence of correctness. Plausible is not the same as correct.
 
-> **Good Clauding Practice:** Assume the model is wrong until verification proves otherwise. The interpolation machine produces plausible output by design. The verification stack (Chapter 1, Section 1.4) exists because the model cannot verify its own output. Trust the verification results. Do not trust the code's appearance.
+> **Good Clauding Practice:** Assume the model is wrong until verification proves otherwise. The interpolation machine produces plausible output by design. The verification stack exists because the model cannot verify its own output. Trust the verification results. Do not trust the code's appearance.
 
 ## 3.6 Sampling: Controlling the Interpolation
 
@@ -198,11 +198,11 @@ Most coding agent frameworks set sampling parameters automatically. The reader d
 
 The mental model in this chapter — the model as an interpolation machine, operating within a fixed context window, taking actions through a harness-managed loop — connects to every subsequent part of the book.
 
-**The model is an interpolator.** What is in context determines what it interpolates from. This means context engineering is a discipline, not a convenience. Specifications, constitutions, and architectural constraints are not documentation — they are the programming interface for the model's behavior. Part II (Requirements) addresses how to write specifications that produce reliable interpolation. Part V (Agent Orchestration) addresses how to manage context across hundreds of tasks.
+**The model is an interpolator.** What is in context determines what it interpolates from. This means context engineering is a discipline, not a convenience. Specifications, constitutions, and architectural constraints are not documentation — they are the programming interface for the model's behavior. Part II (Construction and Requirements) addresses how to write specifications that produce reliable interpolation. Part V (Agent Orchestration) addresses how to manage context across hundreds of tasks.
 
 **The model cannot verify its own output.** Interpolation produces plausible output regardless of correctness. External verification is the only mechanism for establishing that generated code is correct. Part III (Testing) addresses how to test code that was not written by a human. Part IV (How Do You Know Your Code Is Correct?) addresses what "correct" means when the programmer did not write the code.
 
-**The model interpolates from training patterns.** Novel constructional decisions — the architectural choices that define how software is built — are exactly the kind of thing the model will get wrong, because they are specific to the programmer's intent and rarely appear in training data. Externalizing constructional intent (Chapter 1) and defining the construction order (Chapter 2) are not optional practices for ambitious projects — they are the mechanisms that prevent the model from filling architectural gaps with training-data averages.
+**The model interpolates from training patterns.** Novel constructional decisions — the architectural choices that define how software is built — are exactly the kind of thing the model will get wrong, because they are specific to the programmer's intent and rarely appear in training data. Externalizing constructional intent and defining the construction order are not optional practices for ambitious projects — they are the mechanisms that prevent the model from filling architectural gaps with training-data averages.
 
 **The model operates in a loop with tools.** The loop needs management — tool selection, error handling, stop conditions, context budgets. The harness manages the loop for a single task. The orchestrator manages the loop across tasks. Part V addresses both.
 
