@@ -2,7 +2,8 @@
 
 One SRD per chapter, written before the chapter is drafted. The SRD is the
 drafting contract: a chapter issue executes its SRD without re-deriving the
-plan, and `mage critic` (GH-19) checks the draft against it. It is a writing
+plan, and `mage audit` checks the draft against the parts of it a machine
+can check. It is a writing
 spec, not a systems-engineering ceremony.
 
 Files are named `srd-<part>.<chapter>-<slug>.yaml`, matching the chapter ids

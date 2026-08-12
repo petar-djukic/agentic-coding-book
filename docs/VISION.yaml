@@ -111,6 +111,6 @@ inputs:
 success_criteria:
   - "Every section fulfills the obligations its SRD states (docs/srd/), and every SRD references a constitution rule set."
   - "mage all green: figures render and the PDF builds through the Eisvogel pandoc path."
-  - "mage critic reports no blocking finding against constitutions/voice.yaml and constitutions/argument.yaml (GH-19)."
+  - "mage audit is green: the specification is internally consistent and no unaccepted prose finding stands against constitutions/voice.yaml."
   - "Every claim in a drafted chapter resolves to a citation in references.yaml; a claim without a followable source is a defect."
   - "Each term in docs/definitions.yaml is defined once and used identically across chapters."

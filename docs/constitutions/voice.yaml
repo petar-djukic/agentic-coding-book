@@ -13,7 +13,7 @@ meta:
   version: 1
 
 # Rules governing how a chapter is assembled. Each carries a `check` a
-# reviewer or mage critic (GH-19) can apply without reading for taste.
+# reviewer or mage audit can apply without reading for taste.
 structure_rules:
   - id: V-S1
     name: learning_objectives

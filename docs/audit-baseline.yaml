@@ -1,0 +1,90 @@
+# audit-baseline.yaml -- findings mage audit reports but does not fail on (GH-27).
+#
+# The four drafted Part I chapters were written before the constitutions
+# existed, so they predate the rules they are now measured against. Failing the
+# build on that history would make the gate red from the day it shipped, and a
+# gate that is always red gets turned off. Instead the debt is written down:
+# each entry names the finding exactly and the issue that clears it.
+#
+# This is not an exemption list. Every entry is printed on each run, an entry
+# without an `issue` is itself a finding, and an entry that no longer matches
+# anything is reported as stale so the file cannot quietly outlive the defect.
+# Delete entries as they are fixed; do not add one without an issue behind it.
+#
+# The `file`, `rule`, and `detail` fields must match a finding exactly -- run
+# `mage audit` and copy the reported text.
+
+accepted:
+  # --- Retired sidebar labels (GH-12 renames them across all four chapters) ---
+
+  - file: 03-what-is-clauding.md
+    rule: V-B
+    detail: 'uses the retired sidebar label "Common Clauding Error"; the canonical label is "Common Error"'
+    issue: GH-12
+
+  - file: 03-what-is-clauding.md
+    rule: V-B
+    detail: 'uses the retired sidebar label "Good Clauding Practice"; the canonical label is "Good Practice"'
+    issue: GH-12
+
+  - file: 04-layered-construction.md
+    rule: V-B
+    detail: 'uses the retired sidebar label "Common Clauding Error"; the canonical label is "Common Error"'
+    issue: GH-12
+
+  - file: 04-layered-construction.md
+    rule: V-B
+    detail: 'uses the retired sidebar label "Good Clauding Practice"; the canonical label is "Good Practice"'
+    issue: GH-12
+
+  - file: 05-how-the-machine-works.md
+    rule: V-B
+    detail: 'uses the retired sidebar label "Common Clauding Error"; the canonical label is "Common Error"'
+    issue: GH-12
+
+  - file: 05-how-the-machine-works.md
+    rule: V-B
+    detail: 'uses the retired sidebar label "Good Clauding Practice"; the canonical label is "Good Practice"'
+    issue: GH-12
+
+  - file: 06-language-selection.md
+    rule: V-B
+    detail: 'uses the retired sidebar label "Common Clauding Error"; the canonical label is "Common Error"'
+    issue: GH-12
+
+  - file: 06-language-selection.md
+    rule: V-B
+    detail: 'uses the retired sidebar label "Good Clauding Practice"; the canonical label is "Good Practice"'
+    issue: GH-12
+
+  # --- Prose written before voice.yaml existed (GH-28) ---
+
+  - file: 03-what-is-clauding.md
+    rule: 'voice.yaml: forbidden_terms'
+    detail: 'uses "robust"'
+    issue: GH-28
+
+  - file: 05-how-the-machine-works.md
+    rule: 'voice.yaml: forbidden_terms'
+    detail: 'uses "just"'
+    issue: GH-28
+    note: >
+      Inside the quoted phrase "just guesses randomly" -- a naive belief the
+      chapter is reporting, not the minimizer the rule bars. May survive as a
+      permanent exception; GH-28 decides.
+
+  - file: 06-language-selection.md
+    rule: 'voice.yaml: forbidden_terms'
+    detail: 'uses "powerful"'
+    issue: GH-28
+    note: '"C++ is a powerful language precisely because it offers choice."'
+
+  - file: 03-what-is-clauding.md
+    rule: 'voice.yaml: figures.checks'
+    detail: Figure 1.1 is never referenced from the prose
+    issue: GH-28
+
+  - file: 04-layered-construction.md
+    rule: 'voice.yaml: figures.checks'
+    detail: Figure 2.1 is never referenced from the prose
+    issue: GH-28

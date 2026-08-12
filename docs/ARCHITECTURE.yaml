@@ -11,7 +11,7 @@ meta:
 components:
   governance:
     path: docs/constitutions/
-    role: "Binding rules in four strands (GH-16). The argument strand carries claim discipline -- observation over advocacy, deflation after strong claims, research confirming practice rather than leading it. The voice strand carries register, chapter apparatus, sidebar taxonomy, and figure conventions. The venue strand states what a practitioner book is and is not. The process strand states the drafting pipeline: SRD, draft, critic, revise."
+    role: "Binding rules in four strands (GH-16). The argument strand carries claim discipline -- observation over advocacy, deflation after strong claims, research confirming practice rather than leading it. The voice strand carries register, chapter apparatus, sidebar taxonomy, and figure conventions. The venue strand states what a practitioner book is and is not. The process strand states the drafting pipeline: SRD, draft, audit, critique, revise."
   steering:
     path: docs/
     role: "VISION.yaml (goals) and this file. road-map.yaml carries drafting order and per-chapter status; definitions.yaml carries the canonical terms (both GH-15). outline.yaml at the repository root remains the human-facing plan of record and must agree with the structure block below."
@@ -20,13 +20,13 @@ components:
     role: "Markdown is the canonical source, numbered in reading order, with part dividers as their own files. Prose carries pandoc [@key] citations; the build resolves them against references.yaml. Chapter apparatus -- learning objectives, summary, key terms, sidebars -- is prescribed by constitutions/voice.yaml."
   specification:
     path: docs/srd/
-    role: "One Section Requirements Document per section (GH-17), each stating the section's goal, the book goals and claims it advances, its objective, the prior material it draws on, and its candidate citations. The SRD is the contract a drafter writes against, and the critic checks a draft against its SRD plus the constitutions."
+    role: "One Section Requirements Document per section (GH-17), each stating the section's goal, the book goals and claims it advances, its objective, the prior material it draws on, and its candidate citations. The SRD is the contract a drafter writes against; mage audit checks the mechanically checkable part of that contract, and the review-chapter skill judges the rest."
   figures:
     path: figures/
     role: "PlantUML sources compile to PNG via mage figures. Note the unresolved conflict recorded under open_questions: the two drafted chapters carry inline mermaid blocks instead, which the current pandoc path does not render."
   build:
     path: "magefiles/, templates/"
-    role: "mage figures renders figures/*.puml to PNG; mage pdf runs pandoc over the numbered chapters through templates/eisvogel.latex with xelatex, emitting into generated-files/; mage all chains the two. GH-18 adds mage outline (SRDs to an outline PDF) and GH-19 adds mage critic (LLM critic over drafted chapters)."
+    role: "mage figures renders figures/*.puml to PNG; mage pdf runs pandoc over the numbered chapters through templates/eisvogel.latex with xelatex, emitting into generated-files/; mage all chains the two. mage outline renders the SRDs to an outline PDF; mage audit checks specification consistency, prose conformance, and the build together (GH-27)."
   corpus_interface:
     path: references.yaml
     role: "Single CSL-YAML bibliography, resolved by the pandoc build and shared with the reference-maintenance skills. No private or per-chapter bibliography."
@@ -34,7 +34,7 @@ components:
 # The ordering principle. Part I is mechanism; Parts II-VI are practice.
 # Every prescription in the practice parts must rest on a fact established
 # in Part I, and a prescription that cannot name its Part I fact is a defect
-# the critic reports.
+# the audit reports.
 dependency:
   rule: "Part I justifies Parts II-VI."
   direction: "Mechanism precedes practice; no practice part introduces mechanism of its own."
@@ -185,7 +185,7 @@ material_sources:
 traceability:
   - "Vision goals map onto parts: G1 (orient) is Part I; G2 (specify) is Part II; G3 (verify) is Parts III and IV; G4 (orchestrate) is Part V; G5 (instrument) is Part VI; G6 (build the tools) runs across Parts V and VI and is not a part of its own."
   - "Vision goals map onto constitution rules: G1 links to voice.yaml chapter apparatus and definitions-before-use; G2-G5 link to argument.yaml claim discipline; G6 links to argument.yaml observation-over-advocacy, since the tooling argument is the one most likely to slide into advocacy."
-  - "Constitution rules bind chapters through the SRDs: each SRD names the rule sets its section is checked against, and mage critic (GH-19) reports findings by rule id."
+  - "Constitution rules bind chapters through the SRDs: each SRD names the rule sets its section is checked against, and mage audit reports findings by rule id."
   - "Chapters feed the corpus: every citation resolves to references.yaml, and every term to docs/definitions.yaml."
   - "outline.yaml and this file are two views of one structure. Any structural change updates both; the outline carries descriptions for a human reader, this file carries ids, SRD paths, and dependencies for the tooling."
 
@@ -203,7 +203,7 @@ open_questions:
 
 workflow: |
   Spec-first. An SRD exists before its section is drafted; the drafter writes
-  against the SRD and the constitutions; mage critic reports findings by rule
-  id; revision follows. Structural change starts here and in outline.yaml,
+  against the SRD and the constitutions; mage audit reports findings by rule
+  id and the review-chapter skill judges what no checker can; revision follows. Structural change starts here and in outline.yaml,
   not in the chapters -- a chapter that drifts from its SRD is corrected
   against the SRD, or the SRD is changed deliberately and the chapter follows.
