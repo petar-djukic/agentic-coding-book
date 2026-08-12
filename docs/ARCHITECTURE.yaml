@@ -80,8 +80,10 @@ structure:
       chapters:
         - id: C2.1
           title: Layered construction
+          srd: docs/srd/srd-2.1-layered-construction.yaml
         - id: C2.2
           title: Language selection
+          srd: docs/srd/srd-2.2-language-selection.yaml
         - id: C2.3
           title: Where requirements come from
         - id: C2.4

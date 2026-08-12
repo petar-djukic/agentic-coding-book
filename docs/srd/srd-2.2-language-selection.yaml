@@ -1,0 +1,158 @@
+# SRD 2.2 -- Language selection.
+# Drafting contract per docs/srd/README.md.
+#
+# Written after the draft, not before it (contract rule 1). 11-language-selection.md
+# existed before this contract; the contract describes what the chapter does and the
+# `gaps` field records where the two disagree.
+
+meta:
+  chapter: C2.2
+  title: Language selection
+  parent: P2
+  written_against: 11-language-selection.md
+section_goal: make language choice an empirical decision about the language-model pairing rather than a matter of the programmer's expertise
+goals:
+  - id: G2.5
+    goal: The reader can explain why the generation quality of a language depends on the model rather than on their own fluency in it.
+  - id: G2.6
+    goal: The reader can use training-data volume and interpolation density to predict how reliably a model generates a given language.
+  - id: G2.7
+    goal: The reader can explain how grammar complexity affects generation, through both the statistical and the constrained-decoding mechanism.
+  - id: G2.8
+    goal: The reader can say what the compiler contributes to the inner loop, and why that shows up in convergence rather than in first-attempt accuracy.
+  - id: G2.9
+    goal: The reader can decide whether to generate a component or take a library, from the model's interpolation density in that domain.
+chain:
+  - id: Q9
+    owns: partial
+    note: >
+      C2.1 answers the sequencing half of Q9 and this chapter answers the
+      substrate half: which language makes the inner loop converge. Q9 was added
+      at GH-86; before that this chapter owned no link.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S5, V-S6, V-P1, V-P2]
+    note: "V-P2 binds hardest: the chapter is built on benchmark tables, and the numbers are presented without amplification so the reader draws the conclusion."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C4, A-C5, A-C6, A-X1]
+    note: >
+      A-C5 and A-C6 bind: every pass@1 figure belongs to a named model on a
+      named benchmark, and no result is generalized past the languages measured.
+objective: >
+  It replaces the manual-development question -- what language does the team
+  know -- with the question that applies when a model writes the code: which
+  language does this model generate reliably. It then gives the four properties
+  that decide that, deriving each from the interpolation mechanism C1.5
+  establishes: training-data volume, grammar uniformity, compiler feedback, and
+  ecosystem coverage.
+prior_material:
+  - path: go-unix-utils
+    offers: 123 utilities generated in Go and verified against GNU reference binaries, as the worked case for a strong pairing
+  - path: cobbler-scaffold
+    offers: generation runs where the compile-fix cycle count per task was recorded
+citations:
+  - id: codellama2023
+    role: anchor
+    note: the MultiPL-E pass@1 table across six languages for one model, which carries the training-volume claim
+  - id: cassano2024-transfer
+    role: anchor
+    note: >
+      Low-resource pass@1 rates and the fine-tuning result that takes OCaml from
+      6.9% to 19.9%, which is what makes the gap a data problem rather than a
+      capability problem.
+  - id: kocetkov2022
+    role: evidence
+    note: The Stack corpus sizes, the 64:1 Python-to-OCaml ratio the argument starts from
+  - id: cassano2023
+    role: evidence
+    note: the null result on static versus dynamic typing for first-attempt accuracy, which sets up the convergence argument
+  - id: willard2023
+    role: evidence
+    note: FSM-constrained decoding, the mechanical account of why simpler grammars constrain better
+  - id: dong2024
+    role: evidence
+    note: XGrammar's speedup over earlier constrained-decoding approaches
+  - id: beurer-kellner2023
+    role: evidence
+    note: LMQL's token-mask compilation and its reported cost savings
+  - id: park2024
+    role: evidence
+    note: the distribution distortion masking introduces, and proposed corrections
+  - id: runmat2024
+    role: evidence
+    note: corpus uniformity as a factor independent of corpus size
+  - id: wang2024
+    role: evidence
+    note: hallucinations in complex template scenarios passing static checks and tests
+  - id: coderabbit2025
+    role: evidence
+    note: >
+      Omission rates for null checks and error handling in AI-authored code. A
+      vendor report from a company selling code review, and the chapter should
+      say so where it cites it (the same caution recorded at GH-7 for C1.2).
+content:
+  - say: "When a model writes the code, generation quality follows the model's fluency in the language, not the programmer's."
+    cites: []
+  - say: "Training-data volume differs by orders of magnitude across languages, and pass@1 tracks it."
+    cites: [kocetkov2022, codellama2023, cassano2024-transfer]
+  - say: "Grammar uniformity matters independently of volume: a tighter corpus is a denser interpolation space."
+    cites: [runmat2024]
+  - say: "The same argument has a mechanical form -- a simpler grammar compiles to a smaller state machine and needs less masking, so constraining it distorts the model's distribution less."
+    cites: [willard2023, dong2024, beurer-kellner2023, park2024]
+  - say: "Static typing does not improve the first attempt; it improves how fast the loop converges, because the compiler returns structured errors the model can act on."
+    cites: [cassano2023]
+  - say: "Generate where interpolation is dense; take a library where a subtle defect is both likely and hard to verify."
+    cites: [coderabbit2025, wang2024]
+apparatus:
+  objectives:
+    - Explain why the pairing, not the programmer's expertise, decides generation quality.
+    - Predict generation reliability from training-data volume and interpolation density.
+    - Explain the grammar effect through constrained decoding.
+    - Say what the compiler contributes to the inner loop.
+    - Decide between generating a component and taking a library.
+  sidebars:
+    - type: Performance Observation
+      about: what a 23-point pass@1 gap compounds to across hundreds of orchestrated tasks
+    - type: From the Field
+      about: twenty years of C++ mastery against a model that generates Go reliably and hallucinates templates confidently
+    - type: Good Practice
+      about: preferring the language with fewer ways to express the same pattern, for controllability rather than for simplicity
+    - type: Common Error
+      about: choosing Python for the model's fluency in it, and generating infrastructure code that should have come from a library
+  key_terms: [language_model_pairing, interpolation_density, high_resource_language, low_resource_language, fsm_constrained_decoding, corpus_uniformity]
+figures: []
+links:
+  requires: [C1.5, C2.1]
+  supports: [C2.6, C3.1, C4.2]
+gaps:
+  - >
+    Two chapter cross-references were stale and are corrected in this unit.
+    Section 8.1 sent the reader to "the interpolation machine (Chapter 3)",
+    which is now What Is a Harness; interpolation is Chapter 5. Section 8.4
+    sent them to "the inner loop (Chapter 2)", which is now The Agents You
+    Already Use; the inner loop is defined in Chapter 7, the previous chapter.
+    Both were rot from the Part I resequencing, the same class GH-35 fixed
+    elsewhere, and both now name the right chapter.
+  - >
+    The benchmark tables name models without dating them -- Code Llama 70B and
+    StarCoderBase-15B -- which A-C5 and venue.yaml VN-6 require, since a pass@1
+    figure is a claim about a shipping model. The figures are stable published
+    results rather than observations of a live tool, so the fix is a publication
+    date per table rather than a re-measurement.
+  - >
+    "powerful" in 8.3 is authorial voice, so voice.yaml forbidden_terms applies.
+    Accepted in docs/audit-baseline.yaml against GH-57, which owns the decision
+    to rewrite or keep it with a reason.
+  - >
+    Voice debt deferred by GH-57: the chapter scores LIKELY-AI on filter-tells
+    with 4 HIGH and 16 MEDIUM antithesis findings, and carries 13 cliche hits,
+    the highest count in the book. It predates docs/constitutions/.
+  - >
+    The chapter carries no figure. voice.yaml does not require one, and the
+    argument is carried by four tables, so this is recorded as intent rather
+    than as a gap to close.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - Every pass@1 figure names the model and the benchmark it came from (A-C5), and no result is generalized past the languages measured (A-C6).
+  - The numbers are presented without amplification (V-P2); the Python case is argued from the compiler's absence rather than from preference.
+  - Each prescription names the Part I fact it rests on (A-X1); the language argument names the interpolation mechanism of C1.5.
