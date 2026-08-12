@@ -1,0 +1,50 @@
+@startuml
+' Figure 2.1 -- The same skeleton, three tools.
+' Each column is one shipping tool. A shaded box is a component the tool
+' exposes as configuration; a blank box is one that was not present in the
+' configuration surface inspected on 2026-08-11. Versions are in the caption.
+
+skinparam shadowing false
+skinparam defaultFontName Helvetica
+skinparam ArrowFontSize 11
+skinparam rectangle {
+  BorderThickness 1
+  BackgroundColor white
+  BorderColor black
+  FontColor black
+}
+skinparam package {
+  BorderColor black
+  BackgroundColor white
+  FontColor black
+}
+
+package "Claude Code\n2.1.220" as CC {
+  rectangle "Tool set\nskills, commands, MCP" as CC1 #lightgray
+  rectangle "Policy\npermissions.allow rules" as CC2 #lightgray
+  rectangle "Context / compaction\nnot in the surface inspected" as CC3
+}
+
+package "OpenCode\n1.18.16" as OC {
+  rectangle "Tool set\nMCP servers" as OC1 #lightgray
+  rectangle "Policy\nper-agent allow / ask rules" as OC2 #lightgray
+  rectangle "Context / compaction\na named 'compaction' agent" as OC3 #lightgray
+}
+
+package "Crush\nv0.88.1" as CR {
+  rectangle "Tool set\ntools, mcp, lsp" as CR1 #lightgray
+  rectangle "Policy\npermissions.allowed_tools" as CR2 #lightgray
+  rectangle "Context / compaction\noptions.disable_auto_summarize" as CR3 #lightgray
+}
+
+CC1 -[hidden]down- CC2
+CC2 -[hidden]down- CC3
+OC1 -[hidden]down- OC2
+OC2 -[hidden]down- OC3
+CR1 -[hidden]down- CR2
+CR2 -[hidden]down- CR3
+
+CC -[hidden]right- OC
+OC -[hidden]right- CR
+
+@enduml

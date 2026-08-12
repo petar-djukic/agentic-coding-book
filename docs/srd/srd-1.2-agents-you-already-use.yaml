@@ -42,7 +42,13 @@ citations:
     note: measured productivity effect on experienced developers; complicates any claim that adoption implies benefit
   - id: coderabbit2025
     role: evidence
-    note: comparative generation data, used for what differs between tools rather than for ranking them
+    note: >
+      Verified at drafting (GH-7) and narrower than this note assumed. It
+      compares AI-authored against human-authored pull requests (470 PRs, 320
+      AI-co-authored), not one tool against another, so it cannot carry a claim
+      about what differs between harnesses. It is also a vendor report from a
+      company selling code review. Cite it for the class of output, with both
+      caveats stated.
   - id: latentpatterns-harness
     role: anchor
     note: the vocabulary the survey uses to describe what each tool wraps
@@ -74,7 +80,15 @@ apparatus:
   key_terms: [agent, agent_harness, tool]
 figures:
   - shows: "The same skeleton across three tools, with the components each one exposes to the user shaded and the components each one hides left blank."
-    status: planned
+    status: drawn
+    path: figures/fig-2-1-same-skeleton-three-tools.puml
+    label: "Figure 2.1"
+    note: >
+      Shading marks what was found in each tool's configuration surface on the
+      inspection date. A blank box reports the inspection, not a missing
+      capability -- the original wording ("components each one hides") would
+      have claimed more than the method supports.
+
 links:
   requires: [C1.1]
   supports: [C1.3]
@@ -84,7 +98,19 @@ gaps:
     churns faster than the book and a dated URL rots, so the chapter reports
     behavior observed directly and says so, with a version-and-date line per
     tool (VN-6). bensghaier2026 carries the claim about harnesses as a class.
-  - "The survey dates immediately. Whatever is drafted needs a version-and-date line per tool, and a note in road-map.yaml that this chapter is the first to need revision."
+  - >
+    Done at GH-7: every tool claim carries a version and the inspection date
+    (Claude Code 2.1.220, OpenCode 1.18.16, Crush v0.88.1, 2026-08-11), and
+    road-map.yaml records C1.2 as the first chapter needing revision.
+  - >
+    LangGraph was dropped from the surveyed set. The SRD named it, but it was
+    not installed and could not be inspected, and VN-6 plus A-C5 forbid dating
+    a claim that was not observed. Crush v0.88.1 took its place because it was
+    present and inspectable. A framework-assembled agent is still the missing
+    third packaging style; add it when one can be run and dated.
+  - >
+    Figure and section numbers collide with C2.1 (layered construction), which
+    also uses 2.x. Live in the build as of GH-7 and owned by GH-35.
 acceptance:
   - Every citation id resolves in references.yaml.
   - Every claim about a shipping tool carries a version or date (VN-6, A-C5).
