@@ -56,7 +56,7 @@ agent:
 derivation_chain:
   - id: Q1
     question: What writes the code?
-    owners: [C1.1]
+    owners: [C1.1, C1.2]
 part_obligations:
   parts:
     - id: P1
@@ -167,14 +167,18 @@ func TestAuditCatchesEachBreakage(t *testing.T) {
 			want: "cites unknown rule V-S9",
 		},
 		{
-			name:   "SRD claims a chain link it does not own",
-			break_: func(f tree) { f["docs/constitutions/argument.yaml"] = replace2(f, "owners: [C1.1]", "owners: [C1.2]") },
-			want:   "argument.yaml owners are",
+			name: "SRD claims a chain link it does not own",
+			break_: func(f tree) {
+				f["docs/constitutions/argument.yaml"] = replace2(f, "owners: [C1.1, C1.2]", "owners: [C1.2]")
+			},
+			want: "argument.yaml owners are",
 		},
 		{
-			name:   "chain owner is not a chapter",
-			break_: func(f tree) { f["docs/constitutions/argument.yaml"] = replace2(f, "owners: [C1.1]", "owners: [C9.9]") },
-			want:   "owns unknown chapter C9.9",
+			name: "chain owner is not a chapter",
+			break_: func(f tree) {
+				f["docs/constitutions/argument.yaml"] = replace2(f, "owners: [C1.1, C1.2]", "owners: [C1.1, C1.2, C9.9]")
+			},
+			want: "owns unknown chapter C9.9",
 		},
 		{
 			name: "a part carries no obligation",
@@ -933,5 +937,25 @@ The model just interpolates [@hunt1999].`)
 	err := auditTree(t, files)
 	if err == nil || !strings.Contains(err.Error(), `uses "just"`) {
 		t.Fatalf("an unclosed quote must not exempt later prose, got:\n%v", err)
+	}
+}
+
+// ---------------------------------------- derivation-chain coverage (GH-86)
+
+// docs/srd/README.md: every chapter owns at least one link, since a chapter
+// answering no question in the chain is not carrying argument. The rule was
+// written down and unenforced, and four chapters broke it unnoticed.
+func TestEveryChapterOwnsADerivationChainLink(t *testing.T) {
+	files := cleanTree()
+	files["docs/constitutions/argument.yaml"] = strings.Replace(
+		files["docs/constitutions/argument.yaml"], "owners: [C1.1, C1.2]", "owners: [C1.1]", 1)
+	err := auditTree(t, files)
+	if err == nil {
+		t.Fatal("a chapter owning no chain link should be a finding")
+	}
+	for _, want := range []string{"no link is owned by chapter C1.2", "answers at least one"} {
+		if !strings.Contains(err.Error(), want) {
+			t.Errorf("finding should mention %q, got:\n%v", want, err)
+		}
 	}
 }
