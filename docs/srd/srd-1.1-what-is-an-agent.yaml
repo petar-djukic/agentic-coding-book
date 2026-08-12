@@ -70,12 +70,27 @@ apparatus:
   key_terms: [agent, tool, agentic_loop]
 figures:
   - shows: "The agent skeleton: a state machine whose transitions are driven by model output, with tool calls as the only path to anything outside the process."
-    status: planned
+    status: drawn
+    path: figures/fig-1-1-agent-skeleton.puml
+    label: "Figure 1.1"
+
 links:
   requires: []
   supports: [C1.2, C1.3]
 gaps:
-  - "declarative-agents is cited as a repository rather than a publication; check whether the design-patterns monograph is citable by then."
+  - >
+    Checked at drafting (GH-6): the design-patterns monograph is still
+    unpublished source -- "Design Patterns for Declarative Agents: Eleven
+    Patterns for Building Reliable Agents", June 2026, built from
+    design-patterns/ in the repository, with no venue. So the chapter cites the
+    repository (`declarative-agents`, public). Promote the citation if the
+    monograph reaches a venue.
+  - >
+    The boxed definition of `tool` in this chapter says "the surrounding
+    program" where definitions.yaml says "the harness". Deliberate: C1.3
+    introduces the term `harness`, and C1.1 must not depend on it. The content
+    is identical and C1.3 names the program. Reconcile only if the chapter
+    order changes.
 acceptance:
   - Every citation id resolves in references.yaml.
   - The definition is stated before any product name appears.
