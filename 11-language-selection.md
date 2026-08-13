@@ -14,21 +14,21 @@ After reading this chapter, the reader will be able to:
 
 ## 8.1 The Language-Model Pairing
 
-In manual development, language selection starts with the programmer. What does the team know? What does the language offer for this problem domain? What is the ecosystem like? The programmer's skill determines the quality of the code, so the programmer's comfort with the language matters.
+In manual development, language selection starts with the programmer: what the team already knows, what the language offers for the problem domain, what the surrounding libraries and tooling look like. Because the programmer's skill determines the quality of the code, their comfort with the language matters.
 
-In agent-based development, the programmer does not write the code. The model writes the code. The programmer's mastery of the language still matters for reading, reviewing, and specifying — but the generation quality depends on the model, not the programmer. A C++ expert directing an agent to write C++ gets the model's C++ quality, not their own.
+In agent-based development, the programmer does not write the code. The model writes the code. The programmer's mastery of the language still matters for reading, reviewing, and specifying — but the generation quality depends on the model, not the programmer. A C++ expert directing an agent to write C++ gets the model's C++ quality rather than their own.
 
-This changes the decision. The question is no longer "what language am I good at?" The question is: what language does the model generate reliably for this kind of work?
+That changes what the decision is about. It stops being a matter of what language the programmer is good at and becomes a matter of which language the model generates reliably for this kind of work.
 
 > **Definition: Language-model pairing** — the combination of a programming language and a specific model, evaluated by how reliably the model generates correct code in that language. A strong pairing produces code that compiles, passes tests, and matches the specification on the first or second attempt. A weak pairing produces code that looks correct but fails in ways that require the programmer to debug at the language level.
 
-The rest of this chapter explains what determines the strength of a pairing: training data volume, grammar complexity, compiler feedback quality, and ecosystem coverage. These are not opinions. They are properties of how the interpolation machine (Chapter 5) interacts with different languages.
+The rest of this chapter explains what determines the strength of a pairing: training data volume, grammar complexity, compiler feedback quality, and ecosystem coverage. Each is a property of how the interpolation machine (Chapter 5) interacts with a given language, rather than a matter of taste.
 
 ## 8.2 Training Data and Interpolation Density
 
-The model interpolates from patterns in its training data (Chapter 5, Section 5.3). Languages with more training data have denser interpolation spaces — more patterns to draw from, shorter distances between the target and the nearest training example, higher probability of generating correct code.
+Interpolation runs over patterns in the training data (Chapter 5, Section 5.3), so a language with more of that data has a denser interpolation space — more patterns to draw from, shorter distances between the target and the nearest training example, higher probability of generating correct code.
 
-The training data is not evenly distributed across languages. The Stack, the largest permissively licensed source code dataset, contains 64GB of Python, roughly 1GB of OCaml, and roughly 0.5GB of Scheme [@kocetkov2022]. A 64:1 ratio in training data produces a measurable difference in generation quality.
+Training data is distributed very unevenly across languages. The Stack, the largest permissively licensed source code dataset, contains 64GB of Python, roughly 1GB of OCaml, and roughly 0.5GB of Scheme [@kocetkov2022]. A 64:1 ratio in training data produces a measurable difference in generation quality.
 
 Code Llama 70B pass@1 rates on MultiPL-E HumanEval, which translates the same benchmark problems to multiple languages, as published in 2023 [@codellama2023]:
 
@@ -41,7 +41,7 @@ Code Llama 70B pass@1 rates on MultiPL-E HumanEval, which translates the same be
 | TypeScript | 38.0% |
 | C# | 29.1% |
 
-The same model, the same problems, different languages. Python and C++ are within one percentage point. C# trails Python by 23 points. The difference is not in the problems — it is in the density of the interpolation space for each language.
+The same model, the same problems, different languages. Python and C++ are within one percentage point. C# trails Python by 23 points. What differs is not the problems but the density of the interpolation space for each language.
 
 These numbers are misleading if read as a language recommendation. Pass@1 measures first-attempt success on isolated benchmark problems — short functions with clear specifications and test cases provided. It does not measure what happens next: how quickly errors are caught, how many survive into the verification gate, how many reach production. Python leads on benchmarks because the model has the most Python training data. It does not follow that Python is the best choice for agent-based development. Section 8.4 explains why.
 
@@ -57,7 +57,7 @@ The gap is wider for low-resource languages. StarCoderBase-15B pass@1 rates, pub
 | R | 10.2% |
 | OCaml | 6.9% |
 
-OCaml's pass@1 rate is less than a quarter of Python's. The model is not incapable of generating OCaml — after fine-tuning on synthetic training data, OCaml improved from 6.9% to 19.9% [@cassano2024-transfer]. The initial gap is a training data problem, not a capability problem. But for the programmer choosing a language today, the gap is real: directing an agent to write OCaml means accepting that the first attempt will be wrong roughly 93% of the time.
+OCaml's pass@1 rate is less than a quarter of Python's. Incapacity is not the explanation: after fine-tuning on synthetic training data, OCaml improved from 6.9% to 19.9% [@cassano2024-transfer]. The initial gap is a training data problem, not a capability problem. But for the programmer choosing a language today, the gap is real: directing an agent to write OCaml means accepting that the first attempt will be wrong roughly 93% of the time.
 
 > **Performance Observation:** The pass@1 gap between Python (52.8%) and C# (29.1%) on Code Llama 70B means that for every 100 problems, the model generates a correct Python solution on the first try 53 times and a correct C# solution 29 times. Over hundreds of tasks in an orchestration pipeline, this difference compounds. The language choice is, in part, choosing the base rate of the inner loop's first-attempt success.
 
@@ -83,7 +83,7 @@ This is not a claim about language quality. The expressiveness is the point of C
 
 ### 8.3.1 Corpus Uniformity
 
-The uniformity of a language's public corpus affects generation quality independently of corpus size. Rust's public code corpus is more uniform than TypeScript's because the Rust ecosystem enforces consistency: cargo standardizes project structure, rustfmt standardizes formatting, and Clippy standardizes idioms. TypeScript's larger corpus includes code from diverse sources with diverse conventions. A tighter distribution yields more reliable interpolation [@runmat2024].
+Uniformity in a language's public corpus affects generation quality independently of corpus size. Rust's public code corpus is more uniform than TypeScript's because the Rust ecosystem enforces consistency: cargo standardizes project structure, rustfmt standardizes formatting, and Clippy standardizes idioms. TypeScript's larger corpus includes code from diverse sources with diverse conventions. A tighter distribution yields more reliable interpolation [@runmat2024].
 
 This suggests that language communities which enforce style consistency — through formatters, linters, and opinionated toolchains — unintentionally improve the quality of AI-generated code in their language. The enforcement is not designed for models. But the uniformity it produces in the training data is exactly what the interpolation machine needs.
 
@@ -111,15 +111,15 @@ Most readers will not build FSM-constrained decoders. But the mechanism explains
 
 The inner loop (Chapter 7) is specify → generate → verify → fix. The compiler participates in the "verify" step. A stronger compiler catches more errors, earlier, with clearer messages — and this affects how quickly the inner loop converges.
 
-The type system paradox: the MultiPL-E benchmark found no statistically significant effect of static versus dynamic typing on pass@1 rates (p=0.33 on HumanEval, p=0.23 on MBPP) [@cassano2023]. The model does not generate better code on the first try in statically typed languages. This seems to contradict the intuition that types help.
+The type system paradox: the MultiPL-E benchmark found no statistically significant effect of static versus dynamic typing on pass@1 rates (p=0.33 on HumanEval, p=0.23 on MBPP) [@cassano2023]. Statically typed languages get no better first attempt out of the model, which sits awkwardly against the intuition that types help.
 
-The resolution: the benefit of static types is not in the first attempt. It is in the feedback loop. The inner loop does not stop after the first generation. It cycles: generate, compile, read errors, fix, compile again. A statically typed language catches type mismatches, null safety violations, and interface contract violations at compile time. These errors appear immediately, with structured messages that the model can act on. A dynamically typed language defers these errors to runtime, where they appear as crashes — if the right inputs happen to trigger them.
+The resolution is that static types pay in the feedback loop rather than in the first attempt. The inner loop keeps cycling after the first generation: generate, compile, read errors, fix, compile again. A statically typed language catches type mismatches, null safety violations, and interface contract violations at compile time. These errors appear immediately, with structured messages that the model can act on. A dynamically typed language defers these errors to runtime, where they appear as crashes — if the right inputs happen to trigger them.
 
 Consider two inner loop cycles for the same bug — a function called with the wrong argument type:
 
 **Go:** The compiler rejects the code immediately. The error message names the function, the expected type, and the provided type. The model sees this in context and fixes it. One cycle.
 
-**Python:** The code runs. If the test happens to call the function with an argument that exposes the type mismatch, a runtime TypeError is raised. If the test does not exercise that code path, the bug passes silently. The inner loop either catches it late (after several cycles of unrelated work) or does not catch it at all — pushing it to the verification gate between increments, or worse, to production.
+**Python:** The code runs. If the test happens to call the function with an argument that exposes the type mismatch, a runtime TypeError is raised. If the test does not exercise that code path, the bug passes silently. The inner loop catches it several cycles late, after unrelated work has piled on top, or misses it entirely and pushes it to the verification gate between increments — or to production.
 
 The compiler is a verification partner. Languages with stronger compilers provide stronger verification at each inner loop cycle. This does not change the first-attempt success rate, but it changes the convergence rate — how many cycles it takes to reach correct code.
 
@@ -127,13 +127,13 @@ The compiler is a verification partner. Languages with stronger compilers provid
 
 Python leads every code generation benchmark. It has the most training data, the highest pass@1 rates, and the most fluent model output. By the metrics in Section 8.2, it is the obvious choice.
 
-It is not.
+Those metrics stop at the first attempt, and the rest of the loop is where Python costs you.
 
-Python has no compiler. There is no verification step between generation and execution. The model generates code, and the only way to discover errors is to run it — with inputs that happen to trigger them. Every class of error that a compiler catches for free — type mismatches, undefined variables, wrong argument counts, misspelled attribute names — survives in Python until a test exercises the exact code path that exposes it.
+Python has no compiler, so nothing verifies the code between generation and execution. Code is generated, and the only way to discover errors is to run it — with inputs that happen to trigger them. Every class of error that a compiler catches for free — type mismatches, undefined variables, wrong argument counts, misspelled attribute names — survives in Python until a test exercises the exact code path that exposes it.
 
-For manual development, this tradeoff is manageable. The programmer sees the code as it is written and catches most errors through visual inspection. For agent-based development, where hundreds or thousands of lines are generated without manual review, the tradeoff is inverted. The model generates more code faster than any programmer can inspect. Every error that a compiler would have caught is now an error that must be caught by a test — and the tests are also generated by the model, from the same assumptions that produced the bug.
+For manual development, this tradeoff is manageable. A programmer sees the code as it is written and catches most errors by eye. For agent-based development, where hundreds or thousands of lines are generated without manual review, the tradeoff is inverted. The model generates more code faster than any programmer can inspect. Every error that a compiler would have caught is now an error that must be caught by a test — and the tests are also generated by the model, from the same assumptions that produced the bug.
 
-AI-generated code omits null checks, early returns, guardrails, and comprehensive exception handling at a higher rate than human-written code [@coderabbit2025]. In a compiled language, some of these omissions are caught by the compiler. In Python, none of them are. They pass through the inner loop, through the verification gate, and into production.
+AI-generated code omits null checks, early returns, guardrails, and comprehensive exception handling at a higher rate than human-written code [@coderabbit2025]. A compiler catches some of those omissions before anything runs; in Python they all survive. They pass through the inner loop, through the verification gate, and into production.
 
 > **Common Error:** Choosing Python because the model is most fluent in it. Fluency is not reliability. The model generates Python that reads well, runs on the first try for the happy path, and fails silently on edge cases that no test covers. A language with a compiler catches an entire class of these failures automatically — before any test runs, before any code executes. For agent-based development at scale, that automatic verification layer is not optional.
 
@@ -141,13 +141,13 @@ AI-generated code omits null checks, early returns, guardrails, and comprehensiv
 
 A separate problem with expressive languages — Python included — is that they offer many ways to accomplish the same thing. A list can be built with a for loop, a list comprehension, `map()` with a lambda, a generator expression materialized with `list()`, or `itertools`. A class can use inheritance, mixins, dataclasses, named tuples, or plain dictionaries. Each is valid. Each produces different code structure.
 
-When the programmer writes code by hand, this expressiveness is a feature — the programmer picks the approach that fits the context and stays consistent within the codebase. When an agent generates code, this expressiveness is a problem. The model picks whichever approach is most probable given the context, which varies from task to task. The result is a codebase where the same pattern is implemented three different ways across three files, because the model interpolated from different training examples each time.
+When the programmer writes code by hand, this expressiveness is a feature — the programmer picks the approach that fits the context and stays consistent within the codebase. When an agent generates code, this expressiveness is a problem. Whichever approach is most probable given the context is the one the model picks, and that varies from task to task. A codebase comes out of that with the same pattern implemented three different ways across three files, because the model interpolated from different training examples each time.
 
 This is not just an aesthetic issue. Inconsistent patterns make the codebase harder to verify, harder to extend, and harder to specify future work against. When the programmer writes the next specification, they must account for whichever approach the model chose previously — or the model will introduce a fourth approach that is inconsistent with the first three.
 
 Languages that restrict how things are done eliminate this problem. Go has one way to iterate, one way to handle errors, one way to format code. The model cannot choose a surprising approach because the language does not offer one. The programmer's specifications do not need to say "use a for loop, not a list comprehension" because the language has already made that decision.
 
-> **Good Practice:** Prefer languages with fewer ways to express the same pattern. This is not about language simplicity for its own sake — it is about controllability. Every choice the language eliminates is a choice the model cannot get wrong and the specification does not need to address. The fewer degrees of freedom the model has, the more predictable its output, and the less effort the programmer spends correcting stylistic drift across generated code.
+> **Good Practice:** Prefer languages with fewer ways to express the same pattern. The reason is controllability rather than simplicity for its own sake. Every choice the language eliminates is a choice the model cannot get wrong and the specification does not need to address. The fewer degrees of freedom the model has, the more predictable its output, and the less effort the programmer spends correcting stylistic drift across generated code.
 
 > **Performance Observation:** The generate-compile-fix cycle is where language choice has its largest practical effect. A language with fast compilation, clear error messages, and a type system that catches common mistakes makes the inner loop converge faster. Go compiles in under a second and produces error messages the model can parse. Rust compiles slower but catches ownership and concurrency errors that would be runtime failures in other languages. Python has no compilation step — errors surface at runtime, if the tests cover the right paths.
 
@@ -155,7 +155,7 @@ Languages that restrict how things are done eliminate this problem. Go has one w
 
 With agent-based development, the programmer can generate application-level code instead of depending on third-party libraries. A data transformation, a protocol handler, a CLI framework, a JSON parser — if the model generates reliable code in the target language, these are faster to generate purpose-built than to learn, integrate, and maintain someone else's implementation.
 
-This changes the ecosystem calculation. The old question was: "does this language have the libraries I need?" The new question is: "can the model generate what I need in this language?"
+That changes the ecosystem calculation. Where the question used to be whether a language has the libraries you need, it becomes whether the model can generate what you need in that language.
 
 The answer depends on interpolation density in the specific domain:
 

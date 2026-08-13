@@ -55,7 +55,7 @@ The outer loop, which remains the programmer's job, looks like this:
 
 The outer loop is where the programmer's experience, judgment, and architectural knowledge live. It is the thing the agent cannot generate for itself.
 
-> **From the Field:** The first time I ran an agent on a project with more than a few moving parts, I described the whole system and let it go. The code compiled. Some tests passed. But nothing actually worked end-to-end — the data model assumed one query pattern, the API assumed another, and the two did not meet. The second time, I built one feature all the way through: schema, query, endpoint, test. It was thin and incomplete, but it worked. Every subsequent feature built on a foundation I had already verified. The difference was not the agent. The difference was building end-to-end from the start.
+> **From the Field:** The first time I ran an agent on a non-trivial project, I described the whole system and let it go. The code compiled. Some tests passed. But nothing actually worked end-to-end — the data model assumed one query pattern, the API assumed another, and the two did not meet. The second time, I built one feature all the way through: schema, query, endpoint, test. It was thin and incomplete, but it worked. Every subsequent feature built on a foundation I had already verified. The difference was not the agent. The difference was building end-to-end from the start.
 
 ## 7.3 Why You Cannot Skip the Outer Loop
 
