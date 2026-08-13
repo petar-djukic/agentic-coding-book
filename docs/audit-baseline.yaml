@@ -24,20 +24,6 @@
 accepted:
   # --- Prose written before voice.yaml existed (GH-28) ---
 
-  - file: 11-language-selection.md
-    rule: 'voice.yaml: forbidden_terms'
-    detail: 'uses "powerful"'
-    issue: GH-57
-    note: '"C++ is a powerful language precisely because it offers choice."'
-
-  - file: 10-layered-construction.md
-    rule: 'voice.yaml: figures.checks'
-    detail: Figure 7.1 is never referenced from the prose
-    issue: GH-57
-    note: >
-      Renumbered from Figure 2.1 by GH-35; the figure is still unreferenced,
-      which is the part GH-28 clears.
-
   - file: 03-what-is-an-agent.md
     rule: 'voice.yaml: sidebars V-B4 authorship'
     detail: '"From the Field" sidebar #1 was last touched by the do-work skill; V-B4 is author_only'
