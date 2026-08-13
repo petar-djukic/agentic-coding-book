@@ -1088,3 +1088,93 @@ references:
     cites it for where state consistency has to be enforced: the orchestrator
     can commit after every write, and only the next run's check can tell
     whether the state is true.
+
+- id: sigelman2010
+  type: report
+  author:
+  - {family: Sigelman, given: Benjamin H.}
+  - {family: Barroso, given: Luiz André}
+  - {literal: et al.}
+  title: "Dapper, a Large-Scale Distributed Systems Tracing Infrastructure"
+  publisher: Google
+  number: dapper-2010-1
+  URL: https://research.google/pubs/pub36356/
+  issued: {year: 2010}
+  note: >
+    Verified 2026-08-14 (GH-70) via OpenAlex; 471 citations. What a trace needs
+    to be useful across processes: a shared identity carried through every
+    call, causal structure between spans, and sampling, because tracing
+    everything is not affordable. C6.2 cites it because a generation run is a
+    distributed trace whose spans happen to be agent turns, and the three
+    requirements transfer unchanged.
+
+- id: jones1978
+  type: article-journal
+  author:
+  - {family: Jones, given: T. Capers}
+  title: Measuring Programming Quality and Productivity
+  container-title: IBM Systems Journal
+  volume: 17
+  issue: 1
+  page: 39-63
+  DOI: 10.1147/sj.171.0039
+  issued: {year: 1978}
+  note: >
+    Verified 2026-08-14 (GH-70) via Crossref. Lines of code as a productivity
+    denominator, and why it misleads -- it rewards verbosity and varies with
+    language, so the same work measures differently. C6.4 needs it because
+    cost per line is the number Part VI is most likely to be quoted on, and
+    V-V5 requires the deflation to arrive with the figure rather than after it.
+
+- id: otel-genai
+  type: webpage
+  author:
+  - {literal: OpenTelemetry Authors}
+  title: Semantic Conventions for Generative AI
+  container-title: OpenTelemetry
+  URL: https://github.com/open-telemetry/semantic-conventions-genai
+  issued: {year: 2026}
+  note: >
+    Checked 2026-08-14 (GH-70). Spans, metrics, and events for GenAI clients
+    and MCP, plus provider-specific conventions. Cited as a dated pointer and
+    explicitly not as a settled standard: the repository was in active
+    development at that date with its schema URL unset, which is the honest
+    state to report under A-C5. C6.2 uses it to tell the reader an
+    interoperable vocabulary is arriving without implying they can wait for it.
+
+- id: ouyang2024
+  type: article-journal
+  author:
+  - {family: Ouyang, given: Shuyin}
+  - {family: Zhang, given: Jie M.}
+  - {family: Harman, given: Mark}
+  - {family: Wang, given: Meng}
+  title: An Empirical Study of the Non-Determinism of ChatGPT in Code Generation
+  container-title: ACM Transactions on Software Engineering and Methodology
+  volume: 34
+  issue: 2
+  page: 1-28
+  DOI: 10.1145/3697010
+  issued: {year: 2024}
+  note: >
+    Verified 2026-08-14 (GH-70) via OpenAlex; 168 citations. Same prompt,
+    different code, measured across benchmarks rather than anecdotally --
+    including at temperature zero, which is the result that surprises readers
+    who expect determinism to be a setting. C6.6's anchor for the fact; the
+    corpus supplies the cascade.
+
+- id: shewhart1931
+  type: book
+  author:
+  - {family: Shewhart, given: Walter A.}
+  title: Economic Control of Quality of Manufactured Product
+  publisher: D. Van Nostrand Company
+  ISBN: 0873890760
+  issued: {year: 1931}
+  note: >
+    Verified 2026-08-14 (GH-70) via OpenLibrary; the ISBN is the ASQC reprint.
+    The distinction C6.7 is built on: variation with a common cause is the
+    process behaving as it does, and variation with a special cause is
+    something that happened. Chasing the first is waste, and a generation
+    pipeline whose run-to-run cost moves is the same measurement problem in a
+    new setting.

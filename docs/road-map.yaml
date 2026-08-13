@@ -197,11 +197,47 @@ releases:
       the chapter file-first and name no product. srd-5.4 and srd-5.5 hold the
       detail in their gaps fields.
 
+  - id: rel06.srd
+    name: "Part VI specification"
+    status: complete
+    units: [C6.1, C6.2, C6.3, C6.4, C6.5, C6.6, C6.7]
+    gate: "rel05.srd complete."
+    completed: >
+      Seven SRDs written under EPIC GH-70, 2026-08-14, completing the
+      specification for all six parts. `monitor` assigned to C6.2 and
+      `analyst` to C6.7, both having sat at part level with no owning chapter;
+      GH-94's remaining three orphaned roles still stand.
+
+      This part has the strongest evidence base in the book, and the contracts
+      are written against named dataset files rather than against the
+      outline's summaries. Two findings carry chapters on their own: retrying
+      is worth about two points, with pass@1 at 0.7743 rising only to 0.795 by
+      pass@18 across 678 task ids; and tasks carry a floor of roughly $1.32
+      before any work, against about a penny per requirement, which deflates
+      cost per line without any help from the argument.
+
+      Three outline promises could not be met as written. The economics
+      figures do not reproduce -- "$139.24 for 44,628 lines" appears in no
+      dataset and implies $3.12 per kLOC against a corpus median of $9.78, so
+      the two numbers are not from one scope (GH-92). C6.5's promise of
+      predicting expensive tasks before they run is unsupported: the corpus's
+      fitted model predicts tool calls rather than cost, nine of its thirteen
+      features are outcomes, and it does worse than the mean on failed builds.
+      And the turn-level figures throughout cover 659 task ids against 2,706
+      tasks, which every chapter using them must state.
+
   - id: rel06.0
     name: "Part VI -- Instrumentation"
     status: pending
     units: [C6.1, C6.2, C6.3, C6.4, C6.5, C6.6, C6.7]
-    gate: "rel05.0 complete (instrumentation observes the loop the previous part builds)."
+    gate: >
+      rel05.0 complete (instrumentation observes the loop the previous part
+      builds) and rel06.srd complete. Two measurements are worth making before
+      drafting rather than after: whether GH-7's single-turn fix removed the
+      input-token variance it was written to remove, which would turn C6.6's
+      strongest section from a proposal into a result; and a model refitted on
+      pre-run features alone, which would give C6.5 the number the outline
+      assumed it already had.
 
 # Every part and chapter with its status. Chapter ids match
 # ARCHITECTURE.yaml; issue numbers are given where a chapter has one.
