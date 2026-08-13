@@ -68,7 +68,15 @@ apparatus:
       about: writing a specification that cross-references another document the harness will never read
     - type: Performance Observation
       about: what the feedback loop costs in turns when the verifier is slow
-  key_terms: [agent_harness, agentic_loop, context_assembly, context_window, tool, verification_gate]
+  key_terms: [agentic_loop, context_assembly]
+  key_terms_ownership_note: >
+    Four terms dropped at GH-88 -- agent_harness to C1.3, context_window to
+    C1.5, tool to C1.1, verification_gate to C2.1 -- each verified against where
+    its boxed definition actually sits. This chapter's table keeps all four
+    rows, which is the point of the rule: the table serves the reader and the
+    contract records what the chapter introduces. verification_gate is the
+    sharpest case, since requiring it here made a Part I contract depend on a
+    term a Part II chapter introduces.
 figures:
   - shows: "A sequence diagram tracing one request across the programmer, the harness, the model, the file system, and the compiler, with the verification result returning to context as the next input."
     status: planned
