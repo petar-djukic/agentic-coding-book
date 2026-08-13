@@ -174,12 +174,16 @@ structure:
       chapters:
         - id: C6.1
           title: The black box problem
+          srd: docs/srd/srd-6.1-the-black-box-problem.yaml
         - id: C6.2
           title: What to log
+          srd: docs/srd/srd-6.2-what-to-log.yaml
         - id: C6.3
           title: Reading the logs
+          srd: docs/srd/srd-6.3-reading-the-logs.yaml
         - id: C6.4
           title: The economics
+          srd: docs/srd/srd-6.4-the-economics.yaml
         - id: C6.5
           title: Building intuition
         - id: C6.6

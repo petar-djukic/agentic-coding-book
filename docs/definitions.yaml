@@ -713,7 +713,7 @@ monitor:
     compiler output, test results, token costs, turn counts, context
     utilization. Supplies the data the analyst interprets.
   coding_analogue: "logging, metrics collection"
-  introduced: P6
+  introduced: C6.2
   see_also: [analyst]
 
 analyst:
