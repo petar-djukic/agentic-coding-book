@@ -1,0 +1,127 @@
+# SRD 2.5 -- The constitution.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+
+meta:
+  chapter: C2.5
+  title: The constitution
+  parent: P2
+section_goal: establish the constitution as the artifact that carries standing constraints, and show why a constraint has to be enforced rather than requested
+goals:
+  - id: G2.17
+    goal: The reader can state what belongs in a constitution rather than in a per-task specification.
+  - id: G2.18
+    goal: The reader can explain why a rule stated in context competes for attention while a rule enforced in the harness does not.
+  - id: G2.19
+    goal: The reader can write a constraint as a checkable article rather than as guidance.
+  - id: G6.5
+    goal: "The reader has built a constitution gate: the harness refuses a tool call that violates a declared rule, so the constraint holds without the model's cooperation."
+chain:
+  - id: Q5
+    owns: partial
+    note: >
+      C2.5's share of Q5 is the standing half. A specification says what this
+      task must produce; a constitution says what every task must respect, and
+      the difference is lifetime rather than subject.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S2, V-S4, V-S6, V-V1]
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C4, A-X1]
+    note: >
+      A-C4: the case for hard gates over soft guidance rests on C1.3's policy
+      responsibility -- removing a tool is arithmetic, instructing the model not
+      to use it competes with everything else in the context -- and on C1.4's
+      position effect.
+objective: >
+  It separates the standing constraint from the per-task specification, gives
+  the constitution its shape as a set of identified articles, and derives the
+  central claim from Part I: a rule that lives only in the prompt is a rule the
+  model weighs against everything else in the window, while a rule the harness
+  enforces is not weighed at all. It then shows the two enforcement paths --
+  mechanical, through tool permissions, and probabilistic, through the rule text
+  the model reads -- and says which constraints belong on which path.
+prior_material:
+  - path: cobbler-scaffold
+    offers: >
+      docs/constitutions/, nine constitution files -- design, execution,
+      go-style, testing, planning, interface and others -- each a list of
+      articles with an id, a title, and a rule. The worked shape this chapter
+      describes, in use rather than proposed.
+  - path: agentic-coding-book
+    offers: >
+      This book's own docs/constitutions/ and the mage audit target that
+      enforces the checkable subset, as the case where the constitution and its
+      gate were built together and the gate found real defects.
+citations:
+  - id: tmforum-ig1218
+    role: context
+    note: governance and policy vocabulary, cited to place the term rather than to derive the practice
+  - id: latentpatterns-harness
+    role: anchor
+    note: >
+      The harness's policy responsibility, which is what makes a hard gate
+      possible at all. The distinction between refusing a call and asking the
+      model not to make it is C1.3's, and this chapter applies it.
+  - id: liu2023
+    role: evidence
+    note: >
+      Position effects: a rule stated once at the top of a long context is in
+      the least-attended region by the time it matters, which is the mechanical
+      reason soft guidance decays with context length.
+content:
+  - say: "A specification governs one task; a constitution governs every task. The difference is lifetime, and it decides which artifact a constraint belongs in."
+    cites: []
+  - say: "A rule in the prompt is a rule the model weighs against everything else in the window, and its weight falls as the window fills."
+    cites: [liu2023]
+  - say: "A rule the harness enforces is not weighed. Removing a tool, refusing a path, requiring approval -- these are decisions the model has no part in."
+    cites: [latentpatterns-harness]
+  - say: "So constraints sort by enforceability: what can be checked mechanically belongs in the gate, and what cannot belongs in the rule text, stated as an article with an id so a violation can be named."
+    cites: []
+  - say: "Constitutions are stable across projects in a way specifications are not, which is why they are worth writing once and carrying."
+    cites: [tmforum-ig1218]
+apparatus:
+  objectives:
+    - Distinguish a standing constraint from a per-task requirement.
+    - Explain why enforcement beats instruction, from the mechanism.
+    - Write a constraint as an identified, checkable article.
+    - Build a constitution gate into the harness.
+  sidebars:
+    - type: Common Error
+      about: writing a constraint as guidance in the prompt and treating its violation as a model failure
+    - type: Good Practice
+      about: giving every article an id, so a violation is reported against a name rather than described
+    - type: Performance Observation
+      about: what a gate costs per tool call against what a violation costs when it is found later
+  key_terms: [constitution, guardian]
+figures:
+  - shows: "The two enforcement paths for a constraint: the mechanical one through the harness's policy check, and the probabilistic one through rule text the model reads, with the same constraint placed on each."
+    status: planned
+links:
+  requires: [C1.3, C1.4, C2.4]
+  supports: [C2.6, C4.2, C5.7]
+gaps:
+  - >
+    The seam with C2.4's Build section is not settled. Both chapters put
+    something into the request -- the spec loader assembles a specification, the
+    constitution gate enforces a policy -- and outline.yaml's build_thread names
+    them as one Part II obligation. Which chapter builds which half, and whether
+    the gate is a tool-call check or a context contribution, has to agree
+    between srd-2.4 and this SRD before either is drafted.
+  - >
+    definitions.yaml assigns `guardian` here, and the term is an agent role
+    whose fuller treatment is Part V's. The chapter introduces it as the
+    enforcement function rather than as an orchestration role, and Part V
+    extends it; if that split does not survive drafting, the glossary entry
+    moves rather than the chapter stretching.
+  - >
+    The chapter needs a violation that a gate caught and guidance had not. This
+    book's own audit is the nearest case -- the V-B4 authorship check at GH-46
+    caught two sidebars that a written rule had failed to prevent -- but using
+    the book's own tooling as the example risks the chapter reading as a tour of
+    this repository. A go-unix-utils or cobbler-scaffold case is preferable if
+    one exists.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The hard-gate claim names the Part I fact it rests on (A-C4), rather than arguing from experience alone.
+  - Every constraint shown is shown as an article with an id, not as prose advice.
+  - The Build section produces a gate that refuses a violating call, demonstrated failing before it is demonstrated passing.

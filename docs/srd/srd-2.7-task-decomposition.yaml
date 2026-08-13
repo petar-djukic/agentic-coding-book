@@ -1,0 +1,122 @@
+# SRD 2.7 -- Task decomposition.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+
+meta:
+  chapter: C2.7
+  title: Task decomposition
+  parent: P2
+section_goal: give the sizing rule for a unit of agent work, and show what the run data says about tasks sized wrongly in each direction
+goals:
+  - id: G2.23
+    goal: The reader can scope a task to one requirement and say why that boundary and not another.
+  - id: G2.24
+    goal: The reader can recognize an oversized task from its turn count before it fails, and split it.
+  - id: G2.25
+    goal: The reader can weigh the per-task overhead that makes very small tasks wasteful against the failure rate that makes large ones expensive.
+chain:
+  - id: Q5
+    owns: partial
+    note: >
+      C2.7's share of Q5 is granularity: the same intent written as one task or
+      as six is a different artifact, and the difference decides whether the
+      loop converges. It is also the hand-off to Part V, where decomposition
+      stops being a writing decision and becomes the planner's job.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S5, V-S6, V-P2]
+    note: "V-P2: the turn-count distribution is presented without amplification; the reader draws the conclusion from the tail."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C2, A-C4, A-C6, A-X1]
+    note: >
+      A-C2 binds hardest in this chapter, which is built on run data. Every turn
+      count, cost figure and task count names the run it came from. A-C6: the
+      numbers come from one corpus in one language and are stated as such.
+objective: >
+  It gives the one-requirement-per-task rule and then tests it against the
+  measured distribution, which is where the rule earns its keep: the tail of
+  long-running tasks is where decomposition failed, and the shape of that tail
+  is visible in the run data rather than argued from principle. It also states
+  the opposite cost -- per-task overhead makes over-decomposition wasteful --
+  and leaves the reader with a calibration procedure rather than a number.
+prior_material:
+  - path: go-unix-utils
+    offers: >
+      analysis/datasets/task_turns.csv joined to tasks.csv: 661 tasks with a
+      per-task turn count and a target utility, which is the distribution this
+      chapter reads. Median 26 turns; 15 tasks over 100; longest 159 turns on
+      cmd/timeout, task 5430, run44.
+  - path: cobbler-scaffold
+    offers: the planner that decomposes a specification into tasks, as the machinery Part V takes over
+citations:
+  - id: liu2023
+    role: evidence
+    note: >
+      Long tasks accumulate context, and a constraint stated at turn three sits
+      in the least-attended region by turn ninety. The mechanical account of why
+      a long task degrades rather than merely taking longer.
+  - id: wang2024
+    role: context
+    note: what the output looks like when a task has outrun its context, which is the failure signature the turn count predicts
+content:
+  - say: "A task is one requirement, because a requirement is the smallest thing that can be verified as done."
+    cites: []
+  - say: "The measured distribution is heavily skewed: most tasks finish in a few dozen turns and a small tail runs to several times that."
+    cites: []
+  - say: "The tail is not harder work; it is work that was not decomposed, and a long turn count is the symptom that shows before the failure does."
+    cites: [liu2023]
+  - say: "Decomposing further is not free: each task pays setup, context assembly, and verification, so over-decomposition trades one waste for another."
+    cites: []
+  - say: "The calibration is empirical and per-corpus: the rule is one requirement per task, and the turn-count distribution says whether that rule is being followed."
+    cites: [wang2024]
+apparatus:
+  objectives:
+    - Scope a task to one requirement.
+    - Recognize an oversized task from its turn count and split it.
+    - Weigh per-task overhead against the failure rate of large tasks.
+  sidebars:
+    - type: Performance Observation
+      about: the turn-count distribution across the generation corpus, and where the tail begins
+    - type: Common Error
+      about: sizing a task by how much code it produces rather than by how many requirements it verifies
+    - type: From the Field
+      about: a task that ran long enough to be worth splitting, and what splitting it changed
+  key_terms: []
+  key_terms_note: >
+    definitions.yaml assigns no term to this chapter. If the drafting coins one
+    for the sizing rule or for the overhead floor, it reaches the glossary in
+    the same unit (contract rule 2).
+figures:
+  - shows: "The per-task turn-count distribution across the generation corpus, with the tail marked and the median annotated."
+    status: planned
+    note: "A histogram from analysis/datasets/task_turns.csv, so the figure is generated from the dataset rather than drawn."
+links:
+  requires: [C1.4, C1.5, C2.4]
+  supports: [C5.1, C5.2, C6.4]
+gaps:
+  - >
+    The turn-count figure this chapter was outlined around cannot be
+    reproduced. outline.yaml says "sort R4: 104 turns"; in
+    analysis/datasets/task_turns.csv joined to tasks.csv, the longest cmd/sort
+    task is 70 turns (task 5379, run44), no task in the corpus has exactly 104
+    turns, and no run is labelled R4. Either the number comes from a run absent
+    from the published datasets, in which case A-C2 needs that run named, or it
+    is misremembered and should be replaced. Verified 2026-08-13 at GH-66.
+  - >
+    What the datasets do support, and what this SRD's content spine is written
+    against: 661 tasks with turn counts, median 26, 15 tasks over 100 turns,
+    longest 159 on cmd/timeout (task 5430, run44). That is a stronger spine than
+    a single anecdote, since the argument is about a distribution.
+  - >
+    A-C6 applies: every number here comes from one corpus, in Go, generated
+    against Unix utility specifications. The sizing rule may generalize; the
+    turn counts do not, and the chapter says so rather than implying a
+    cross-language constant.
+  - >
+    The per-task overhead claim has no measurement yet. cost and duration are in
+    task_attempts.csv, so a floor could be computed rather than asserted, and
+    it should be before the claim is made.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - Every turn count, cost, and task count names the run it came from (A-C2); the "sort R4" figure is either sourced or dropped.
+  - The distribution is presented without amplification (V-P2), and its single-corpus scope is stated (A-C6).
+  - The sizing rule is derived from what a requirement is, not from the turn counts, which are evidence that the rule was broken rather than the reason for it.
