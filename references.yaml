@@ -802,3 +802,154 @@ references:
     principle and states plainly what it does not inherit -- the formal
     derivation is not what a coding agent does, and a tight specification
     constrains the output without guaranteeing it.
+
+- id: hayesroth1985
+  type: article-journal
+  author:
+  - {family: Hayes-Roth, given: Barbara}
+  title: A Blackboard Architecture for Control
+  container-title: Artificial Intelligence
+  volume: 26
+  issue: 3
+  page: 251-321
+  DOI: 10.1016/0004-3702(85)90063-3
+  issued: {year: 1985}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex; 1,143 citations. The blackboard
+    as a control architecture rather than only a data structure: independent
+    knowledge sources contribute to a shared solution state and a scheduler
+    decides which acts next. C5.3 cites it for the lineage and for the part
+    that transfers -- the agents coordinate through the board and not with
+    each other.
+
+- id: erman1980
+  type: article-journal
+  author:
+  - {family: Erman, given: Lee D.}
+  - {family: Hayes-Roth, given: Frederick}
+  - {family: Lesser, given: Victor R.}
+  - {family: Reddy, given: D. Raj}
+  title: "The Hearsay-II Speech-Understanding System: Integrating Knowledge to Resolve Uncertainty"
+  container-title: ACM Computing Surveys
+  volume: 12
+  issue: 2
+  page: 213-253
+  DOI: 10.1145/356810.356816
+  issued: {year: 1980}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex; 1,351 citations. The system the
+    blackboard model was extracted from. Cited as context for what the
+    original was built to solve -- combining uncertain evidence from
+    independent sources -- which is not the coding-agent problem, so C5.3
+    borrows the structure and says which motivation it is not inheriting.
+
+- id: nii1986
+  type: article-journal
+  author:
+  - {family: Nii, given: H. Penny}
+  title: The Blackboard Model of Problem Solving
+  container-title: AI Magazine
+  volume: 7
+  issue: 2
+  page: 38-53
+  DOI: 10.1609/aimag.v7i2.537
+  issued: {year: 1986}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex; 542 citations. The retrospective
+    that names the model's parts -- the board, the knowledge sources, the
+    control component -- and is the readable entry point for a reader who
+    wants the lineage without the speech-recognition detail.
+
+- id: gelernter1985
+  type: article-journal
+  author:
+  - {family: Gelernter, given: David}
+  title: Generative Communication in Linda
+  container-title: ACM Transactions on Programming Languages and Systems
+  volume: 7
+  issue: 1
+  page: 80-112
+  DOI: 10.1145/2363.2433
+  issued: {year: 1985}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex; 2,274 citations. Tuple space:
+    processes coordinate by posting and matching tuples in a shared space
+    rather than by addressing each other. The blackboard's contemporary and
+    its closest structural cousin, cited by C5.3 because a task queue with
+    claims is nearer to a tuple space than to Hearsay-II, and the reader
+    should know both names.
+
+- id: cemri2025
+  type: paper-conference
+  author:
+  - {family: Cemri, given: Mert}
+  - {family: Pan, given: Melissa Z.}
+  - {literal: et al.}
+  title: Why Do Multi-Agent LLM Systems Fail?
+  container-title: Advances in Neural Information Processing Systems (NeurIPS)
+  URL: https://arxiv.org/abs/2503.13657
+  DOI: 10.48550/arXiv.2503.13657
+  issued: {year: 2025}
+  note: >
+    Verified 2026-08-14 (GH-69); NeurIPS 2025, 507 citations as of that date.
+    MAST, a failure taxonomy of 14 modes in three categories -- system design,
+    inter-agent misalignment, and task verification -- derived from 1,600+
+    annotated traces across seven multi-agent frameworks. The counterpoint
+    Part V is checked against: adding agents adds failure modes, and C5.1
+    states that before proposing orchestration.
+
+- id: kwa2025
+  type: paper-conference
+  author:
+  - {family: Kwa, given: Thomas}
+  - {family: West, given: Ben}
+  - {literal: et al.}
+  title: Measuring AI Ability to Complete Long Software Tasks
+  container-title: Advances in Neural Information Processing Systems (NeurIPS)
+  URL: https://arxiv.org/abs/2503.14499
+  DOI: 10.48550/arXiv.2503.14499
+  issued: {year: 2025}
+  note: >
+    Verified 2026-08-14 (GH-69); NeurIPS 2025. The 50%-success time horizon --
+    the human-expert task duration at which a model succeeds half the time --
+    reported at roughly 50 minutes for Claude 3.7 Sonnet and doubling about
+    every seven months since 2019. C5.1 cites it for the shape of the limit
+    rather than the number, which A-C5 dates and which will be stale before
+    the book ships.
+
+- id: valmeekam2023
+  type: paper-conference
+  author:
+  - {family: Valmeekam, given: Karthik}
+  - {family: Marquez, given: Matthew}
+  - {family: Sreedharan, given: Sarath}
+  - {family: Kambhampati, given: Subbarao}
+  title: "On the Planning Abilities of Large Language Models: A Critical Investigation"
+  container-title: Advances in Neural Information Processing Systems (NeurIPS), Spotlight
+  URL: https://arxiv.org/abs/2305.15771
+  DOI: 10.48550/arXiv.2305.15771
+  issued: {year: 2023}
+  note: >
+    Verified 2026-08-14 (GH-69); NeurIPS 2023 Spotlight. GPT-4 produced
+    executable plans autonomously at about 12% average success across the
+    domains tested, and did better when its plans seeded a sound planner or
+    were corrected by external feedback. C5.2's evidence that the planner is
+    the role needing the most external structure.
+
+- id: kambhampati2024
+  type: paper-conference
+  author:
+  - {family: Kambhampati, given: Subbarao}
+  - {family: Valmeekam, given: Karthik}
+  - {literal: et al.}
+  title: "LLMs Can't Plan, But Can Help Planning in LLM-Modulo Frameworks"
+  container-title: Proceedings of the 41st International Conference on Machine Learning (ICML), PMLR 235
+  URL: https://arxiv.org/abs/2402.01817
+  DOI: 10.48550/arXiv.2402.01817
+  issued: {year: 2024}
+  note: >
+    Verified 2026-08-14 (GH-69); ICML 2024. The constructive half of the same
+    group's result: a model paired with external verifiers in a two-way loop
+    is useful for planning even though it cannot plan alone. C5.2 cites it as
+    the shape the planner role has to take, which is also why the blackboard
+    and the verification gates are load-bearing rather than convenient.

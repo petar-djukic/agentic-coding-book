@@ -143,10 +143,13 @@ structure:
       chapters:
         - id: C5.1
           title: Why orchestrate
+          srd: docs/srd/srd-5.1-why-orchestrate.yaml
         - id: C5.2
           title: Planning and generating
+          srd: docs/srd/srd-5.2-planning-and-generating.yaml
         - id: C5.3
           title: The blackboard
+          srd: docs/srd/srd-5.3-the-blackboard.yaml
         - id: C5.4
           title: "Off-the-shelf blackboards: GitHub and beads"
         - id: C5.5
@@ -191,6 +194,9 @@ material_sources:
   - path: coding-skills
     offers: "the GitHub issue loop and the skills that drive it"
     feeds: [P5]
+  - path: meshintelligence.substack.com
+    offers: "the author's published articles -- loop engineering, GitHub as long-term memory, worktree isolation, the three-command orchestrator, and running a cheaper model on OpenCode. Field material to quarry, not literature to cite: the figures in them are the author's own reporting and name their run before they enter a chapter (A-C2)"
+    feeds: [P5, P6]
   - path: declarative-agents
     offers: "the agent model in the form where the state machine and tools are still visible"
     feeds: [P1]

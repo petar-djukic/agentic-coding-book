@@ -480,7 +480,7 @@ orchestrator:
     ordering, state tracking, verification gates, and transitions between
     increments. The orchestrator drives the harness with the right tasks in
     the right order, and manages the lifecycle of the sub-agents it spawns.
-  introduced: P5
+  introduced: C1.3
   see_also: [agent_harness, inner_loop, outer_loop, blackboard, subagent_lifecycle]
 
 externalized_memory:
@@ -677,7 +677,7 @@ planner:
     and current state, identifies what must be built, produces an ordered
     task list.
   coding_analogue: "cobbler measure, make-work"
-  introduced: P5
+  introduced: C5.2
   see_also: [generator, orchestrator]
 
 generator:
@@ -685,7 +685,7 @@ generator:
     The agent role that generates code from a task specification: receives a
     task, assembles context, generates code, produces a commit.
   coding_analogue: "cobbler stitch, do-work"
-  introduced: P5
+  introduced: C5.2
   see_also: [planner, critic]
 
 critic:
