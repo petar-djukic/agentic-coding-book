@@ -953,3 +953,59 @@ references:
     is useful for planning even though it cannot plan alone. C5.2 cites it as
     the shape the planner role has to take, which is also why the blackboard
     and the verification gates are load-bearing rather than convenient.
+
+- id: kung1981
+  type: article-journal
+  author:
+  - {family: Kung, given: H. T.}
+  - {family: Robinson, given: John T.}
+  title: On Optimistic Methods for Concurrency Control
+  container-title: ACM Transactions on Database Systems
+  volume: 6
+  issue: 2
+  page: 213-226
+  DOI: 10.1145/319566.319567
+  issued: {year: 1981}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex; 1,446 citations. Optimistic
+    concurrency control: act, then validate before committing, and roll back
+    on conflict. C5.4 cites it because a task board reached through an API
+    that offers no compare-and-set is running optimistic control without the
+    validation phase, which is the shape of the races the corpus recorded.
+
+- id: gray1989
+  type: paper-conference
+  author:
+  - {family: Gray, given: Cary G.}
+  - {family: Cheriton, given: David R.}
+  title: "Leases: An Efficient Fault-Tolerant Mechanism for Distributed File Cache Consistency"
+  container-title: Proceedings of the 12th ACM Symposium on Operating Systems Principles (SOSP)
+  page: 202-210
+  DOI: 10.1145/74850.74870
+  issued: {year: 1989}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex; 486 citations. A lease is a
+    claim with an expiry, so a holder that dies releases what it held without
+    anyone intervening. C5.4 and C5.6 both need it: a task claimed by a
+    sub-agent that never returns is the same problem, and a claim without an
+    expiry is why stale branches accumulate.
+
+- id: maddox2016
+  type: article-journal
+  author:
+  - {family: Maddox, given: Michael}
+  - {family: Goehring, given: David}
+  - {literal: et al.}
+  title: "Decibel: The Relational Dataset Branching System"
+  container-title: Proceedings of the VLDB Endowment
+  volume: 9
+  issue: 9
+  page: 624-635
+  DOI: 10.14778/2947618.2947619
+  issued: {year: 2016}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex. Branching and versioning as
+    first-class relational operations, which is what a versioned database
+    offers a blackboard that a file cannot: concurrent writers and a queryable
+    history in the same store. C5.5 cites it for what the graduation buys,
+    since the corpus has no versioned-database blackboard to point at.

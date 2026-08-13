@@ -1,0 +1,165 @@
+# SRD 5.4 -- Off-the-shelf blackboards: GitHub and beads.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+#
+# The first of C5.3's two implementation chapters. It is scored against
+# C5.3's requirement list -- state, claim, handoff, history -- and its job is
+# to show what an existing tool gives away for free and where it stops.
+
+meta:
+  chapter: C5.4
+  title: "Off-the-shelf blackboards: GitHub and beads"
+  parent: P5
+section_goal: measure two existing trackers against the board requirement, and locate precisely where each one stops being enough
+goals:
+  - id: G4.10
+    goal: The reader can run a task loop on an issue tracker they already have, using labels for state and comments for handoff.
+  - id: G4.11
+    goal: The reader can name the failure a shared tracker with no compare-and-set produces, and recognise it in their own logs.
+  - id: G4.12
+    goal: The reader can say what a git-backed tracker changes and what it does not, so the choice is made on properties rather than novelty.
+chain:
+  - id: Q7
+    owns: partial
+    note: >
+      Q7 says shared state the harness can reach. C5.4 is the cheapest way to
+      have some: a tracker the reader already runs. The chapter's contribution
+      to the chain is the boundary -- the point where the free option starts
+      costing more than it saves.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S2, V-S5, V-S6, V-P1, V-V1]
+    note: >
+      V-P1: the races are stated as what happened, with issue numbers, not as
+      caveats. V-V1: each tool is introduced by the requirement it answers,
+      which C5.3 already fixed, so neither arrives as a recommendation.
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C2, A-C3, A-C5, A-C6]
+    note: >
+      A-C5: both tools are dated -- an API's concurrency behaviour and a young
+      tracker's feature set are exactly the claims that expire. A-C6: the
+      beads evidence is thin and the chapter's confidence is scaled to it.
+objective: >
+  It takes the two trackers the reader can have today and scores them against
+  the requirement C5.3 fixed. GitHub issues carry state in labels, claims in
+  assignees, handoff in comments, and history for free, which is why the
+  cheapest orchestrator is one built on a tracker already in use. The chapter
+  then shows where that ends. An issue tracker reached over an HTTP API gives
+  no way to claim a task and know the claim held, so two agents can pass the
+  same check and both proceed -- the corpus recorded that as a generator
+  stopping early when its open-issue check raced the API, and as a measure
+  pass flooding the tracker with placeholder issues. The chapter names the
+  general form, which is optimistic concurrency without the validation step,
+  and then treats beads as the alternative that changes the substrate rather
+  than the shape: a git-backed tracker is offline, diffable, and free of rate
+  limits, and it is still last-writer-wins on a merge.
+prior_material:
+  - path: cobbler-scaffold
+    offers: >
+      The GitHub blackboard at production scale, and the two races as recorded
+      defects: GH-1475, a generator that stopped prematurely when its
+      open-issue check raced the API after closing the last task, and GH-1467,
+      a measure pass creating one placeholder issue per iteration until the
+      tracker was flooded. Both closed, so the fixes are readable beside the
+      failures.
+  - path: coding-skills
+    offers: >
+      The tracker loop in its portable form -- issue push, pop, and work as
+      separate commands -- and the bd variants of the same three, which are
+      the beads half of this chapter in the only form the evidence base
+      currently has.
+  - path: meshintelligence.substack.com/how-to-use-github-as-long-term-memory
+    offers: the argument for the tracker as the run's memory, and the issue-body test for whether a handoff is complete
+citations:
+  - id: kung1981
+    role: anchor
+    note: >
+      The general form of both races. Optimistic concurrency control validates
+      before committing; a tracker API that offers no compare-and-set lets an
+      agent act on a read it cannot confirm is still true, which is the same
+      protocol with the validation phase missing.
+  - id: gray1989
+    role: evidence
+    note: >
+      Why a claim needs an expiry. A lease releases itself when its holder
+      dies; an assignee does not, so a task claimed by an agent that never
+      returns stays claimed until something sweeps it.
+  - id: cemri2025
+    role: evidence
+    note: the same failures in the taxonomy's vocabulary, so a reader recognises their own logs in the literature rather than only in this book's corpus
+  - id: hayesroth1985
+    role: context
+    note: the board these tools are standing in for, carried forward from C5.3 so the comparison is against the requirement rather than against each other
+content:
+  - say: "A tracker already gives three of the four records away: labels are state, assignees are claims, comments are handoff, and the event log is history."
+    cites: [hayesroth1985]
+  - say: "That makes the cheapest possible orchestrator one that reads and writes the tracker a team already runs, which is where to start rather than where to end."
+    cites: []
+  - say: "It ends at the claim. An HTTP API that offers no way to claim and confirm in one step lets two agents read the same state and both act on it."
+    cites: [kung1981]
+  - say: "The corpus recorded both shapes: a generator that stopped early because its open-issue check raced the API, and a planner that flooded the tracker because each iteration created a placeholder before checking for one."
+    cites: []
+  - say: "A claim also has to be able to expire, because an agent that dies holding one will not release it."
+    cites: [gray1989]
+  - say: "A git-backed tracker changes the substrate and not the shape: offline, diffable, no rate limits, and still last-writer-wins when two branches touch the same record."
+    cites: []
+  - say: "So the choice between them is about where the state lives and who else reads it, not about which one is a real blackboard."
+    cites: [cemri2025]
+apparatus:
+  objectives:
+    - Run a task loop on an existing issue tracker.
+    - Name the failure a claim without compare-and-set produces.
+    - Say what a git-backed tracker changes and what it does not.
+  sidebars:
+    - type: Common Error
+      about: treating an assignee as a lock, when nothing releases it if the agent dies and nothing prevents a second agent from overwriting it
+    - type: Performance Observation
+      about: what tracker round-trips cost per task at rate limits, and why that is the number that pushes a loop off a hosted API
+    - type: From the Field
+      about: the run that flooded its own tracker with placeholder issues, and what the check should have been
+  key_terms: []
+  key_terms_note: >
+    definitions.yaml assigns no term here; `blackboard` is C5.3's and this
+    chapter measures implementations against it. If the chapter coins one for
+    the claim-without-compare-and-set failure, it reaches the glossary in the
+    same unit (contract rule 2).
+figures:
+  - shows: "Two agents reading the same tracker state and both proceeding, with the missing validation step marked at the point where one of them should have failed."
+    status: planned
+links:
+  requires: [C5.2, C5.3]
+  supports: [C5.5, C5.7, C5.8, C5.9]
+gaps:
+  - >
+    The beads walkthrough does not exist in the evidence base and this chapter
+    cannot be drafted without it. What exists: the bd command definitions in
+    coding-skills, and three repositories carrying a .beads/issues.jsonl --
+    journal, cobbler, and a worktree of the itd voice-exemplar work. What is
+    missing is a run: the corpora hold 6 and 15 records, which shows the record
+    shape but not the behaviour under load, and the GitHub half of this chapter
+    is drawn from a tracker with four-digit issue numbers. Before drafting,
+    either a beads-driven run is recorded, or the chapter states plainly that
+    the two halves are evidenced at different scales and stops claiming
+    otherwise. Verified 2026-08-14 at GH-69.
+  - >
+    The record shape is verifiable and worth stating: a beads issue carries id,
+    title, description, status, priority, issue_type, owner, created_at,
+    updated_at, closed_at, close_reason, and comments -- which is C5.3's four
+    records exactly, with owner as the claim and the timestamps as the history.
+    That correspondence is the chapter's strongest argument that C5.3's
+    decomposition is right, and it should be made explicitly rather than left
+    for the reader to notice.
+  - >
+    outline.yaml mislabels one of the issues Part V cites, and C5.8 inherits
+    the error. GH-1361 is listed as "premature stops" but is actually a stitch
+    pass marking an entire release implemented after one task; the premature
+    stop is GH-1475, which the outline files under race conditions. Both
+    descriptions are individually defensible and the pairing is wrong. The
+    issue numbers themselves all resolve -- nine were checked at GH-69 and all
+    nine exist with matching subject matter -- so this is a labelling error
+    rather than the numeric-claims problem GH-92 covers.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - Each tool is introduced by the requirement it answers (V-V1); neither is recommended before it is measured.
+  - The races are stated with their issue numbers and their general form (A-C2, A-C3), not as a warning that something might go wrong.
+  - Both tools are dated (A-C5), since API behaviour and a young tracker's features are the claims most likely to expire.
+  - The evidence asymmetry between the GitHub half and the beads half is stated in the chapter, not hidden by writing both with equal confidence (A-C6).

@@ -152,10 +152,13 @@ structure:
           srd: docs/srd/srd-5.3-the-blackboard.yaml
         - id: C5.4
           title: "Off-the-shelf blackboards: GitHub and beads"
+          srd: docs/srd/srd-5.4-off-the-shelf-blackboards.yaml
         - id: C5.5
           title: Build your own blackboard
+          srd: docs/srd/srd-5.5-build-your-own-blackboard.yaml
         - id: C5.6
           title: The sub-agent lifecycle
+          srd: docs/srd/srd-5.6-the-subagent-lifecycle.yaml
         - id: C5.7
           title: State management and recovery
         - id: C5.8

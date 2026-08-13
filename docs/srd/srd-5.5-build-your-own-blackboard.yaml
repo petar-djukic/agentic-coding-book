@@ -1,0 +1,162 @@
+# SRD 5.5 -- Build your own blackboard.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+#
+# The part's first build chapter and the second of C5.3's two
+# implementations. It carries a G6 subgoal: the reader leaves with a board
+# they wrote.
+
+meta:
+  chapter: C5.5
+  title: Build your own blackboard
+  parent: P5
+section_goal: have the reader build the smallest board that works, and state the conditions under which it stops working
+goals:
+  - id: G4.13
+    goal: The reader can implement a board that records state, claims, handoffs, and history in a file, and drive a loop from it.
+  - id: G4.14
+    goal: The reader can name the specific pressure -- concurrent writers, query complexity, or audit -- that a file stops answering.
+  - id: G4.15
+    goal: The reader can decide whether to graduate to a database from a stated condition rather than from a preference for one.
+  - id: G6.9
+    goal: "The reader has built a blackboard: a file the planner and the generator both read and write, with claims that can expire and a history that replays."
+chain:
+  - id: Q7
+    owns: partial
+    note: >
+      C5.4 borrowed a board; C5.5 builds one, which is where Q7's "shared
+      state the harness can reach" stops being a property of somebody else's
+      product. It is also the chapter that makes the coordination substrate
+      inspectable, since a file can be read in full and an API cannot.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S2, V-S5, V-S6, V-P1, V-V1]
+    note: >
+      V-S5 governs: this is a build chapter and nothing is asserted about the
+      design that the reader does not then implement. V-P1: the graduation
+      criteria are stated as conditions, not as a recommendation wearing a
+      hedge.
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C4, A-C6, A-X1]
+    note: >
+      A-C6 binds hardest here and is the reason this SRD carries the gap it
+      does: the file half has corpus behind it and the database half does not,
+      so the chapter's confidence is uneven and must say so.
+objective: >
+  It builds the board rather than describing one. A single file, written and
+  read by one orchestrator, holds the four records C5.3 fixed and is enough
+  for a loop with one planner and several generators -- diffable, reviewable
+  in a pull request, and readable in full, which no hosted tracker is. The
+  chapter then states what breaks it, in the order it breaks: concurrent
+  writers first, since a file has no way to admit two at once; then queries,
+  once the question is about the run rather than about a task; then audit,
+  once someone needs to know what the board said last Tuesday. Each pressure
+  names the property a versioned database supplies, so a reader can recognise
+  which one they are under. What the chapter does not do is recommend the
+  graduation by default, because the file is sufficient for longer than the
+  usual advice suggests.
+prior_material:
+  - path: cobbler-scaffold
+    offers: >
+      The state files the orchestrator already keeps beside its tracker --
+      requirements.yaml and road-map.yaml -- and the defects that came from
+      them going out of sync, which is the file board's real failure mode
+      rather than the theoretical one.
+  - path: agentic-coding-book
+    offers: >
+      This repository's own docs/ tree as a worked file-based state store:
+      specifications, a road-map with per-chapter status, and an audit that
+      fails when they disagree. The nearest thing to a file blackboard the
+      author operates daily.
+  - path: coding-skills
+    offers: the loop the file has to serve, so the schema is derived from what the commands read rather than designed in advance
+citations:
+  - id: maddox2016
+    role: anchor
+    note: >
+      What a versioned database offers that a file does not: branching and
+      history as first-class relational operations rather than as something
+      the caller maintains. The chapter's reference point for what the
+      graduation actually buys.
+  - id: kung1981
+    role: evidence
+    note: >
+      The concurrent-writer pressure in its general form, carried forward from
+      C5.4. A file has no validation phase either; the difference is that a
+      single-writer file makes the constraint visible instead of intermittent.
+  - id: gray1989
+    role: evidence
+    note: claims that expire, which the reader implements here -- a claim with a timestamp and a sweep is a lease built by hand
+  - id: hayesroth1985
+    role: context
+    note: the control component of the original model, which is the part the reader is writing when they decide who may claim next
+content:
+  - say: "The smallest board that works is a file the orchestrator reads at the top of the loop and writes at the bottom, holding the four records and nothing else."
+    cites: [hayesroth1985]
+  - say: "A file is diffable and reviewable, and it can be read in full, which is a property no hosted tracker has and the reason to start here rather than to settle here."
+    cites: []
+  - say: "A claim in the file carries a timestamp, and a sweep at the top of the loop releases the ones that have outlived their holder."
+    cites: [gray1989]
+  - say: "The first pressure is concurrent writers, and a file answers it by refusing: one writer, enforced, is a design rather than a limitation until the loop genuinely needs two."
+    cites: [kung1981]
+  - say: "The second is queries, which arrive when the question becomes about the run rather than about a task."
+    cites: [maddox2016]
+  - say: "The third is audit -- what the board said at a past moment -- which a versioned store answers and a file answers only if every write was committed."
+    cites: [maddox2016]
+  - say: "None of the three is hypothetical, and none of them arrives on schedule, so the graduation is triggered by a condition the reader can check rather than by a size."
+    cites: []
+apparatus:
+  objectives:
+    - Implement a file board with state, claims, handoffs, and history.
+    - Expire a claim whose holder did not return.
+    - Name the pressure that a file stops answering, and check for it.
+  sidebars:
+    - type: Good Practice
+      about: committing every board write, so the history is the git log rather than a field the code has to maintain
+    - type: Common Error
+      about: two processes writing the board because the loop grew a second writer nobody declared, which a file makes intermittent rather than impossible
+    - type: Performance Observation
+      about: what a board read costs per task at increasing file size, against the point where the loop spends more time parsing state than generating
+  key_terms: []
+  key_terms_note: >
+    definitions.yaml assigns no term here; `blackboard` is C5.3's. If the
+    chapter coins one for the graduation condition, it reaches the glossary in
+    the same unit (contract rule 2).
+figures:
+  - shows: "The file board's records beside the same records in a versioned store, with the three pressures marked at the point where each crosses from one column to the other."
+    status: planned
+links:
+  requires: [C5.3, C5.4]
+  supports: [C5.6, C5.7, C5.9]
+gaps:
+  - >
+    The Dolt half of this chapter has no evidence at all. A search of the
+    corpus at GH-69 found no Dolt schema, no Dolt-backed run, and no mention of
+    Dolt in cobbler-scaffold's source, configuration, or docs. outline.yaml
+    promises "the Dolt graduation" as the chapter's second half, and writing it
+    on that basis would be a recommendation with nothing behind it, which A-C1
+    forbids and A-C6 forbids twice. Three ways out, in order of preference:
+    build a versioned-database blackboard so the chapter has a subject; or keep
+    the chapter file-first and treat the database generically, with maddox2016
+    for what versioning buys and no product named; or drop the second half and
+    let the graduation conditions close the chapter. This SRD is written for
+    the second, so drafting is unblocked, and the acceptance criteria enforce
+    it. Verified 2026-08-14 at GH-69.
+  - >
+    The Dolt schema sketch that outline.yaml lists under background_needed is
+    therefore not a missing document but a missing decision. If the first way
+    out is chosen, the schema is written as part of building the thing; if the
+    second, no schema is needed and the background_needed entry should be
+    struck rather than left standing as an unmet dependency.
+  - >
+    The file board and the state files cobbler-scaffold already keeps are the
+    same idea at different maturities, and the chapter should say so rather
+    than presenting the build as new. The defects those files produced --
+    uncommitted updates, status not reverted -- are C5.7's material, so the
+    two chapters need one sentence agreeing which owns the consistency
+    problem. C5.7 is the later chapter and this SRD proposes it owns it.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The reader finishes with a working file board, not a description of one (V-S5), and it is the board C5.6 spawns sub-agents against.
+  - Nothing in the chapter names a specific database as the recommended graduation unless the corpus has one by drafting time (A-C1, A-C6).
+  - The three pressures are stated as checkable conditions, so the graduation decision is falsifiable rather than a matter of scale.
+  - Claims expire, and the mechanism is implemented rather than described, since an unexpiring claim is the defect C5.4 already showed.

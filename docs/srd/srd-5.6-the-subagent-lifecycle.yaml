@@ -1,0 +1,163 @@
+# SRD 5.6 -- The sub-agent lifecycle.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+#
+# The best-evidenced chapter in Part V: cobbler-scaffold implements every
+# stage of the lifecycle as a named seam, so the contract can be written
+# against code rather than against intent.
+
+meta:
+  chapter: C5.6
+  title: The sub-agent lifecycle
+  parent: P5
+section_goal: turn spawning an agent into a managed lifecycle with a defined end, so a run cannot be held open by a sub-agent that will never finish
+goals:
+  - id: G4.16
+    goal: The reader can name the five stages of a sub-agent's life and say what the orchestrator owns at each.
+  - id: G4.17
+    goal: The reader can isolate a sub-agent so that two running at once cannot corrupt each other's work.
+  - id: G4.18
+    goal: The reader can end a sub-agent that is not going to finish, distinguishing a slow task from a stalled one.
+  - id: G6.10
+    goal: "The reader has built a lifecycle manager: it spawns a sub-agent into its own worktree under a named configuration, watches it, collects its result, and kills it on timeout."
+chain:
+  - id: Q7
+    owns: partial
+    note: >
+      Q7 turns the work into a distributed system, and this is the chapter
+      where the reader becomes responsible for processes they did not start by
+      hand. Spawn and kill are the two halves; the middle three exist because
+      the process can fail without saying so.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S3, V-S4, V-S5, V-S6, V-P1]
+    note: >
+      V-S3: the five stages are named before any is treated. V-S4: both terms
+      this chapter owns are defined at first appearance, since C5.7 and C5.9
+      use them without re-introduction.
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C2, A-C3, A-C4, A-X1]
+    note: >
+      A-C3: every stage here was learned from a run before it was read
+      anywhere, so the field observation leads and the citation follows.
+      A-C4: isolation rests on C1.3's file-system access -- an agent that can
+      write the tree is why two of them in one tree is a corruption problem.
+objective: >
+  It replaces "start an agent" with a lifecycle the orchestrator owns end to
+  end: spawn it with a configuration, isolate it so its work cannot collide
+  with anything else running, monitor it for progress rather than for
+  completion, collect what it produced, and end it when it is not going to
+  finish. Isolation is a git worktree per task, which gives each sub-agent its
+  own checkout over one object store, so two agents editing the same
+  repository are editing different directories. The configuration is the part
+  most readers skip: a sub-agent is a model plus a prompt plus a tool set plus
+  a set of constraints, and two sub-agents on the same model under different
+  configurations are different agents. The chapter closes on ending, which is
+  the stage that gets built last and needed first, and it distinguishes the
+  two timeouts that matter -- total elapsed, and silence.
+prior_material:
+  - path: cobbler-scaffold
+    offers: >
+      The lifecycle implemented as named seams in the stitch loop --
+      enterWorktree, createWorktree, cleanupWorktree -- plus recoverStaleTasks
+      and a worktree prune at the top of the loop, which is what a sweep looks
+      like in production. It also carries both timeouts as separate settings:
+      a total run timeout, and an idle timeout with its own override for the
+      planning role, which is the evidence that silence and slowness are
+      different failures. Two agent configurations exist there as files, one
+      per role, which is the concrete form of the claim that a configuration
+      and not a model defines the agent, and corroborates C5.2's two-role
+      minimum from a second direction.
+  - path: meshintelligence.substack.com/how-to-use-git-worktrees-with-coding
+    offers: >
+      Worktree mechanics for agent isolation: one object store, one checkout
+      per agent, the create and remove commands, and the properties that make
+      it work -- shared refs, isolated checkouts, and the constraint that one
+      branch cannot be checked out in two trees at once.
+  - path: coding-skills
+    offers: the one-worktree-per-epic discipline as the smaller version, where the isolation boundary is a unit of work rather than a task
+citations:
+  - id: gray1989
+    role: anchor
+    note: >
+      The lease is the chapter's organising idea for ending things. A
+      sub-agent holds a claim, the claim has an expiry, and the orchestrator
+      sweeps what has expired -- which is why kill is a scheduled
+      responsibility rather than an exception handler.
+  - id: cemri2025
+    role: evidence
+    note: >
+      Sub-agents that stop without reporting, and orchestrators that wait for
+      them, appear in the taxonomy's system-design category. The chapter cites
+      it so the reader knows the failure is general rather than a property of
+      one implementation.
+  - id: latentpatterns-harness
+    role: evidence
+    note: >
+      The harness's tool-execution and file-system responsibilities, which are
+      exactly what has to be scoped per sub-agent. An agent configuration is a
+      harness configuration applied to one role.
+  - id: kung1981
+    role: context
+    note: why isolation is cheaper than coordination here -- separate checkouts remove the conflict rather than detecting it, which is the option a shared tracker did not have
+content:
+  - say: "A sub-agent has five stages and the orchestrator owns all of them: spawn, isolate, monitor, collect, end."
+    cites: []
+  - say: "Isolation is a worktree per task -- one object store, one checkout each -- so two agents in the same repository are not two processes mutating one directory."
+    cites: [kung1981]
+  - say: "Spawning takes a configuration and not just a prompt: a model, a tool set, and constraints, which is what makes two sub-agents on one model different agents."
+    cites: [latentpatterns-harness]
+  - say: "Monitoring watches for progress rather than completion, because the failure that costs most is the one that never reports."
+    cites: [cemri2025]
+  - say: "That means two timeouts, not one: how long the whole task may take, and how long it may go quiet, and a run that conflates them either kills slow work or waits forever on stalled work."
+    cites: []
+  - say: "Ending is a sweep and not an exception: claims expire, the orchestrator collects what expired, and the worktree is removed whether the agent finished or not."
+    cites: [gray1989]
+apparatus:
+  objectives:
+    - Name the five stages and what the orchestrator owns at each.
+    - Isolate a sub-agent so concurrent work cannot collide.
+    - Distinguish a slow task from a stalled one, and end the second.
+    - Build a lifecycle manager that spawns, watches, collects, and kills.
+  sidebars:
+    - type: Good Practice
+      about: pruning worktrees at the top of the loop rather than at the end of a task, so a crashed run cleans itself up on the next pass
+    - type: Common Error
+      about: one timeout for both slow and silent, which either kills work that was progressing or waits out a process that stopped reporting an hour ago
+    - type: Performance Observation
+      about: what worktree creation and removal cost per task, and at what task size that overhead stops mattering
+  key_terms: [subagent_lifecycle, agent_configuration]
+figures:
+  - shows: "One sub-agent's five stages along a timeline, with the orchestrator's action at each and the two timeouts drawn as separate clocks."
+    status: planned
+links:
+  requires: [C1.3, C5.2, C5.5]
+  supports: [C5.7, C5.8, C5.9]
+gaps:
+  - >
+    The sub-agent lifecycle examples outline.yaml lists under
+    background_needed are present after all, and this SRD is written against
+    them: the stitch loop's worktree seams, the stale-task recovery and prune,
+    and the two timeout settings with a per-role override. What is not present
+    is a measurement -- how often the idle timeout fires against the total
+    timeout, and how many tasks were ended rather than completed. Without it
+    the chapter can describe the mechanism but cannot say how much it matters,
+    and the Performance Observation sidebar has nothing behind it. Verified
+    2026-08-14 at GH-69.
+  - >
+    C5.6 and C5.7 share a boundary that neither has claimed. Recovering stale
+    tasks is implemented inside the lifecycle but is a state-management
+    concern, and C5.7 is titled for it. This SRD proposes the split by tense:
+    C5.6 owns ending a sub-agent that is still running, C5.7 owns what is
+    found on the next start. srd-5.7 should confirm or take it.
+  - >
+    The G6 deliverable here depends on C5.5's board existing, since the
+    lifecycle manager claims tasks from it. If C5.5's build is reduced --
+    see its Dolt gap -- this chapter's build still stands, but the two must be
+    written in order and the drafter should not take C5.6 first.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The five stages are named before any is treated (V-S3).
+  - Both key terms are defined at first appearance (V-S4) and appear in the Key Terms table.
+  - The two timeouts are distinguished, since conflating them is the defect the corpus separates by having two settings.
+  - The Build section produces a manager that ends a sub-agent, not only one that starts them; a lifecycle without a kill path fails this contract.
+  - The field observation precedes the citation (A-C3) at each stage, since every stage here was learned from a run.
