@@ -1,0 +1,121 @@
+# SRD 3.1 -- Differential testing.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+
+meta:
+  chapter: C3.1
+  title: Differential testing
+  parent: P3
+section_goal: establish the reference implementation as an oracle, and show what verification looks like when the correct answer can be obtained rather than asserted
+goals:
+  - id: G3.1
+    goal: The reader can state the oracle problem and say why a reference implementation dissolves it for a whole class of work.
+  - id: G3.2
+    goal: The reader can identify whether their own project has an oracle available, and what stands in for one when it does not.
+  - id: G3.3
+    goal: The reader can compare two implementations on the dimensions that matter -- stdout, stderr, exit code -- and normalize the output that is legitimately non-deterministic.
+chain:
+  - id: Q6
+    owns: partial
+    note: >
+      Q6 asks how code no human wrote gets verified. C3.1 answers the easiest
+      case first, and it is easy for a reason worth stating: when a correct
+      implementation already exists, correctness is a comparison rather than a
+      judgement. The rest of Part III is what remains after that case is used up.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S2, V-S5, V-S6, V-V1]
+    note: "V-S2: the chapter opens on the problem -- you cannot read 44,000 generated lines -- before naming the technique."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C2, A-C4, A-C6, A-X1]
+    note: >
+      A-C4: differential testing is prescribed here because Q4 established that
+      the model emits fluent output whether or not it is correct, and surface
+      inspection cannot separate the two. A-C6: the go-unix-utils result comes
+      from one corpus with an unusually good oracle, and the chapter says so.
+objective: >
+  It states the oracle problem, then shows the case where it is already solved:
+  a reference implementation answers what the output should be, so verification
+  becomes execution and comparison. The worked evidence is go-unix-utils, where
+  123 utilities were verified against the GNU binaries. It also states the
+  limits honestly -- an oracle fixes behaviour and not structure, it exists for
+  reimplementations and migrations rather than for new work, and matching a
+  reference means inheriting its bugs along with its behaviour.
+prior_material:
+  - path: go-unix-utils
+    offers: >
+      pkg/testutils, the differential harness in use: BuildBinary compiles the
+      Go binary, RunDiffTests runs it and the reference over a table of
+      DiffTest cases comparing stdout, stderr and exit code, and
+      ComposeNormalizers handles output that is legitimately non-deterministic.
+      A cmd test declares its cases as data and skips when the reference binary
+      is absent.
+  - path: go-unix-utils
+    offers: docs/specs/sources.yaml, which pins each reference implementation to a commit, so the oracle itself is versioned
+citations:
+  - id: mckeeman1998
+    role: anchor
+    note: >
+      The technique's origin, and the reason to present it as inherited rather
+      than invented: differential testing predates agents by decades and the
+      book applies it to a new source of untrusted code.
+  - id: barr2015
+    role: anchor
+    note: >
+      The oracle problem stated in full, which is what makes the reference
+      implementation valuable: it is a solved instance of a problem the rest of
+      Part III has to work around.
+  - id: wang2024
+    role: evidence
+    note: why inspection does not substitute -- generated code fails in ways that pass static checks and read correctly
+content:
+  - say: "Verification of code nobody read needs a source of truth outside the code, and naming that source is the oracle problem."
+    cites: [barr2015]
+  - say: "For a reimplementation the oracle already exists: the software being reimplemented answers what the output should be for any input."
+    cites: [mckeeman1998]
+  - say: "So the test is mechanical -- run both, compare stdout, stderr and exit code -- and the comparison is stronger than reading the diff, because it does not depend on noticing anything."
+    cites: [wang2024]
+  - say: "Non-determinism is handled by normalizing what legitimately varies rather than by weakening the comparison."
+    cites: []
+  - say: "The oracle constrains behaviour and not structure, and a reference's own defects are inherited along with its behaviour."
+    cites: []
+apparatus:
+  objectives:
+    - State the oracle problem and say when a reference implementation solves it.
+    - Identify whether a project has an oracle available.
+    - Compare implementations across stdout, stderr and exit code, normalizing what varies legitimately.
+  sidebars:
+    - type: Common Error
+      about: treating a passing differential test as proof of correctness when it proves only agreement with the reference
+    - type: Performance Observation
+      about: what a differential suite costs to run against what reading the same volume of generated code would cost
+    - type: Good Practice
+      about: pinning the reference implementation to a version, so a comparison result stays reproducible
+  key_terms: [differential_testing]
+figures:
+  - shows: "One differential case: the same input driven through the generated binary and the reference, with stdout, stderr and exit code compared and a normalizer applied to the timestamp field."
+    status: planned
+links:
+  requires: [C1.5, C2.6]
+  supports: [C3.2, C3.3, C3.5, C4.1]
+gaps:
+  - >
+    The chapter needs a divergence that mattered -- a case where the generated
+    utility passed its own tests and failed the reference. go-unix-utils has the
+    differential results, but identifying a specific instructive divergence is
+    drafting work and cannot be written from the technique alone.
+  - >
+    A-C6 bites harder here than anywhere in Part III. Unix utilities with a GNU
+    reference are close to the best case an oracle can have, and a reader whose
+    project has no reference will find the chapter inapplicable unless it says
+    plainly what to do instead. The pointer is C3.2 and C3.4, and the chapter
+    should make that hand-off rather than implying differential testing is
+    generally available.
+  - >
+    definitions.yaml recorded differential_testing at part level (P3); GH-67
+    assigned it to this chapter, since the GH-88 ownership check requires a
+    chapter rather than a part.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The oracle problem is stated before the technique is named (V-S2, V-V1).
+  - The prescription names the Part I fact it rests on (A-C4): Q4, output that is fluent whether or not it is right.
+  - The single-corpus scope of the go-unix-utils evidence is stated (A-C6), and the chapter names what a reader without an oracle should read instead.

@@ -105,14 +105,19 @@ structure:
       chapters:
         - id: C3.1
           title: Differential testing
+          srd: docs/srd/srd-3.1-differential-testing.yaml
         - id: C3.2
           title: Generated tests
+          srd: docs/srd/srd-3.2-generated-tests.yaml
         - id: C3.3
           title: Test infrastructure
+          srd: docs/srd/srd-3.3-test-infrastructure.yaml
         - id: C3.4
           title: Property-based and fuzz testing
+          srd: docs/srd/srd-3.4-property-based-and-fuzz-testing.yaml
         - id: C3.5
           title: Coverage and confidence
+          srd: docs/srd/srd-3.5-coverage-and-confidence.yaml
     - id: P4
       title: How Do You Know Your Code Is Correct?
       role: "What correctness means when the volume exceeds human review capacity."

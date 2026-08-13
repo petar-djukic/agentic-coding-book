@@ -111,11 +111,27 @@ releases:
     units: [C2.1, C2.2, C2.3, C2.4, C2.5, C2.6, C2.7]
     gate: "rel02.srd complete. C2.1 and C2.2 are already drafted and need reframing against their contracts rather than first drafting; the disagreement lists are in the two SRDs."
 
+  - id: rel03.srd
+    name: "Part III specification"
+    status: complete
+    units: [C3.1, C3.2, C3.3, C3.4, C3.5]
+    gate: "rel02.srd complete."
+    completed: >
+      Five SRDs written under EPIC GH-67, 2026-08-13, all before drafting --
+      no Part III chapter exists, so none needed writing against prose the way
+      C2.1 and C2.2 did.
+
+      Two seams recorded rather than settled: verification_stack is still
+      introduced at P3 in definitions.yaml because GH-78 claims it for Part IV,
+      and the build-thread split between C3.3's standalone harness and Part
+      IV's wiring of it into the loop needs srd-4.x to take the harness as
+      given rather than rebuild it.
+
   - id: rel03.0
     name: "Part III -- Testing"
     status: pending
     units: [C3.1, C3.2, C3.3, C3.4, C3.5]
-    gate: "rel02.0 complete (testing verifies what the specification asked for)."
+    gate: "rel03.srd complete, and rel02.0 (testing verifies what the specification asked for)."
 
   - id: rel04.0
     name: "Part IV -- Correctness"

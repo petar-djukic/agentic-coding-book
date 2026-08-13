@@ -1,0 +1,124 @@
+# SRD 3.5 -- Coverage and confidence.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+#
+# Closes Part III, and hands Q6 to Part IV: this chapter says what the layered
+# evidence is worth, and C4.1 takes up what it still does not establish.
+
+meta:
+  chapter: C3.5
+  title: Coverage and confidence
+  parent: P3
+section_goal: say what a coverage number measures and what it does not, and give a defensible answer to when testing stops
+goals:
+  - id: G3.13
+    goal: The reader can say what line and branch coverage measure, and name what a fully covered codebase can still get wrong.
+  - id: G3.14
+    goal: The reader can use mutation score to ask whether a suite detects change, rather than whether it executes code.
+  - id: G3.15
+    goal: The reader can decide when a component has been tested enough, and state the decision as a rule rather than a feeling.
+chain:
+  - id: Q6
+    owns: partial
+    note: >
+      C3.5 closes Part III's share of Q6 by grading the evidence the previous
+      four chapters produce, and hands the remainder to Part IV. The split is
+      that this chapter asks how much confidence the tests support, and C4.1
+      asks what confidence is not.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S5, V-S6, V-P1, V-P2]
+    note: "V-P2 binds hardest: coverage percentages invite amplification, and the chapter presents them without it."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C2, A-C4, A-C6, A-X1]
+    note: >
+      A-C2: any coverage or mutation figure from the corpus names the run it
+      came from. A-C6: a threshold that worked for Unix utilities with a
+      reference implementation is not a general number.
+objective: >
+  It separates what testing measures from what it establishes. Coverage counts
+  executed lines, which is a proxy weak enough that a suite asserting nothing
+  can score highly; mutation testing asks the sharper question, whether the
+  suite notices a deliberate change. The chapter uses both to answer when to
+  stop, and it answers with a rule tied to consequence rather than with a
+  percentage. It closes by naming what the whole Part III stack still does not
+  establish, which is what Part IV is for.
+prior_material:
+  - path: go-unix-utils
+    offers: >
+      analysis/datasets/quality_summary.yaml and the differential results, so
+      coverage can be reported beside a stronger signal -- agreement with a
+      reference implementation -- rather than on its own.
+  - path: cobbler-scaffold
+    offers: the verification pipeline where coverage is one gate among several, and the record of which gate caught what
+citations:
+  - id: demillo1978
+    role: anchor
+    note: >
+      Mutation testing and the coupling effect, which is the chapter's answer to
+      what a coverage number is worth: the useful question is whether the suite
+      detects a change, not whether it executed a line.
+  - id: barr2015
+    role: evidence
+    note: >
+      Coverage says nothing about the oracle. A suite can execute every line and
+      assert nothing, which is the failure the oracle survey frames.
+  - id: konstantinou2024
+    role: evidence
+    note: >
+      Why coverage is especially misleading for generated suites: an oracle that
+      captures actual behaviour executes the code fully while confirming
+      whatever it does.
+  - id: wang2024
+    role: context
+    note: defects that survive a fully covered suite because they are wrong at the level of intent
+content:
+  - say: "Coverage measures which lines ran, and a suite that runs every line while asserting nothing scores perfectly."
+    cites: [barr2015]
+  - say: "That gap is worse for generated suites, where the assertions may encode whatever the code already does."
+    cites: [konstantinou2024]
+  - say: "Mutation testing asks the question coverage appears to answer: change the program deliberately, and see whether the suite notices."
+    cites: [demillo1978]
+  - say: "So the stopping rule is not a percentage. It is a consequence: test until the cost of the next test exceeds the cost of the defect it would catch, and say what that cost is."
+    cites: []
+  - say: "What none of it establishes is that the specification was right, which is where Part IV begins."
+    cites: [wang2024]
+apparatus:
+  objectives:
+    - Say what coverage measures and what a covered codebase can still get wrong.
+    - Use mutation score to ask whether a suite detects change.
+    - State a stopping rule tied to consequence rather than to a percentage.
+  sidebars:
+    - type: Common Error
+      about: setting a coverage threshold as a gate and getting a suite optimized to reach it
+    - type: Performance Observation
+      about: what a mutation run costs against a coverage run, and why that cost is the reason it is used sparingly
+    - type: From the Field
+      about: a component at high coverage whose defect the differential test caught and the suite did not
+  key_terms: [mutation_testing]
+figures:
+  - shows: "The same component under three measures: lines covered, mutants killed, and differential agreement, showing where each is satisfied while a defect survives."
+    status: planned
+links:
+  requires: [C3.1, C3.2, C3.3, C3.4]
+  supports: [C4.1, C4.5, C6.5]
+gaps:
+  - >
+    No mutation-testing run exists in the evidence base. The chapter can explain
+    the technique from the literature, but a chapter arguing that mutation score
+    beats coverage should show one run rather than assert the superiority. Doing
+    that on a go-unix-utils package is drafting work with a real cost, and if it
+    is not done the chapter must say the comparison is from the literature.
+  - >
+    Coverage figures for the corpus are in analysis/datasets/quality_summary.yaml
+    but have not been read for this contract. A-C2 requires whichever numbers
+    the chapter uses to name their run, and that check happens at drafting.
+  - >
+    The hand-off to C4.1 needs both SRDs to agree. This chapter says what the
+    stack is worth; C4.1 says what it does not establish. Written independently,
+    the two will overlap on the trust question, and srd-4.1 should state which
+    of them owns it.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - Coverage numbers are presented without amplification (V-P2) and name their run (A-C2).
+  - The stopping rule is stated as a rule the reader can apply, not as a threshold to copy (A-C6).
+  - The chapter closes Part III by naming what the stack does not establish, and hands that to Part IV.

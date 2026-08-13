@@ -1,0 +1,127 @@
+# SRD 3.4 -- Property-based and fuzz testing.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+
+meta:
+  chapter: C3.4
+  title: Property-based and fuzz testing
+  parent: P3
+section_goal: give the reader a way to test when the cases cannot be enumerated and no reference implementation answers what the output should be
+goals:
+  - id: G3.10
+    goal: The reader can state an invariant that holds for every input, where they could not state the expected output for any particular one.
+  - id: G3.11
+    goal: The reader can choose between a property and a fuzz run, from what they are trying to find.
+  - id: G3.12
+    goal: The reader can read a shrunk counterexample and take it back to the specification rather than patching the code around it.
+chain:
+  - id: Q6
+    owns: partial
+    note: >
+      C3.1 needed an oracle and C3.2 found the generated substitute
+      compromised. C3.4 is what remains: an invariant is a partial oracle that
+      holds for inputs nobody wrote down, which is the only kind available when
+      the behaviour is new.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S2, V-S5, V-S6, V-V1]
+    note: "V-V1: the technique is introduced by the problem -- the case space is larger than anyone will enumerate -- rather than by its name."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C4, A-C6, A-X1]
+    note: >
+      A-C4: properties are prescribed because Q4 established the failure mode is
+      plausible-and-wrong output; an invariant catches what an example-based
+      test misses precisely because nobody chose the input.
+objective: >
+  It gives the two techniques that work without an oracle and without
+  enumeration. A property states what must hold for every input and lets the
+  tool find the cases, and shrinking turns a failure into the smallest input
+  that still fails, which is what makes it diagnosable. Fuzzing drops the
+  expectation entirely and looks for the crash. The chapter also says which
+  agent-generated failures each one is likely to catch, and connects a shrunk
+  counterexample back to the specification defect that admitted it.
+prior_material:
+  - path: go-unix-utils
+    offers: >
+      Utilities whose behaviour is fixed by POSIX but whose input space is
+      unbounded -- text streams, flag combinations, malformed encodings. The
+      case where a differential test covers the enumerated flags and a property
+      covers the rest.
+  - path: cobbler-scaffold
+    offers: the verification pipeline as the place a property suite runs, alongside the differential gate
+citations:
+  - id: claessen2000
+    role: anchor
+    note: >
+      Property-based testing as introduced: state the invariant, generate the
+      cases, shrink the failure. Cited for the technique, not for Haskell -- the
+      lineage reaches Hypothesis, gopter and the rest.
+  - id: miller1990
+    role: anchor
+    note: >
+      Fuzzing's origin, and it began by feeding random input to Unix utilities,
+      which is exactly the corpus this book regenerates. Worth naming rather
+      than leaving as coincidence: the oldest fuzzing target is the book's
+      evidence base.
+  - id: barr2015
+    role: evidence
+    note: an invariant is a partial oracle, which is what places these techniques in the same frame as C3.1 rather than beside it
+  - id: wang2024
+    role: context
+    note: the failure signature properties are aimed at -- output that is well-formed and wrong
+content:
+  - say: "Some behaviour has no reference implementation and an input space nobody will enumerate, which rules out both of the previous chapters' techniques."
+    cites: []
+  - say: "A property is what can still be stated: not what the output should be for this input, but what must hold for every input."
+    cites: [claessen2000]
+  - say: "That makes an invariant a partial oracle, which is why it belongs in the same frame as the reference implementation rather than as a different kind of activity."
+    cites: [barr2015]
+  - say: "Shrinking is what makes a random failure usable, because the minimum failing input is a diagnosis rather than a report."
+    cites: [claessen2000]
+  - say: "Fuzzing gives up on the expectation and looks for the crash, and it began on the same Unix utilities this book regenerates."
+    cites: [miller1990]
+  - say: "A shrunk counterexample belongs back in the specification, since an input the specification did not consider is a specification defect before it is a code defect."
+    cites: [wang2024]
+apparatus:
+  objectives:
+    - State an invariant where the expected output cannot be stated.
+    - Choose between a property and a fuzz run from what is being sought.
+    - Take a shrunk counterexample back to the specification.
+  sidebars:
+    - type: Good Practice
+      about: writing the property from the requirement rather than from the implementation, so it does not inherit the code's assumptions the way a generated test does
+    - type: Common Error
+      about: patching the code to satisfy a counterexample without asking why the specification allowed that input
+    - type: Performance Observation
+      about: what a property run costs against an enumerated suite, and where the crossover sits as the case space grows
+  key_terms: []
+  key_terms_note: >
+    definitions.yaml assigns no term here. Terms the chapter coins -- for the
+    invariant-as-partial-oracle framing, or for shrinking -- reach the glossary
+    in the same unit (contract rule 2).
+figures:
+  - shows: "One property from statement to diagnosis: the invariant, a generated failing input, the shrunk minimum, and the specification line that admitted it."
+    status: planned
+links:
+  requires: [C1.5, C3.1, C3.2, C3.3]
+  supports: [C3.5, C4.4]
+gaps:
+  - >
+    The chapter needs a property that found something in the evidence base. If
+    go-unix-utils has no property suite, the honest options are to state that
+    the example is constructed, or to write one against a utility and report
+    what it found -- the second is better and is drafting work rather than
+    contract work.
+  - >
+    The boundary with C4.4, correctness by construction, is not drawn. Both are
+    about establishing something for all inputs rather than for chosen ones, and
+    the difference -- a property is checked, a construction is guaranteed --
+    should be stated in one place. srd-4.4 should agree which.
+  - >
+    A-C6: fuzzing evidence from Unix utilities transfers poorly to a service or
+    a library with a narrow typed interface, and the chapter should say what
+    changes rather than implying the technique is uniformly applicable.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The technique is introduced by the problem it solves, before it is named (V-V1, V-S2).
+  - The invariant is presented as a partial oracle, linking the chapter to C3.1 rather than leaving it as a separate topic.
+  - The prescription names the Part I fact it rests on (A-C4).

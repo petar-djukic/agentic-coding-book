@@ -1,0 +1,122 @@
+# SRD 3.3 -- Test infrastructure.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+
+meta:
+  chapter: C3.3
+  title: Test infrastructure
+  parent: P3
+section_goal: make the comparison mechanical and reusable, so a verification technique becomes a harness the agent writes tests into rather than a procedure someone repeats
+goals:
+  - id: G3.7
+    goal: The reader can separate the harness from the cases, so an agent adding a utility writes data rather than machinery.
+  - id: G3.8
+    goal: The reader can handle output that legitimately varies -- timestamps, orderings, paths -- without weakening the comparison.
+  - id: G3.9
+    goal: The reader can decide what an agent should build for itself and what it should be handed already working.
+  - id: G6.6
+    goal: "The reader has built the differential harness standalone: it compiles a binary, runs it and a reference over a table of cases, and reports divergence in stdout, stderr or exit code."
+chain:
+  - id: Q6
+    owns: partial
+    note: >
+      C3.1 and C3.2 establish what verification is worth; C3.3 is what makes it
+      affordable at volume. A technique applied by hand per utility does not
+      survive 123 of them, and the harness is what turns the technique into
+      something the generation loop can use.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S5, V-S6, V-V1, V-V4]
+    note: "V-S5: the harness is shown as code, since a chapter about infrastructure that shows no interface is describing rather than teaching."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C4, A-C5, A-X1]
+    note: >
+      A-C4: the separation of harness from cases rests on C1.4 -- the harness
+      reads whole files into context, so an agent handed a working package and
+      a usage example writes a table, while an agent handed nothing reinvents
+      the machinery each time.
+objective: >
+  It turns differential testing into infrastructure. The harness owns building,
+  running, comparing and normalizing; the per-utility test owns only the cases,
+  declared as data. That split is what lets an agent add a utility without
+  rewriting the comparison logic, and it is also the chapter where the reader
+  builds the harness themselves, since Part III's build-thread deliverable is a
+  differential harness standing alone before Part IV wires it into the loop.
+prior_material:
+  - path: go-unix-utils
+    offers: >
+      pkg/testutils as the reference design: BuildBinary, RunDiffTests over a
+      []DiffTest table, ComposeNormalizers for non-deterministic output, and a
+      skip when the reference binary is absent. Its SRD states the intent
+      outright -- the package is the authoritative API reference so a stitch
+      agent imports it rather than reinventing it.
+  - path: go-unix-utils
+    offers: the cmd tests, each a short table of cases with names, arguments and expected exit codes
+citations:
+  - id: mckeeman1998
+    role: evidence
+    note: the technique the harness automates, cited once here rather than re-argued
+  - id: latentpatterns-harness
+    role: context
+    note: >
+      Why the harness/cases split matters mechanically: what the agent receives
+      in context is what exists for it, so a package it can import is a package
+      it does not have to invent.
+  - id: wang2024
+    role: context
+    note: the failure class the comparison is arranged to catch
+content:
+  - say: "A verification technique applied by hand once per component does not survive a hundred components, so the technique has to become a package."
+    cites: [mckeeman1998]
+  - say: "The split is harness against cases: building, running, comparing and normalizing belong to the package, and the per-component test declares only its inputs and expectations."
+    cites: []
+  - say: "That split is what an agent needs, because a package it can import is a package it will not reinvent, and what reaches its context is what exists for it."
+    cites: [latentpatterns-harness]
+  - say: "Legitimate variation -- timestamps, orderings, absolute paths -- is normalized rather than tolerated, so the comparison stays exact."
+    cites: []
+  - say: "Infrastructure is the part worth handing an agent already working; the cases are the part worth generating."
+    cites: [wang2024]
+apparatus:
+  objectives:
+    - Separate the harness from the cases so an agent writes data, not machinery.
+    - Normalize legitimate variation without weakening the comparison.
+    - Decide what to build for an agent and what to let it generate.
+    - Build a standalone differential harness.
+  sidebars:
+    - type: Good Practice
+      about: writing the harness's own tests first, since a harness that reports false agreement is worse than none
+    - type: Common Error
+      about: letting each component grow its own copy of the comparison logic, so a fix in one does not reach the others
+    - type: Performance Observation
+      about: what the harness costs per case against what a per-component reimplementation costs in generated lines
+  key_terms: []
+  key_terms_note: >
+    definitions.yaml assigns no term here. Terms the chapter coins for the
+    harness/cases split reach the glossary in the same unit (contract rule 2).
+figures:
+  - shows: "The harness and the cases as separate layers: the package owning build, run, compare and normalize, and the per-component test contributing only a table."
+    status: planned
+links:
+  requires: [C1.4, C3.1, C3.2]
+  supports: [C3.4, C4.2, C5.2]
+gaps:
+  - >
+    The Build section's scope against Part IV needs agreeing before drafting.
+    outline.yaml's build_thread gives Part III a differential harness built
+    standalone and Part IV the verification stack wired into the loop as gates.
+    The seam is whether this chapter's harness knows anything about the
+    orchestrator; it should not, and srd-4.x should confirm it takes the
+    standalone harness as given rather than rebuilding it.
+  - >
+    The chapter risks reading as a tour of pkg/testutils. The design is worth
+    showing because it is in use, but the reader's harness is theirs, and the
+    prose should give the shape and the reasons rather than the source. VN-4
+    applies to the book's own repositories as much as to products.
+  - >
+    Whether the harness belongs in the reader's project or in a shared package
+    is unaddressed here and is really a Part V question about what the
+    orchestrator provides. Recorded so C5.x can pick it up.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The harness is shown as an interface a reader could implement, not described (V-S5).
+  - The harness/cases split names the Part I fact it rests on (A-C4).
+  - The Build section produces a harness that detects a real divergence, demonstrated failing before it is demonstrated passing.

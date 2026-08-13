@@ -558,7 +558,7 @@ differential_testing:
     Running two implementations of the same specification on the same inputs
     and comparing outputs. Any discrepancy reveals a defect in at least one.
     Requires no oracle beyond agreement.
-  introduced: P3
+  introduced: C3.1
   see_also: [verification_stack]
 
 mutation_testing:
@@ -566,7 +566,7 @@ mutation_testing:
     Injecting small faults into code and running the test suite against each
     mutant. A surviving mutant marks a gap in the tests. The mutation score
     is the most robust known metric for test adequacy.
-  introduced: P3
+  introduced: C3.5
   see_also: [verification_stack, test_suite]
 
 # --- Code as artifact ----------------------------------------------------
