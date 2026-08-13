@@ -90,7 +90,7 @@ figures:
     status: planned
     note: "A histogram from analysis/datasets/task_turns.csv, so the figure is generated from the dataset rather than drawn."
 links:
-  requires: [C1.4, C1.5, C2.4]
+  requires: [C1.4, C1.5, C2.1, C2.4]
   supports: [C5.1, C5.2, C6.4]
 gaps:
   - >

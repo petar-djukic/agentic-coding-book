@@ -97,7 +97,7 @@ figures:
   - shows: "The two enforcement paths for a constraint: the mechanical one through the harness's policy check, and the probabilistic one through rule text the model reads, with the same constraint placed on each."
     status: planned
 links:
-  requires: [C1.3, C1.4, C2.4]
+  requires: [C1.3, C1.4, C1.6, C2.4]
   supports: [C2.6, C4.2, C5.7]
 gaps:
   - >

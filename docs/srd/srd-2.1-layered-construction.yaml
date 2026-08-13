@@ -98,7 +98,7 @@ figures:
     label: "Figure 7.1"
 links:
   requires: [C1.4, C1.5, C1.6]
-  supports: [C2.3, C2.6, C2.7, C5.1]
+  supports: [C2.6, C2.7, C5.1]
 gaps:
   - >
     Figure 7.1 is captioned but never referenced from the prose, which

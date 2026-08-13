@@ -123,7 +123,7 @@ apparatus:
 figures: []
 links:
   requires: [C1.5, C2.1]
-  supports: [C2.6, C3.1, C4.2]
+  supports: [C3.1, C4.2]
 gaps:
   - >
     Two chapter cross-references were stale and are corrected in this unit.

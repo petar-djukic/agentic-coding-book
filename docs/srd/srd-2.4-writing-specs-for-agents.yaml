@@ -125,7 +125,7 @@ figures:
       here makes it live and it must be renumbered to this chapter under the
       GH-35 rule, which also removes its collision with C1.1's Figure 1.1.
 links:
-  requires: [C1.4, C1.5, C2.3]
+  requires: [C1.4, C1.5, C1.6, C2.3]
   supports: [C2.5, C2.6, C2.7, C3.2]
 gaps:
   - >

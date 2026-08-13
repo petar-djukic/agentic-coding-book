@@ -99,7 +99,7 @@ figures:
   - shows: "One defect traced end to end: the specification fragment, the generated code that reads it faithfully, the failing differential test, and the corrected fragment."
     status: planned
 links:
-  requires: [C1.5, C2.1, C2.4]
+  requires: [C1.5, C2.1, C2.3, C2.4, C2.5]
   supports: [C3.1, C3.2, C4.1]
 gaps:
   - >
