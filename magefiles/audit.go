@@ -732,6 +732,10 @@ func checkChapterBinding(root string, s *spec) []finding {
 	}
 
 	fileOf := map[string]string{}
+	// bodyOf holds each drafted chapter's text in the same normalized form as
+	// a glossary key, so the ownership check below can ask whether the chapter
+	// that claims a term ever says it (GH-105).
+	bodyOf := map[string]string{}
 	for _, path := range chapterFiles(root) {
 		data, err := os.ReadFile(filepath.Join(root, path))
 		if err != nil {
@@ -752,6 +756,7 @@ func checkChapterBinding(root string, s *spec) []finding {
 			continue
 		}
 		fileOf[id] = path
+		bodyOf[id] = normalizeTerm(body)
 		if !archChapters[id] {
 			add(path, "GH-25 binding", "claims chapter %s, which ARCHITECTURE does not define", id)
 			continue
@@ -801,6 +806,49 @@ func checkChapterBinding(root string, s *spec) []finding {
 			if c.Status == "drafted" && fileOf[c.ID] == "" {
 				add("docs/road-map.yaml", "GH-25 binding", "%s is marked drafted but no chapter file claims it", c.ID)
 			}
+		}
+	}
+
+	// A term's owning chapter has to say it. GH-71 made every glossary term
+	// name the chapter that introduces it, which catches an owner that is not
+	// a chapter -- fifteen were owned by a part. It does not catch an owner
+	// that is a chapter and never mentions the term, because it validates the
+	// owner's form rather than its claim. `transient_code` named C2.1 and the
+	// word appears nowhere in the book (GH-105).
+	//
+	// The match is over the whole file, table and prose together, because
+	// several chapters legitimately define a term in their Key Terms table
+	// without using the phrase in body prose, and firing on those would be
+	// wrong. Separators are normalized (`file_system_access` matches
+	// "File-system access") and inflection is not, which keeps the check to
+	// the case that prompted it.
+	//
+	// Only drafted chapters can be checked, so this is deliberately partial:
+	// a term wrongly assigned to an undrafted chapter passes today and starts
+	// failing the day that chapter is written. At GH-105 it covered 40 of the
+	// 61 chapter-owned terms.
+	terms := make([]string, 0, len(s.definedIn))
+	for k := range s.definedIn {
+		terms = append(terms, k)
+	}
+	sort.Strings(terms)
+	for _, k := range terms {
+		switch s.definedStatus[k] {
+		case "retired", "reference":
+			continue
+		}
+		owner := s.definedIn[k]
+		if owner == "" || owner == "Introduction" {
+			continue
+		}
+		body, drafted := bodyOf[owner]
+		if !drafted {
+			continue // no prose to check yet
+		}
+		if !strings.Contains(body, normalizeTerm(k)) {
+			add("docs/definitions.yaml", "definitions: ownership",
+				"%s names %s as the chapter that introduces it, and %s never says it; name the chapter that does, or mark it `status: reference`",
+				k, owner, fileOf[owner])
 		}
 	}
 	return out
