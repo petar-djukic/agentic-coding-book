@@ -1,0 +1,139 @@
+# SRD 4.5 -- Confidence, not proof.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+#
+# Closes Part IV and discharges its obligation: "states plainly what the
+# layered evidence does not establish."
+
+meta:
+  chapter: C4.5
+  title: Confidence, not proof
+  parent: P4
+section_goal: say what the assembled evidence actually supports, and turn that into a ship-or-hold decision the reader can defend
+goals:
+  - id: G3.28
+    goal: The reader can state what the layered stack establishes and what it leaves open, without overclaiming in either direction.
+  - id: G3.29
+    goal: The reader can decide to ship or hold from evidence they can name, rather than from how the code reads.
+  - id: G3.30
+    goal: The reader can say which signal would change the decision, so the judgement is falsifiable rather than a summary of comfort.
+chain:
+  - id: Q6
+    owns: partial
+    note: >
+      C4.5 closes Q6 for the book. Parts III and IV together built the
+      evidence; this chapter grades it and stops. What it explicitly does not
+      do is convert evidence into proof, which is the obligation P4 carries.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S6, V-P1, V-P2, V-V4]
+    note: >
+      V-P2 binds hardest. A chapter about confidence is where amplification is
+      most tempting and least affordable, and every figure is presented for the
+      reader to weigh rather than to be persuaded by.
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C2, A-C6, A-X1]
+    note: >
+      A-C2 is the chapter's discipline: every number naming its run. The
+      outline's churn figure fails that test today, which the gaps record.
+objective: >
+  It states the position the book has been building toward: what the stack
+  produces is confidence supported by layered evidence, not proof, and the
+  layers are not independent enough to multiply cleanly. It then makes that
+  usable, turning the evidence into a ship-or-hold decision stated as a rule
+  with named signals -- which gate failed, what class of defect that gate
+  catches, what the cost of being wrong is here. It closes Part IV by saying
+  what remains unestablished after everything, which is the part a reader is
+  entitled to know before shipping generated code.
+prior_material:
+  - path: go-unix-utils
+    offers: >
+      analysis/datasets/runs.csv, where run gh-799-run31 is recorded in
+      detail: 239 tasks over 224 unique task ids, 15 retries, 81.84 wall-clock
+      hours, $236.04, 17,651 production and 26,807 test lines of delta, and 18
+      zero-output tasks costing $8.13. Concrete enough to ground a ship-or-hold
+      discussion in a real run.
+  - path: cobbler-scaffold
+    offers: the gate results per increment, so a hold decision can be traced to the layer that produced it
+citations:
+  - id: barr2015
+    role: anchor
+    note: >
+      The oracle problem is why proof is unavailable rather than merely
+      expensive: without an oracle for intent there is nothing to prove
+      correctness against.
+  - id: knight1986
+    role: evidence
+    note: >
+      Why layered evidence does not multiply. If the layers' failures correlate,
+      confidence rises more slowly than the count of layers suggests, and this
+      is the chapter that has to say so.
+  - id: demillo1978
+    role: evidence
+    note: mutation score as the sharper reading of test evidence, carried forward from C3.5 rather than re-argued
+  - id: wang2024
+    role: context
+    note: the defect class that survives every layer, and the reason the honest verdict is confidence rather than correctness
+content:
+  - say: "What the stack produces is confidence, and the word is exact: evidence that shifts a judgement, not a demonstration that closes it."
+    cites: [barr2015]
+  - say: "The layers are not independent, so their evidence does not multiply, and a pipeline with six gates is not six times as trustworthy as one with one."
+    cites: [knight1986]
+  - say: "Reading test evidence sharply means asking whether the suite detects change, not whether it ran."
+    cites: [demillo1978]
+  - say: "A ship decision is defensible when it names the evidence and the signal that would reverse it; otherwise it is a summary of how the code reads."
+    cites: []
+  - say: "What remains unestablished after all of it is whether the specification said what was meant, which is where this part started."
+    cites: [wang2024]
+apparatus:
+  objectives:
+    - State what the stack establishes and what it leaves open.
+    - Decide ship or hold from named evidence.
+    - Name the signal that would reverse the decision.
+  sidebars:
+    - type: Performance Observation
+      about: a real run's shape -- tasks, retries, cost, output -- as the material a ship decision is actually made from
+    - type: Common Error
+      about: reading an all-green pipeline as proof, when the layers correlate and the last one was never automated
+    - type: From the Field
+      about: a hold decision and what the evidence was, or a ship decision that proved wrong and which layer should have caught it
+  key_terms: []
+  key_terms_note: >
+    definitions.yaml assigns no term here. If the chapter coins one for the
+    ship-or-hold rule, it reaches the glossary in the same unit (contract
+    rule 2).
+figures:
+  - shows: "The six layers with their evidence weighted rather than counted, showing correlated layers contributing less than their number suggests."
+    status: planned
+links:
+  requires: [C3.5, C4.1, C4.2, C4.3, C4.4]
+  supports: [C5.7, C6.4, C6.5]
+gaps:
+  - >
+    The churn figure this chapter was outlined around does not reproduce.
+    outline.yaml says "the churn metric (3.7% in Run 31)". The run exists and
+    is well recorded -- gh-799-run31 in analysis/datasets/runs.csv -- but
+    "churn" in that corpus is a tool-call measure, the count of Edit and Write
+    calls per file, not a percentage, and no run-31 ratio lands on 3.7%:
+    retries are 6.3% of tasks, zero-output tasks 7.5%, and zero-output cost
+    3.4% of spend. Under A-C2 the figure is treated as missing until its
+    definition and run are named, so the contract is written against the run's
+    verifiable shape instead. Verified 2026-08-13 at GH-68.
+  - >
+    This is the second outline figure to fail verification -- GH-66 found "sort
+    R4: 104 turns" unreproducible for C2.7. Filed as GH-92, covering
+    outline.yaml's numeric claims as a class, since two of the four checked do
+    not reproduce and the remaining two cannot be checked against
+    analysis/datasets/runs.csv, whose LOC columns are net deltas rather than
+    lines generated.
+  - >
+    The hand-off from C3.5 has to be agreed in one direction. srd-3.5 says it
+    grades the evidence and this chapter says what the evidence is not; written
+    independently both will reach for the same argument, and C4.1 already
+    claims the trust framing. The three-way split -- C3.5 grades, C4.1 frames,
+    C4.5 decides -- should be stated in one of them rather than assumed.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - Every number names the run it came from (A-C2); the churn figure is sourced or dropped rather than repeated.
+  - The non-independence of the layers is stated, so confidence is not presented as multiplying with the number of gates.
+  - The chapter closes Part IV by naming what remains unestablished, discharging P4's obligation.
+  - Figures are presented without amplification (V-P2), and no ship rule is given as an imperative outside a sidebar (V-V4).

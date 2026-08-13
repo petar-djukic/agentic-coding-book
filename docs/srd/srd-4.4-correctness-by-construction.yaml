@@ -1,0 +1,128 @@
+# SRD 4.4 -- Correctness by construction.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+
+meta:
+  chapter: C4.4
+  title: Correctness by construction
+  parent: P4
+section_goal: show how far specification precision can shrink the space of wrong outputs, and mark where that strategy stops working
+goals:
+  - id: G3.25
+    goal: The reader can relate specification precision to the size of the space of outputs that satisfy it.
+  - id: G3.26
+    goal: The reader can tell a domain where a specification can be made tight from one where it cannot, before spending effort on the attempt.
+  - id: G3.27
+    goal: The reader can say what a tight specification guarantees and what it only makes likely.
+chain:
+  - id: Q6
+    owns: partial
+    note: >
+      C4.2 and C4.3 both check output after it exists. C4.4 is the other
+      direction -- constrain the input until fewer wrong outputs are available
+      -- and it is the only chapter in Part IV that reduces the verification
+      burden rather than discharging it.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S2, V-S5, V-S6, V-P1]
+    note: "V-P1: the limit is stated as flatly as the technique, since the chapter's value is knowing when not to reach for it."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C4, A-C6, A-X1]
+    note: >
+      A-C4: the precision argument rests on C1.5's interpolation mechanism --
+      a specification narrows the region the model interpolates from, which is
+      why precision changes output quality rather than merely documenting
+      intent. A-C6: the POSIX case is unusually favourable and says so.
+objective: >
+  It takes the formal idea -- build the program so that it is correct by
+  construction rather than correct by later inspection -- and says honestly
+  what survives translation to a coding agent. What survives is the
+  relationship between precision and output: a specification tight enough
+  leaves fewer outputs that satisfy it, and the model has less room to
+  interpolate wrongly. What does not survive is the guarantee, because nothing
+  in the loop derives the program from the specification. The chapter then does
+  the more useful work of marking the boundary: POSIX-tight domains where the
+  behaviour is already pinned, against domains where the ambiguity is in the
+  problem and no amount of specification effort removes it.
+prior_material:
+  - path: go-unix-utils
+    offers: >
+      The favourable end of the range: behaviour fixed by a standard and a
+      reference implementation, where specifications can be made tight because
+      someone already made them tight.
+  - path: cobbler-scaffold
+    offers: specifications for a system with no external standard, as the contrasting case where precision has to be manufactured
+citations:
+  - id: kourie2012
+    role: anchor
+    note: >
+      Correctness by construction as a formal discipline. Cited for the
+      principle and immediately bounded: the formal derivation is not what an
+      agent does, and the chapter says which half it is borrowing.
+  - id: liu2023
+    role: evidence
+    note: >
+      Precision is not only about content. A tight constraint placed badly is
+      still weakly attended, so specification precision and specification
+      placement are separate levers.
+  - id: posix2024
+    role: evidence
+    note: the worked case of a domain where behaviour is pinned by a standard, and the point where even POSIX leaves things implementation-defined
+  - id: wang2024
+    role: context
+    note: what a loose specification produces -- plausible output filling the gap the specification left
+content:
+  - say: "Verification checks output after it exists. The other lever is the input: a specification that admits fewer correct answers leaves the model less room to be wrong."
+    cites: [kourie2012]
+  - say: "That is a real effect and not a guarantee, because nothing in the loop derives the code from the specification the way the formal discipline does."
+    cites: [kourie2012]
+  - say: "Precision has a placement component as well as a content one, since a constraint present but buried is weakly attended."
+    cites: [liu2023]
+  - say: "Some domains are already tight -- a standard and a reference implementation have done the work -- and even those leave behaviour implementation-defined at the edges."
+    cites: [posix2024]
+  - say: "In an ambiguous domain the ambiguity is in the problem, and specification effort spent trying to remove it produces a longer document rather than a narrower output."
+    cites: [wang2024]
+apparatus:
+  objectives:
+    - Relate specification precision to the space of satisfying outputs.
+    - Tell a tightenable domain from an irreducibly ambiguous one.
+    - Say what precision guarantees and what it only makes likely.
+  sidebars:
+    - type: Good Practice
+      about: spending precision where the cost of a wrong guess is highest, rather than uniformly across a specification
+    - type: Common Error
+      about: answering a defect by lengthening the specification, in a domain where the ambiguity is in the problem
+    - type: Performance Observation
+      about: what specification length costs in context budget against the regeneration it avoids
+  key_terms: []
+  key_terms_note: >
+    definitions.yaml assigns no term here. If the chapter coins one for the
+    precision/ambiguity boundary, it reaches the glossary in the same unit
+    (contract rule 2).
+figures:
+  - shows: "The space of outputs satisfying a specification, drawn loose and tight, with the model's interpolation region overlaid on each."
+    status: planned
+links:
+  requires: [C1.5, C2.4, C2.6, C4.1]
+  supports: [C4.5]
+gaps:
+  - >
+    The boundary with C3.4 is not drawn, and srd-3.4 flags it from the other
+    side. Both chapters are about establishing something for all inputs rather
+    than for chosen ones; the difference is that a property is checked after the
+    fact and a construction constrains beforehand. One chapter should state
+    that distinction and the other should refer to it, and this SRD proposes
+    C4.4 owns it since it is the later chapter.
+  - >
+    The chapter needs a case where tightening a specification measurably changed
+    the output, and go-unix-utils is the wrong corpus for it -- its
+    specifications were tight from the start. The contrasting case has to come
+    from cobbler-scaffold or be constructed, and the chapter should say which.
+  - >
+    A-C6: the POSIX case makes tightening look more available than it is.
+    Most projects have no standard, and the chapter's honesty depends on
+    spending as much space on the ambiguous domain as on the favourable one.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The borrowed principle is bounded where it is introduced (A-C1) -- precision constrains, it does not guarantee.
+  - The precision argument names the Part I fact it rests on (A-C4), the interpolation mechanism.
+  - The ambiguous domain gets comparable space to the tightenable one, so the chapter is usable by a reader without a standard (A-C6).

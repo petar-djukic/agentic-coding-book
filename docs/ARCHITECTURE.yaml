@@ -124,14 +124,19 @@ structure:
       chapters:
         - id: C4.1
           title: The trust problem
+          srd: docs/srd/srd-4.1-the-trust-problem.yaml
         - id: C4.2
           title: Mechanical verification
+          srd: docs/srd/srd-4.2-mechanical-verification.yaml
         - id: C4.3
           title: Code inspections at scale
+          srd: docs/srd/srd-4.3-code-inspections-at-scale.yaml
         - id: C4.4
           title: Correctness by construction
+          srd: docs/srd/srd-4.4-correctness-by-construction.yaml
         - id: C4.5
           title: Confidence, not proof
+          srd: docs/srd/srd-4.5-confidence-not-proof.yaml
     - id: P5
       title: Agent Orchestration
       role: "Running agent work past a single context window, and the failure modes that follow."

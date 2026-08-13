@@ -714,3 +714,91 @@ references:
     mutation score asks whether the tests detect a change, which is the question
     coverage only appears to answer. Page range is cited as 34-41 in most
     sources and 34-43 in some; 34-41 used here.
+
+- id: fagan1976
+  type: article-journal
+  title: Design and code inspections to reduce errors in program development
+  author:
+    - family: Fagan
+      given: Michael E.
+  container-title: IBM Systems Journal
+  volume: 15
+  issue: 3
+  page: 182-211
+  DOI: 10.1147/sj.153.0182
+  issued:
+    year: 1976
+  note: >
+    Verified 2026-08-13 (GH-68). The origin of formal code inspection, and the
+    baseline C4.3 measures against: inspection was designed for a volume a team
+    of humans could read, and the chapter's problem is what happens when that
+    assumption fails.
+
+- id: knight1986
+  type: article-journal
+  title: An experimental evaluation of the assumption of independence in multiversion programming
+  author:
+    - family: Knight
+      given: John C.
+    - family: Leveson
+      given: Nancy G.
+  container-title: IEEE Transactions on Software Engineering
+  volume: SE-12
+  issue: 1
+  page: 96-109
+  issued:
+    year: 1986
+    month: 1
+  note: >
+    Verified 2026-08-13 (GH-68). The experiment that refuted the independence
+    assumption in N-version programming: independently developed versions
+    failed on the same inputs more often than chance allows. The ancestor of
+    the reviewer-of-the-reviewer problem, and the reason a second agent is not
+    automatically a second opinion.
+
+- id: ron2026
+  type: article
+  title: N-Version Programming with Coding Agents
+  author:
+    - family: Ron
+      given: Javier
+    - family: Baudry
+      given: Benoit
+    - family: Monperrus
+      given: Martin
+  container-title: arXiv preprint arXiv:2606.20158
+  URL: https://arxiv.org/abs/2606.20158
+  issued:
+    year: 2026
+    month: 6
+  note: >
+    Verified 2026-08-13 (GH-68). Re-runs the Knight-Leveson question for coding
+    agents, varying agent system, model and implementation language, and finds
+    substantial common-mode failure -- diversity of agent does not buy
+    independence of failure. It also measures the upside: majority voting takes
+    mean failures from 387.44 for single versions to 130.99 for triples, with
+    close to 12,000 three-version units failing zero times. Both halves are
+    needed, so the chapter neither assumes a second agent is a second opinion
+    nor concludes that ensembling is worthless. Single version, June 2026, no
+    venue -- still a preprint.
+
+- id: kourie2012
+  type: book
+  title: The Correctness-by-Construction Approach to Programming
+  author:
+    - family: Kourie
+      given: Derrick G.
+    - family: Watson
+      given: Bruce W.
+  publisher: Springer
+  ISBN: 9783642279188
+  DOI: 10.1007/978-3-642-27919-5
+  issued:
+    year: 2012
+  note: >
+    Verified 2026-08-13 (GH-68). Correctness by construction as a formal
+    discipline: derive the program from the specification so that it is correct
+    by the way it was built rather than by later testing. C4.4 borrows the
+    principle and states plainly what it does not inherit -- the formal
+    derivation is not what a coding agent does, and a tight specification
+    constrains the output without guaranteeing it.

@@ -1,0 +1,126 @@
+# SRD 4.1 -- The trust problem.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+
+meta:
+  chapter: C4.1
+  title: The trust problem
+  parent: P4
+section_goal: state what correctness can mean for a codebase nobody has read, and separate that question from whether the tests pass
+goals:
+  - id: G3.16
+    goal: The reader can state why review by reading stops being available at volume, in terms of a number rather than a feeling.
+  - id: G3.17
+    goal: The reader can separate the two questions verification answers -- does the code match the specification, does the specification match the intent -- and say which one automation reaches.
+  - id: G3.18
+    goal: The reader can say what a passing verification stack does and does not license, without either trusting it wholly or dismissing it.
+chain:
+  - id: Q6
+    owns: partial
+    note: >
+      Part III answered how code gets verified. Part IV asks what that
+      verification establishes, and C4.1 opens it by naming the gap: every
+      technique in Part III checks the code against something written down, and
+      none of them checks whether the thing written down was right.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S2, V-S6, V-P1, V-P2]
+    note: "V-P1: the trust problem is stated as a fact about volume, not hedged into a worry."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C2, A-C4, A-X1]
+    note: >
+      A-C2: the volume claim names its run. A-C4: the problem is derived from
+      Q4 -- output that is fluent whether or not it is right -- rather than from
+      an intuition that generated code is untrustworthy.
+objective: >
+  It states the problem Part IV exists for. Manual review is the default
+  verification method in hand-written development and it silently stops being
+  available somewhere between a hundred and a hundred thousand lines. The
+  chapter fixes that boundary with a real number from the evidence base, then
+  splits verification into its two questions: whether the code matches the
+  specification, which Part III automates, and whether the specification
+  matched the intent, which nothing automates. That second question is what the
+  rest of Part IV is about, and naming it early is what stops a green pipeline
+  from being read as correctness.
+prior_material:
+  - path: go-unix-utils
+    offers: >
+      44,628 generated lines across 31 pipeline runs, which is the concrete
+      form of the problem: a volume no reviewer read, verified by other means.
+      The number names its run, per A-C2.
+  - path: unplaced-intent-autonomy-and-verification.md
+    offers: >
+      The framing of the verification problem as two questions -- code against
+      specification, specification against intent -- and the observation that
+      layer six is the one that cannot be automated. This SRD claims that
+      framing; srd-4.2 claims the six layers themselves.
+citations:
+  - id: wang2024
+    role: anchor
+    note: >
+      Generated code that passes static checks and tests while being wrong,
+      which is why the volume problem is not solved by trusting the pipeline.
+  - id: barr2015
+    role: evidence
+    note: >
+      The oracle problem restated at the level of intent: the specification is
+      itself a proposed oracle, and nothing in the stack validates it.
+  - id: coderabbit2025
+    role: context
+    note: >
+      Defect rates in AI-authored code, cited with its provenance stated -- a
+      vendor report from a company selling review. It indicates the scale of the
+      problem without settling it.
+content:
+  - say: "Review by reading is the default verification method until the volume exceeds what anyone will read, and generated code crosses that line early."
+    cites: []
+  - say: "Verification has two questions, and only the first is automatable: does the code match the specification, and did the specification say what was meant."
+    cites: [barr2015]
+  - say: "A green pipeline answers the first question. Reading it as an answer to the second is the mistake this part exists to prevent."
+    cites: [wang2024]
+  - say: "Nothing about the volume is exotic; what changed is that the writing stopped being the bottleneck and the reading became one."
+    cites: [coderabbit2025]
+apparatus:
+  objectives:
+    - State why review by reading stops scaling, with a number.
+    - Separate the two questions verification answers.
+    - Say what a passing stack licenses and what it does not.
+  sidebars:
+    - type: Common Error
+      about: treating a green pipeline as correctness, when it establishes conformance to a specification nobody has checked
+    - type: From the Field
+      about: the point in a generation run where reading the diff stopped being possible, and what replaced it
+    - type: Performance Observation
+      about: lines generated per run against lines a reviewer reads in a day, as the ratio that defines the problem
+  key_terms: []
+  key_terms_note: >
+    definitions.yaml assigns no term here yet. If the chapter coins one for the
+    code-to-spec and spec-to-intent split, it reaches the glossary in the same
+    unit (contract rule 2).
+figures:
+  - shows: "The two verification questions as separate gates: everything Part III automates on one side, and the unautomated intent question on the other, with the layers marked by which side they serve."
+    status: planned
+links:
+  requires: [C1.5, C2.6, C3.5]
+  supports: [C4.2, C4.3, C4.4, C4.5]
+gaps:
+  - >
+    The 44,628-line figure needs its run named in the prose (A-C2). The
+    introduction already uses it as "44,628 lines of Go generated across 31
+    pipeline runs", so the attribution exists and only needs carrying through.
+  - >
+    The boundary with C3.5 needs both SRDs to agree, and srd-3.5 already flags
+    it from the other side. C3.5 grades how much confidence the tests support;
+    this chapter says what confidence is not. Written independently they will
+    both reach for the trust question, and one of them has to own it -- the
+    proposal here is that C3.5 stops at the evidence and C4.1 starts at what the
+    evidence cannot reach.
+  - >
+    This chapter claims the framing of the verification problem from the parked
+    file while srd-4.2 claims the six layers. The two fragments are adjacent
+    prose in the original and splitting them risks losing the transition, so
+    whichever chapter is drafted second should read the other's use of it first.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The volume claim names its run (A-C2), not a round number.
+  - The two questions are separated before any technique is discussed, since the rest of the part depends on that split.
+  - The prescription names the Part I fact it rests on (A-C4).

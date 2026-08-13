@@ -133,11 +133,28 @@ releases:
     units: [C3.1, C3.2, C3.3, C3.4, C3.5]
     gate: "rel03.srd complete, and rel02.0 (testing verifies what the specification asked for)."
 
+  - id: rel04.srd
+    name: "Part IV specification"
+    status: complete
+    units: [C4.1, C4.2, C4.3, C4.4, C4.5]
+    gate: "rel03.srd complete."
+    completed: >
+      Five SRDs written under EPIC GH-68, 2026-08-13. C4.2 claims the six-layer
+      verification stack from the parked file and takes verification_stack with
+      it, P3 to C4.2. C4.3's reviewer-of-the-reviewer problem is grounded in
+      Knight and Leveson 1986 and its 2026 replication for coding agents.
+
+      One figure could not be sourced: outline.yaml gives C4.5 "the churn
+      metric (3.7% in Run 31)", and while run gh-799-run31 is well recorded,
+      churn in that corpus is a per-file Edit/Write count rather than a
+      percentage and no run-31 ratio is 3.7%. A-C2 treats it as missing; the
+      SRD says so and GH-92 covers outline.yaml's numeric claims as a class.
+
   - id: rel04.0
     name: "Part IV -- Correctness"
     status: pending
     units: [C4.1, C4.2, C4.3, C4.4, C4.5]
-    gate: "rel03.0 complete (correctness is the stronger claim testing cannot make on its own)."
+    gate: "rel04.srd complete, and rel03.0 (correctness is the stronger claim testing cannot make on its own)."
 
   - id: rel05.0
     name: "Part V -- Agent Orchestration"
@@ -336,29 +353,36 @@ unplaced:
   - source: unplaced-intent-autonomy-and-verification.md
     status: unplaced
     holds: >
-      Two concepts still needing a home, in a chapter whose framing GH-5
-      retired. The intent material now has a destination: srd-2.4 claims the
-      worked notification-system example, its Strategy-pattern figure, and the
-      Common Error sidebar (GH-66), so it moves when C2.4 is drafted rather than
-      waiting on a decision. The boxed definition of agentic_coding that used to
-      sit here went to 01-introduction.md at GH-60. What remains unplaced is
-      the per-level autonomy walkthrough with its bottleneck-by-level and
-      programmer-role-by-level tables; and the six-layer verification stack
-      with its Good Practice and From the Field sidebars.
+      Every fragment now has a named SRD destination, so nothing here is
+      unhomed. What remains is a move, not a decision.
 
-      Placement is blocked rather than undecided. The intent material belongs
-      to C2.3 or C2.4 and the verification stack to Parts III-IV, and none of
-      those chapters is drafted or has an SRD. Prose cannot be placed into a
-      chapter that does not exist, so this waits on the drafting order rather
-      than on a decision.
+      The intent pair and its worked notification-system example, the
+      Strategy-pattern figure and the Common Error sidebar: claimed by srd-2.4
+      at GH-66. The boxed definitions of behavioral and constructional intent
+      already went to C1.5 section 5.4.1 at GH-43.
 
-      Already resolved and removed from the file: the in-the-loop and
-      on-the-loop definitions went to C1.6 section 6.4 at GH-11; the
-      compounding-advantage passage was already in 01-introduction.md; the
-      autonomy_level definition and the L0/L5 endpoints went to C1.6 section
-      6.5 at GH-11; and the boxed definitions of behavioral and constructional
-      intent went to C1.5 section 5.4.1 at GH-43, closing a V-S4 gap where the
-      terms were used in two chapters and defined in none.
+      The six-layer verification stack with its Good Practice and From the
+      Field sidebars: claimed by srd-4.2 at GH-68, which also took
+      verification_stack from P3 to C4.2. The framing of verification as two
+      questions -- code against specification, specification against intent --
+      is claimed by srd-4.1.
+
+      The per-level autonomy walkthrough and its two tables, bottleneck by
+      level and programmer role by level: split at GH-68. The bottleneck table
+      goes to C4.5, whose subject is what evidence supports a decision and
+      whose top row is a verification-trust question. The walkthrough and the
+      programmer-role table stay Part II material and belong with the
+      construction chapters; GH-43 is titled for Part II and that reading
+      holds for these two. Neither destination is an SRD claim yet, so this is
+      the one fragment still needing a prior_material entry when Part II is
+      revisited.
+
+      Already absorbed and removed from the file: the in-the-loop and
+      on-the-loop definitions to C1.6 section 6.4 at GH-11; the
+      compounding-advantage passage, already in 01-introduction.md; the
+      autonomy_level definition and the L0/L5 endpoints to C1.6 section 6.5 at
+      GH-11; and the boxed definition of agentic_coding to 01-introduction.md
+      at GH-60, which took the last use of the retired term with it.
     owner: >
       Needs an owner. GH-12 parked the file outside the numbered sequence so
       the build skips it and the prose survives, and retired the term it was

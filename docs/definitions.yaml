@@ -542,10 +542,13 @@ fsm_constrained_decoding:
 # --- Verification --------------------------------------------------------
 
 verification_stack:
-  introduced: P3
+  introduced: C4.2
   introduced_note: >
-    Part-level because the stack spans Parts III and IV, the way
-    knowledge_manager spans P5. GH-43 owns placing the parked prose.
+    Assigned to C4.2 at GH-68, which claims the six-layer stack from the
+    parked file. It was recorded at part level while the destination was
+    undecided; GH-67 left it there deliberately so this unit could claim it.
+    Part III builds the individual checks and C4.2 assembles them, so the term
+    belongs where the stack is named rather than where its rungs are built.
   definition: >
     Multiple independent automated layers, each catching a different class of
     defect: compilation for syntax and types, linting for structure, tests

@@ -1,0 +1,141 @@
+# SRD 4.3 -- Code inspections at scale.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+
+meta:
+  chapter: C4.3
+  title: Code inspections at scale
+  parent: P4
+section_goal: ask what inspection can still contribute when the volume exceeds human reading, and answer the reviewer-of-the-reviewer problem with evidence rather than with a shrug
+goals:
+  - id: G3.22
+    goal: The reader can say what formal inspection was designed to do and which of its assumptions generated volume breaks.
+  - id: G3.23
+    goal: The reader can state why an agent reviewing agent output is not automatically a second opinion, and what would make it one.
+  - id: G3.24
+    goal: The reader can decide where scarce human reading is worth spending, given that it cannot be spent everywhere.
+  - id: G6.8
+    goal: "The reader has built an inspector sub-agent: a reviewing agent invoked by the orchestrator with its own context and its own tool set, whose findings enter the loop as gate results rather than as prose."
+chain:
+  - id: Q6
+    owns: partial
+    note: >
+      C4.2 automated what automates. C4.3 takes the residue -- the judgements
+      that need a reader -- and asks whether a second agent can supply them.
+      The answer is partial, and the measurement is what keeps the chapter from
+      being either enthusiasm or dismissal.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S2, V-S5, V-S6, V-P1]
+    note: "V-P1: the reviewer-of-the-reviewer result is stated as measured, not hedged."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C2, A-C3, A-C5, A-X1]
+    note: >
+      A-C3: where practice and literature agree, the field observation is
+      stated first and the citation follows. The common-mode result is the
+      strongest case in the book for that ordering, since the literature is
+      forty years old and the agent measurement is months old.
+objective: >
+  It takes inspection seriously as prior art and then states what breaks. Fagan
+  inspection assumes a volume a team can read and a reviewer whose errors are
+  uncorrelated with the author's; generated code violates the first, and an
+  agent reviewer violates the second. The chapter grounds that in the
+  Knight-Leveson result and its recent replication for coding agents, which
+  found substantial common-mode failure across agent systems, models and
+  languages -- and also found that majority voting still reduces failures
+  substantially. Both halves are the chapter: a second agent is not a second
+  opinion, and ensembles still help. It closes on where human reading is worth
+  spending, since it cannot be spent everywhere.
+prior_material:
+  - path: cobbler-scaffold
+    offers: >
+      The inspector role in the orchestrator -- a reviewing agent with its own
+      context and tool set, whose findings return as gate results. The reference
+      implementation for the Build section.
+  - path: go-unix-utils
+    offers: generated code reviewed by other means than reading, so the counterfactual is visible
+citations:
+  - id: fagan1976
+    role: anchor
+    note: >
+      Formal inspection as designed, and the baseline this chapter measures
+      against. Cited for its assumptions rather than its procedure -- the
+      procedure survives, the assumptions are what generated volume breaks.
+  - id: knight1986
+    role: anchor
+    note: >
+      The refutation of independence in multiversion programming: independently
+      developed versions failed on the same inputs more often than chance
+      allows. The ancestor of the reviewer-of-the-reviewer problem, and the
+      reason the chapter does not need to discover it from scratch.
+  - id: ron2026
+    role: evidence
+    note: >
+      The same question re-run for coding agents across agent systems, models
+      and languages, finding substantial common-mode failure -- and measuring
+      the upside, with majority voting taking mean failures from 387.44 for
+      single versions to 130.99 for triples. Single-version June 2026 preprint,
+      no venue; the chapter says so.
+  - id: wang2024
+    role: context
+    note: the failure signature a reviewing agent has to catch, and the reason it often does not
+content:
+  - say: "Inspection was designed for a volume a team could read and for reviewers whose mistakes were not the author's mistakes. Generated code breaks the first assumption immediately."
+    cites: [fagan1976]
+  - say: "The obvious repair is another agent, and the obvious repair inherits a forty-year-old result: independently produced versions do not fail independently."
+    cites: [knight1986]
+  - say: "Re-run for coding agents, varying the agent, the model and the language, the common-mode failure is still substantial."
+    cites: [ron2026]
+  - say: "The same measurement shows ensembling is not worthless -- majority voting across three versions cuts mean failures by more than half -- so the honest conclusion is a reduction rather than an independent check."
+    cites: [ron2026]
+  - say: "What a reviewing agent does reliably is apply a checklist at volume, which is inspection's mechanical half rather than its judgement half."
+    cites: [wang2024]
+  - say: "Human reading remains the only source of the judgement half, so it is spent where a defect would be worst rather than where code is newest."
+    cites: []
+apparatus:
+  objectives:
+    - Say what inspection assumed and which assumption generated volume breaks.
+    - State why an agent reviewer is not automatically a second opinion.
+    - Decide where scarce human reading is worth spending.
+    - Build an inspector sub-agent whose findings enter the loop as gate results.
+  sidebars:
+    - type: Common Error
+      about: adding a reviewing agent and treating its approval as independent evidence, when its blind spots correlate with the author's
+    - type: Performance Observation
+      about: what a review pass costs per task against the defect classes it actually catches, and how that compares with a mechanical gate
+    - type: From the Field
+      about: a review agent that approved a defect the differential test caught, and what the two disagreed about
+  key_terms: []
+  key_terms_note: >
+    definitions.yaml assigns no term here. If the chapter coins one for
+    common-mode failure among agents or for the inspector role, it reaches the
+    glossary in the same unit (contract rule 2). Note `guardian` is C2.5's and
+    an inspector is a different role; the two should not be conflated.
+figures:
+  - shows: "Three independently generated versions with their failure sets overlapping, against the independence assumption's disjoint sets, annotated with the measured majority-voting reduction."
+    status: planned
+links:
+  requires: [C1.5, C3.2, C4.1, C4.2]
+  supports: [C4.5, C5.7, C5.8]
+gaps:
+  - >
+    The strongest evidence is a single-version preprint from June 2026. The
+    chapter's central claim rests on it, so it states that provenance and is
+    re-checked for a published version before the book ships -- the same
+    discipline C1.3 and C3.2 apply to their preprints.
+  - >
+    C3.2 argues circularity for generated tests and this chapter argues
+    common-mode failure for reviewing agents. They are the same phenomenon at
+    two sites, and the book is stronger if one of them names the other rather
+    than each deriving it locally. C3.2 is earlier, so this chapter should refer
+    back.
+  - >
+    The inspector Build section overlaps Part V, where sub-agent lifecycle is
+    C5.6's subject. This chapter builds one inspector; C5.6 owns how sub-agents
+    are managed generally, and srd-5.6 should confirm it extends rather than
+    repeats.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The common-mode claim is stated as measured, with the run and the preprint status named (A-C2, A-C5).
+  - Both halves of the ensemble result appear -- the correlation and the reduction -- since either alone misleads.
+  - The field observation precedes the citation where they agree (A-C3).
+  - The Build section produces an inspector whose findings enter the loop as gate results, not as prose a human then reads.

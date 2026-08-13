@@ -1,0 +1,130 @@
+# SRD 4.2 -- Mechanical verification.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+#
+# This SRD claims the six-layer verification stack from
+# unplaced-intent-autonomy-and-verification.md. definitions.yaml records
+# verification_stack at part level; GH-68 assigns it here.
+
+meta:
+  chapter: C4.2
+  title: Mechanical verification
+  parent: P4
+section_goal: assemble the individual checks into a stack whose layers fail differently, and wire that stack into the loop as gates rather than as advice
+goals:
+  - id: G3.19
+    goal: The reader can name the layers of a verification stack and say which class of defect each one catches.
+  - id: G3.20
+    goal: The reader can say which layers automate and which do not, and stop expecting the last one to.
+  - id: G3.21
+    goal: The reader can tell a gate from a guideline by what happens when it fails.
+  - id: G6.7
+    goal: "The reader has wired the stack into the loop as gates: a failing layer stops the task rather than annotating it, using the harness they built in Part III."
+chain:
+  - id: Q6
+    owns: partial
+    note: >
+      C4.1 named the gap; C4.2 is the practical answer for everything below it.
+      The stack is what makes verification a property of the pipeline rather
+      than a step someone remembers, and its layers are ordered by what they
+      can establish rather than by when they run.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S3, V-S5, V-S6, V-V1]
+    note: "V-S3: the stack is six layers, and the decomposition is stated before any layer is treated."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C4, A-X1]
+    note: >
+      A-C4: gates over guidance rests on C1.3's policy responsibility, the same
+      Part I fact C2.5 uses for the constitution. The two chapters apply one
+      mechanism to different content, and each should point at the other.
+objective: >
+  It assembles the checks Part III produced into a stack and states the
+  property that makes a stack worth having: each layer catches a class the
+  others miss, so confidence comes from their independence rather than from any
+  one being strong. Layers one through five automate; the sixth, intent
+  conformance, does not, and the chapter says so rather than implying the stack
+  is complete. It then turns the stack into gates, wiring the standalone
+  harness from C3.3 into the loop so a failing layer stops the work instead of
+  annotating it.
+prior_material:
+  - path: unplaced-intent-autonomy-and-verification.md
+    offers: >
+      The six-layer stack -- compilation, linting, tests, coverage,
+      specification conformance, intent conformance -- with the observation that
+      layers one to five are automatable and the sixth is not, plus the Good
+      Practice sidebar treating verification as a stack rather than a check and
+      the From the Field sidebar comparing it to an ML validation pipeline.
+      This SRD claims that material; GH-43 has been waiting for a destination
+      and this is it.
+  - path: cobbler-scaffold
+    offers: the verification pipeline with the gates in place, and the record of which layer caught which defect
+  - path: go-unix-utils
+    offers: the differential layer as the strongest rung, since a reference implementation makes layer five decisive rather than indicative
+citations:
+  - id: latentpatterns-harness
+    role: anchor
+    note: >
+      The harness's policy responsibility, which is what a gate is: the pipeline
+      declines to proceed. Without it a layer is a report.
+  - id: barr2015
+    role: evidence
+    note: why layer five is the strongest automatable rung and why layer six resists automation -- both are oracle questions
+  - id: demillo1978
+    role: context
+    note: mutation testing as the check on layer four, cross-referenced to C3.5 rather than re-argued
+  - id: wang2024
+    role: evidence
+    note: the defect classes that survive the lower layers, which is the argument for the stack having more than three rungs
+content:
+  - say: "A single check is a filter for one class of defect, and the classes are not the same, so confidence comes from layers that fail differently."
+    cites: [wang2024]
+  - say: "The stack has six rungs: compilation, linting, tests, coverage, specification conformance, and intent conformance."
+    cites: []
+  - say: "Five of them automate. The sixth is a person deciding whether the specification said what was meant, and no arrangement of the other five reaches it."
+    cites: [barr2015]
+  - say: "A layer becomes a gate when failing it stops the work, and that is a property of the harness rather than of the check."
+    cites: [latentpatterns-harness]
+  - say: "Coverage is the rung that most needs its own check, which is what mutation testing supplies."
+    cites: [demillo1978]
+apparatus:
+  objectives:
+    - Name the stack's layers and the defect class each catches.
+    - Say which layers automate and which does not.
+    - Distinguish a gate from a guideline by what failure does.
+    - Wire the stack into the loop as gates.
+  sidebars:
+    - type: Good Practice
+      about: treating verification as a stack rather than a single check, since a pipeline that compiles and tests but never lints ships structural defects
+    - type: From the Field
+      about: the ML validation pipeline as the familiar precedent -- nobody validates a network by reading the weights
+    - type: Performance Observation
+      about: what each layer costs per task against the class of defect it catches, and why the expensive rungs run at increment boundaries rather than per task
+  key_terms: [verification_stack]
+figures:
+  - shows: "The six layers with the automation boundary drawn between five and six, and each layer annotated with the defect class it catches and where it runs in the loop."
+    status: planned
+links:
+  requires: [C1.3, C3.1, C3.3, C3.5, C4.1]
+  supports: [C4.3, C4.5, C5.7]
+gaps:
+  - >
+    The build seam with Part III has to hold. srd-3.3 says its harness knows
+    nothing about the orchestrator, and this chapter takes that harness as given
+    and wires it in. If the drafting rebuilds the harness here, Part III's Build
+    section loses its point, so C3.3's deliverable should be imported rather
+    than reimplemented.
+  - >
+    C2.5 makes the same gates-over-guidance argument for the constitution, from
+    the same Part I fact. Two chapters deriving one mechanism is acceptable only
+    if each names the other; otherwise the book argues it twice and appears not
+    to notice. srd-2.5 and this SRD should cross-reference in the prose.
+  - >
+    Layer six has no procedure in this chapter, only a name. C4.3 and C4.4 are
+    the two attempts at it -- review at scale and construction that makes the
+    question smaller -- and this chapter should hand off explicitly rather than
+    leaving the sixth rung as an admission.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The six layers are stated before any is treated (V-S3), and the automation boundary is stated as a fact rather than a caveat.
+  - The gate/guideline distinction names the Part I fact it rests on (A-C4) and cross-references C2.5.
+  - The Build section wires the C3.3 harness into the loop without rebuilding it, and a failing gate is demonstrated stopping a task.
