@@ -186,10 +186,13 @@ structure:
           srd: docs/srd/srd-6.4-the-economics.yaml
         - id: C6.5
           title: Building intuition
+          srd: docs/srd/srd-6.5-building-intuition.yaml
         - id: C6.6
           title: Non-determinism
+          srd: docs/srd/srd-6.6-non-determinism.yaml
         - id: C6.7
           title: Stats and post-run analysis
+          srd: docs/srd/srd-6.7-stats-and-post-run-analysis.yaml
 
 # Where the book's material comes from. Every SRD lists its own sources in a
 # prior_material field; this map states each corpus once with the parts it

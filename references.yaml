@@ -1141,3 +1141,40 @@ references:
     development at that date with its schema URL unset, which is the honest
     state to report under A-C5. C6.2 uses it to tell the reader an
     interoperable vocabulary is arriving without implying they can wait for it.
+
+- id: ouyang2024
+  type: article-journal
+  author:
+  - {family: Ouyang, given: Shuyin}
+  - {family: Zhang, given: Jie M.}
+  - {family: Harman, given: Mark}
+  - {family: Wang, given: Meng}
+  title: An Empirical Study of the Non-Determinism of ChatGPT in Code Generation
+  container-title: ACM Transactions on Software Engineering and Methodology
+  volume: 34
+  issue: 2
+  page: 1-28
+  DOI: 10.1145/3697010
+  issued: {year: 2024}
+  note: >
+    Verified 2026-08-14 (GH-70) via OpenAlex; 168 citations. Same prompt,
+    different code, measured across benchmarks rather than anecdotally --
+    including at temperature zero, which is the result that surprises readers
+    who expect determinism to be a setting. C6.6's anchor for the fact; the
+    corpus supplies the cascade.
+
+- id: shewhart1931
+  type: book
+  author:
+  - {family: Shewhart, given: Walter A.}
+  title: Economic Control of Quality of Manufactured Product
+  publisher: D. Van Nostrand Company
+  ISBN: 0873890760
+  issued: {year: 1931}
+  note: >
+    Verified 2026-08-14 (GH-70) via OpenLibrary; the ISBN is the ASQC reprint.
+    The distinction C6.7 is built on: variation with a common cause is the
+    process behaving as it does, and variation with a special cause is
+    something that happened. Chasing the first is waste, and a generation
+    pipeline whose run-to-run cost moves is the same measurement problem in a
+    new setting.

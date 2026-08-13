@@ -721,7 +721,7 @@ analyst:
     The agent role that interprets observations: diagnoses errors, identifies
     failure patterns, recognizes recurring issues.
   coding_analogue: "cobbler pattern, error diagnosis"
-  introduced: P5
+  introduced: C6.7
   see_also: [monitor, improve]
 
 coordinator:
