@@ -1,0 +1,132 @@
+# SRD 3.2 -- Generated tests.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+#
+# This is the chapter Part III's obligation names: "States the circularity
+# problem when the tests are generated too, rather than assuming it away."
+
+meta:
+  chapter: C3.2
+  title: Generated tests
+  parent: P3
+section_goal: state the circularity problem in generated tests plainly, and separate the cases where generated tests carry evidence from the cases where they only restate the code
+goals:
+  - id: G3.4
+    goal: The reader can state why a test generated from the same context as the code is weak evidence, and say what it does still establish.
+  - id: G3.5
+    goal: The reader can distinguish a test translated from an independent specification from one generated alongside the implementation.
+  - id: G3.6
+    goal: The reader can arrange generation so the test's source of truth is not the code under test.
+chain:
+  - id: Q6
+    owns: partial
+    note: >
+      C3.2 answers the case C3.1 leaves open -- no reference implementation --
+      and finds the obvious substitute compromised. It is the chapter that keeps
+      Part III honest, because a verification stack whose tests come from the
+      same misunderstanding as the code verifies nothing.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S4, V-S5, V-S6, V-P1]
+    note: "V-P1: the circularity claim is stated as a fact with evidence behind it, not hedged into a caution."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C4, A-C5, A-X1]
+    note: >
+      A-C4: the circularity argument rests on Q4 -- the model interpolates from
+      context, so code and tests generated from one context inherit one
+      misunderstanding. A-C5: claims about what a model does when generating
+      tests are dated, since the behaviour changes with the model.
+objective: >
+  It states the problem the rest of Part III is arranged around: an agent asked
+  to write tests for code it just wrote will write tests that pass. The tests
+  encode the implementation rather than the intent, so they catch regressions
+  and not defects. The chapter separates that from the case where the test's
+  source of truth is independent -- a specification, a reference, a
+  human-written example -- and gives the arrangements that keep the two apart,
+  including generating tests before the code and from the requirement rather
+  than from the implementation.
+prior_material:
+  - path: go-unix-utils
+    offers: >
+      Generated implementations verified against an external oracle rather than
+      against generated tests, which is the arrangement this chapter argues for,
+      already in place.
+  - path: cobbler-scaffold
+    offers: generation runs where the test task and the implementation task were separate invocations with different context
+citations:
+  - id: konstantinou2024
+    role: anchor
+    note: >
+      The circularity problem measured rather than asserted: over 24 open-source
+      Java repositories, LLM-based test generation is prone to producing oracles
+      that capture the actual program behaviour rather than the expected one.
+      A single-version preprint with no venue, and the chapter says so.
+  - id: barr2015
+    role: evidence
+    note: >
+      A generated test is a proposed oracle, so the oracle problem applies to
+      it. This is the link that makes the circularity argument structural rather
+      than anecdotal.
+  - id: wang2024
+    role: evidence
+    note: generated code that passes static checks and its own tests, which is the failure the circular arrangement cannot see
+  - id: coderabbit2025
+    role: context
+    note: >
+      Omission rates in AI-authored code, cited with its provenance stated -- a
+      vendor report from a company selling review -- as one indication of what
+      generated tests routinely fail to cover.
+content:
+  - say: "An agent asked to test the code it just wrote will produce tests that pass, because both came from one reading of the task."
+    cites: []
+  - say: "Measured, the pattern is that generated oracles capture what the program does rather than what it should do."
+    cites: [konstantinou2024]
+  - say: "A generated test is itself a proposed oracle, so it inherits the oracle problem rather than solving it."
+    cites: [barr2015]
+  - say: "What such tests do establish is regression: the behaviour is pinned, so a later change that alters it is caught. That is worth having and is not correctness."
+    cites: []
+  - say: "The separation that restores evidence is provenance: the test's source of truth has to be something other than the implementation -- a specification, a reference, or a case written by hand."
+    cites: [wang2024]
+apparatus:
+  objectives:
+    - State why a test generated from the same context as the code is weak evidence.
+    - Distinguish a translated test from an independently generated one.
+    - Arrange generation so the test's source of truth is not the code under test.
+  sidebars:
+    - type: Common Error
+      about: reading a green generated suite as evidence of correctness when it is evidence that the code agrees with itself
+    - type: Good Practice
+      about: generating the test from the requirement, in a separate task, before the implementation exists to interpolate from
+    - type: From the Field
+      about: a generated suite that passed while the behaviour was wrong, and what the differential test found instead
+  key_terms: []
+  key_terms_note: >
+    definitions.yaml assigns no term here yet. If the chapter coins one for the
+    circular arrangement or for provenance-separated tests, it reaches the
+    glossary in the same unit (contract rule 2), which mage audit enforces in
+    both directions since GH-52.
+figures:
+  - shows: "Two arrangements side by side: code and tests generated from one context, against tests generated from the specification in a separate task, with the shared-misunderstanding path marked."
+    status: planned
+links:
+  requires: [C1.5, C2.4, C3.1]
+  supports: [C3.3, C3.4, C3.5, C4.1]
+gaps:
+  - >
+    The anchor is a single-version preprint with no venue. Part III's central
+    caution rests on it, so the chapter states that provenance, and the claim
+    should be re-checked for a published version before the book ships -- the
+    same discipline C1.3 applies to its 2026 preprints.
+  - >
+    The chapter needs a worked case of a generated suite passing while the
+    behaviour was wrong. go-unix-utils verified against an external oracle
+    rather than against generated tests, so the corpus may not contain one; if
+    it does not, the sidebar is honest only if it says the case is constructed.
+  - >
+    The boundary with C3.5 needs agreeing. Coverage of a circular suite is high
+    and meaningless, which is a point either chapter could make. C3.2 owns why
+    the suite is weak; C3.5 owns what any coverage number is worth.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The circularity claim carries measured evidence and states its source's preprint status (A-C1, A-C5).
+  - The chapter says what a circular suite does establish, not only what it does not (V-P1, no hedging in either direction).
+  - The prescription names the Part I fact it rests on (A-C4): interpolation from a shared context.

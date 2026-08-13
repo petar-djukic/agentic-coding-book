@@ -580,3 +580,71 @@ references:
     the Austin Group. Cited in C2.3 as the worked case of a standard used as a
     requirements source: go-unix-utils extracted utility behaviour from it and
     from the GNU implementations, then verified against the reference binaries.
+
+- id: mckeeman1998
+  type: article-journal
+  title: Differential Testing for Software
+  author:
+    - family: McKeeman
+      given: William M.
+  container-title: Digital Technical Journal
+  volume: 10
+  issue: 1
+  page: 100-107
+  issued:
+    year: 1998
+  note: >
+    Verified 2026-08-13 (GH-67). The origin of differential testing as a named
+    technique: run the same input through two implementations and compare. The
+    lineage matters for C3.1, because the practice predates agents entirely and
+    the book applies it rather than inventing it.
+
+- id: barr2015
+  type: article-journal
+  title: "The Oracle Problem in Software Testing: A Survey"
+  author:
+    - family: Barr
+      given: Earl T.
+    - family: Harman
+      given: Mark
+    - family: McMinn
+      given: Phil
+    - family: Shahbaz
+      given: Muzammil
+    - family: Yoo
+      given: Shin
+  container-title: IEEE Transactions on Software Engineering
+  volume: 41
+  issue: 5
+  page: 507-525
+  DOI: 10.1109/TSE.2014.2372785
+  issued:
+    year: 2015
+  note: >
+    Verified 2026-08-13 (GH-67). The canonical survey of the test-oracle
+    problem -- how to tell correct behaviour from incorrect given an input.
+    Part III's frame: a reference implementation is a solved oracle, and the
+    chapters that follow are about what to do when there is not one.
+
+- id: konstantinou2024
+  type: article
+  title: "Do LLMs generate test oracles that capture the actual or the expected program behaviour?"
+  author:
+    - family: Konstantinou
+      given: Michael
+    - family: Degiovanni
+      given: Renzo
+    - family: Papadakis
+      given: Mike
+  container-title: arXiv preprint arXiv:2410.21136
+  URL: https://arxiv.org/abs/2410.21136
+  issued:
+    year: 2024
+    month: 10
+  note: >
+    Verified 2026-08-13 (GH-67). Studies test-oracle classification and
+    generation over 24 open-source Java repositories, and finds LLM-based test
+    generation prone to producing oracles that capture the actual program
+    behaviour rather than the expected one. That is the circularity problem of
+    C3.2 stated as a measured result rather than as a worry. Single version,
+    October 2024, no venue -- still a preprint, and the chapter says so.
