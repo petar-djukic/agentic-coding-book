@@ -119,8 +119,10 @@ gaps:
     present and inspectable. A framework-assembled agent is still the missing
     third packaging style; add it when one can be run and dated.
   - >
-    Figure and section numbers collide with C2.1 (layered construction), which
-    also uses 2.x. Live in the build as of GH-7 and owned by GH-35.
+    Resolved at GH-35, which made every chapter number its sections by
+    book-wide position and added the check that keeps them from drifting
+    again. The collision with C2.1 that was live in the build at GH-7 is
+    gone.
 acceptance:
   - Every citation id resolves in references.yaml.
   - Every claim about a shipping tool carries a version or date (VN-6, A-C5).

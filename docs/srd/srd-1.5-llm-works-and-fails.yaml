@@ -66,7 +66,11 @@ citations:
     note: hallucination phenomena and mechanism in practical code generation
   - id: kocetkov2022
     role: context
-    note: the scale and composition of code training corpora; grounds interpolation density
+    note: >
+      The scale and composition of code training corpora. It carries the fact
+      that density varies and nothing about what the model does with it --
+      GH-100 split the spine claim that had it doing both, since a corpus
+      paper cannot support a claim about model behaviour.
   - id: box1976
     role: anchor
     note: all models are wrong, some are useful -- the framing for treating the model as an approximation
@@ -78,8 +82,10 @@ content:
     cites: [vaswani2017]
   - say: "What looks like reasoning is interpolation: the model finds the point in its learned space most consistent with the context it was given."
     cites: [xie2021, olsson2022, akyurek2022, vonoswald2023]
-  - say: "Interpolation is reliable where training data is dense and unreliable where it is sparse, and the model does not distinguish the two cases."
+  - say: "Training corpora are enormous and very unevenly distributed across languages and domains, which is what makes density a property that varies rather than a constant."
     cites: [kocetkov2022]
+  - say: "Interpolation is reliable where that data is dense and unreliable where it is sparse, and the model does not distinguish the two cases -- which follows from the mechanism the previous claims establish rather than from a measurement of corpora."
+    cites: [xie2021, akyurek2022]
   - say: "Tokens and the context window are hard mechanical limits, and position inside the window changes what the model actually uses."
     cites: [liu2023]
   - say: "The four failure modes follow from the mechanism rather than from bugs."
@@ -110,7 +116,7 @@ links:
   requires: [C1.3, C1.4]
   supports: [C1.6, C3.1, C4.1, C4.2]
 gaps:
-  - "The split from 05-how-the-machine-works.md must be executed before this SRD can be checked against a draft: the agentic-loop material moves to C1.4, and both chapters need their citations re-divided."
+  - "Resolved at GH-10: 05-how-the-machine-works.md was split, the agentic-loop material moved to C1.4, and the citations were re-divided. The file no longer exists and this SRD is checked against a draft."
   - "No citation for the four failure modes as a set; they are the author's taxonomy, and each is separately supported. State that plainly rather than implying a source."
 acceptance:
   - Every citation id resolves in references.yaml.

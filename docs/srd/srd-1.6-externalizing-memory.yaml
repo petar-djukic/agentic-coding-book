@@ -74,6 +74,8 @@ content:
     cites: []
   - say: "This is the mechanism behind every artifact the rest of the book asks for. The artifacts are not process ceremony; they are the only memory the system has."
     cites: []
+  - say: "The mechanisms have been surveyed and grouped -- compression, retrieval, reflection, hierarchical context, learned management -- and what this book asks for is the plainest of them: files a person can read."
+    cites: [du2026]
   - say: "The programmer is themselves a memory device, supplying the missing context each session by answering questions and correcting course."
     cites: []
   - say: "The moment the human leaves the loop is the moment that stops. What was carried in their head is either written down or it is gone, and the loop proceeds on what remains."

@@ -85,7 +85,7 @@ links:
   requires: [C1.3]
   supports: [C1.5, C1.6, C2.4, C3.1]
 gaps:
-  - "The figure cannot be drawn until GH-21 resolves whether figures are Mermaid or PlantUML. This chapter is the forcing function for that decision."
+  - "Resolved: GH-21 settled on PlantUML and the figure exists as figures/fig-4-1-harness-sequence.puml, referenced from the prose as Figure 4.1. This chapter was the forcing function for that decision, which is why the entry is kept rather than deleted."
   - "No citation for context-assembly strategies specifically; liu2023 covers position effects but not how harnesses choose what to include."
 acceptance:
   - Every citation id resolves in references.yaml.

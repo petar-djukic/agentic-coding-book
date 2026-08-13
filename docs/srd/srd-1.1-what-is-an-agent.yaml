@@ -51,6 +51,8 @@ citations:
 content:
   - say: "The word 'agent' is applied to autocomplete, to chat wrappers, and to systems that rewrite a codebase overnight. A definition that covers all three carries no information."
     cites: []
+  - say: "The term was already contested when it was surveyed in 1995, split between a weak notion -- autonomy, social ability, reactivity, pro-activeness -- and a strong one adding beliefs and intentions. This book's structural definition is a choice among existing ones rather than a coinage."
+    cites: [wooldridge1995]
   - say: "An agent is a state machine plus a set of tools. The state machine decides what to do next; the tools are how it acts on anything outside itself."
     cites: []
   - say: "Declarative agents make the skeleton visible: the states, the transitions, and the tool boundary are written down rather than implied by a framework's control flow."
@@ -88,6 +90,13 @@ links:
   requires: []
   supports: [C1.2, C1.3]
 gaps:
+  - >
+    A-C6, added at GH-100 once wooldridge1995 reached the content spine. The
+    chapter takes the weak notion of agency and leaves the strong one behind:
+    beliefs, intentions and knowledge are attributes this book never ascribes
+    to an agent, and the state-machine definition is deliberately mentalism-
+    free. Borrowing half a distinction without saying which half is the defect
+    A-C6 names, and the chapter has to state it where the survey is cited.
   - >
     Checked at drafting (GH-6): the design-patterns monograph is still
     unpublished source -- "Design Patterns for Declarative Agents: Eleven
