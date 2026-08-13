@@ -99,8 +99,8 @@ content:
   - say: "The first pressure is concurrent writers, and a file answers it by refusing: one writer, enforced, is a design rather than a limitation until the loop genuinely needs two."
     cites: [kung1981]
   - say: "The second is queries, which arrive when the question becomes about the run rather than about a task."
-    cites: [maddox2016]
-  - say: "The third is audit -- what the board said at a past moment -- which a versioned store answers and a file answers only if every write was committed."
+    cites: []
+  - say: "The third is audit -- what the board said at a past moment -- which a versioned store answers with branching and history as first-class operations, and a file answers only if every write was committed."
     cites: [maddox2016]
   - say: "None of the three is hypothetical, and none of them arrives on schedule, so the graduation is triggered by a condition the reader can check rather than by a size."
     cites: []

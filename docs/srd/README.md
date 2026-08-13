@@ -72,6 +72,15 @@ demanded `agentic_loop`, which C1.4 introduces, and `srd-1.6` demanded
 | `gaps` | corpus holes worth filling before or during drafting |
 | `acceptance` | drafting-readiness checks |
 
+## Figures are pinned to a snapshot
+
+Every number a chapter states names the dataset it came from, and those
+datasets are a snapshot rather than a live total. The policy, the snapshot's
+contents, and the reason for it are recorded in the header of
+[../../outline.yaml](../../outline.yaml) (GH-71). Two consequences for a
+drafter: a figure that cannot name its file does not go in, and a per-turn
+figure covers roughly a quarter of the corpus and has to say so.
+
 ## The drafting contract
 
 1. **The SRD comes first.** A chapter is not drafted before its SRD exists

@@ -111,8 +111,10 @@ content:
     cites: []
   - say: "Each produced a confident number, which is worse than producing none, because nothing about a wrong total looks wrong."
     cites: [avizienis2004]
-  - say: "So the last discipline is checking the measurement against the source it claims to summarise, on a schedule rather than on suspicion."
+  - say: "What goes in the report is itself a choice, and a metric that is easy to compute and easy to misread will be misread."
     cites: [jones1978]
+  - say: "So the last discipline is checking the measurement against the source it claims to summarise, on a schedule rather than on suspicion."
+    cites: []
 apparatus:
   objectives:
     - Produce a run report from records rather than recollection.

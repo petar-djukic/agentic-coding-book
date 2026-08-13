@@ -9,7 +9,7 @@ A build thread runs through every part: the reader builds a small
 declarative coding harness and grows it into an orchestrator by Part V.
 
 The material comes from production runs rather than demos — 44,628 lines
-of Go generated across 31 pipeline runs, and 123 Unix utilities
+of production Go at peak across 60 pipeline runs, and 107 Unix utilities
 regenerated from specification and verified against the GNU reference
 binaries by differential testing.
 
@@ -66,7 +66,7 @@ holds the term definitions used across the book.
 ## The evidence base
 
 Claims trace to public repositories:
-[go-unix-utils](https://github.com/petar-djukic/go-unix-utils) (123 Unix
+[go-unix-utils](https://github.com/petar-djukic/go-unix-utils) (107 Unix
 utilities generated from specification, verified against GNU binaries),
 [cobbler-scaffold](https://github.com/petar-djukic/cobbler-scaffold)
 (the specifications and constitutions governing generation), and

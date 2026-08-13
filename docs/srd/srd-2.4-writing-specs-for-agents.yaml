@@ -50,7 +50,7 @@ objective: >
 prior_material:
   - path: go-unix-utils
     offers: >
-      docs/specs/software-requirements/, the PRD corpus 123 utilities were
+      docs/specs/software-requirements/, the PRD corpus 107 utilities were
       generated from. srd001-testutils.yaml is the anatomy case: it states the
       problem, then carries the full API and a canonical usage fragment inline,
       explicitly so that an agent implementing a cmd/ package reads one document

@@ -47,7 +47,7 @@ objective: >
   ecosystem coverage.
 prior_material:
   - path: go-unix-utils
-    offers: 123 utilities generated in Go and verified against GNU reference binaries, as the worked case for a strong pairing
+    offers: 107 utilities generated in Go and verified against GNU reference binaries, as the worked case for a strong pairing
   - path: cobbler-scaffold
     offers: generation runs where the compile-fix cycle count per task was recorded
 citations:

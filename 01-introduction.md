@@ -8,9 +8,11 @@ one typing, you are the one specifying, verifying, and orchestrating.
 This book teaches experienced programmers how to work across the full
 range of that shift — from a single interactive session to autonomous
 pipelines running hundreds of tasks. The material draws on production
-runs rather than demos: 44,628 lines of Go generated across 31 pipeline
-runs, and 123 Unix utilities regenerated from specification and verified
-against the GNU reference binaries by differential testing. Two open
+runs rather than demos: 60 pipeline runs producing 2,706 tasks and, at
+their peak, 45,789 lines of production Go, with 107 Unix utilities
+regenerated from specification and verified against the GNU reference
+binaries by differential testing. Those figures are a snapshot of the
+corpus recorded in `analysis/datasets/`, not a running total. Two open
 repositories — [cobbler-scaffold](https://github.com/petar-djukic/cobbler-scaffold)
 and [go-unix-utils](https://github.com/petar-djukic/go-unix-utils) —
 serve as both the subject and the laboratory.

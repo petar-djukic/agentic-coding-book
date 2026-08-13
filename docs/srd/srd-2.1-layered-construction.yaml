@@ -50,7 +50,7 @@ prior_material:
   - path: cobbler-scaffold
     offers: an orchestrator that runs the outer loop explicitly, with the gate between increments visible in code
   - path: go-unix-utils
-    offers: 123 utilities built as increments, each verified against a reference binary before the next began
+    offers: 107 utilities built as increments, each verified against a reference binary before the next began
 citations:
   - id: hunt1999
     role: anchor
