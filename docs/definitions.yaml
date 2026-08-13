@@ -739,7 +739,7 @@ knowledge_manager:
     structured, and when it is refreshed. Different phases need different
     context.
   coding_analogue: "context assembly, retrieval, memory management"
-  introduced: P5
+  introduced: C5.9
   see_also: [context_window, domain_knowledge, externalized_memory]
 
 creator:

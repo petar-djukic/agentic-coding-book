@@ -1009,3 +1009,82 @@ references:
     offers a blackboard that a file cannot: concurrent writers and a queryable
     history in the same store. C5.5 cites it for what the graduation buys,
     since the corpus has no versioned-database blackboard to point at.
+
+- id: lamport1978
+  type: article-journal
+  author:
+  - {family: Lamport, given: Leslie}
+  title: Time, Clocks, and the Ordering of Events in a Distributed System
+  container-title: Communications of the ACM
+  volume: 21
+  issue: 7
+  page: 558-565
+  DOI: 10.1145/359545.359563
+  issued: {year: 1978}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex; 8,461 citations. Events in a
+    distributed system have no total order unless one is imposed, so "before"
+    is a relation that has to be constructed. C5.8 cites it because an
+    orchestrator reading a tracker is asking what happened first across
+    processes that share no clock, which is the same question.
+
+- id: avizienis2004
+  type: article-journal
+  author:
+  - {family: Avizienis, given: Algirdas}
+  - {family: Laprie, given: Jean-Claude}
+  - {family: Randell, given: Brian}
+  - {family: Landwehr, given: Carl}
+  title: Basic Concepts and Taxonomy of Dependable and Secure Computing
+  container-title: IEEE Transactions on Dependable and Secure Computing
+  volume: 1
+  issue: 1
+  page: 11-33
+  DOI: 10.1109/TDSC.2004.2
+  issued: {year: 2004}
+  note: >
+    Verified 2026-08-14 (GH-69) via Crossref. The fault-error-failure
+    vocabulary: a fault is the cause, an error the corrupted state, a failure
+    the visible deviation. C5.8 borrows the distinction because the corpus's
+    defects are mostly errors that took hours to become failures, and a
+    chapter about failure modes needs the word to mean one thing.
+
+- id: metcalfe1976
+  type: article-journal
+  author:
+  - {family: Metcalfe, given: Robert M.}
+  - {family: Boggs, given: David R.}
+  title: "Ethernet: Distributed Packet Switching for Local Computer Networks"
+  container-title: Communications of the ACM
+  volume: 19
+  issue: 7
+  page: 395-404
+  DOI: 10.1145/360248.360253
+  issued: {year: 1976}
+  note: >
+    Verified 2026-08-14 (GH-69) via Crossref. The origin of exponential
+    backoff: contending stations retry after a randomised, growing interval
+    rather than immediately. C5.8 cites it against a recorded defect -- a
+    generator loop that retried failing tasks with no backoff at all -- so the
+    fix has a fifty-year-old name rather than being invented locally.
+
+- id: saltzer1984
+  type: article-journal
+  author:
+  - {family: Saltzer, given: Jerome H.}
+  - {family: Reed, given: David P.}
+  - {family: Clark, given: David D.}
+  title: End-to-End Arguments in System Design
+  container-title: ACM Transactions on Computer Systems
+  volume: 2
+  issue: 4
+  page: 277-288
+  DOI: 10.1145/357401.357402
+  issued: {year: 1984}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex; 2,128 citations for the
+    canonical version. A correctness check belongs where the knowledge to make
+    it lives, and lower layers can only make it cheaper, not sufficient. C5.7
+    cites it for where state consistency has to be enforced: the orchestrator
+    can commit after every write, and only the next run's check can tell
+    whether the state is true.

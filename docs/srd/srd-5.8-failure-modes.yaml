@@ -1,0 +1,167 @@
+# SRD 5.8 -- Failure modes.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+#
+# Every failure in this chapter names a recorded defect. The issue numbers
+# were checked at GH-69 and all resolve; one outline label does not match its
+# issue, and this SRD carries the correction.
+
+meta:
+  chapter: C5.8
+  title: Failure modes
+  parent: P5
+section_goal: show that an orchestrator's failures are the standard distributed-systems failures, so the reader can name them and reach for fixes that already exist
+goals:
+  - id: G4.22
+    goal: The reader can classify an orchestration failure as a fault, an error, or a failure, and stop calling all three the same thing.
+  - id: G4.23
+    goal: The reader can recognise the four recurring shapes -- races, stale work retried, retries without backoff, and premature completion -- in their own run logs.
+  - id: G4.24
+    goal: The reader can apply the standard fix for each, knowing it has a name older than the problem.
+chain:
+  - id: Q7
+    owns: partial
+    note: >
+      Q7's answer ends with "imports its failure modes", and this is the
+      chapter that collects on that. Its contribution is that none of the
+      failures is new, which is the most useful thing the chapter can tell a
+      reader who thinks agent orchestration is unprecedented.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S3, V-S5, V-S6, V-P1, V-P2]
+    note: >
+      V-S3: the four shapes are stated before any is treated. V-P2: no failure
+      is dramatised, and none is presented as evidence that orchestration is
+      unwise -- C5.1 already priced that.
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C2, A-C3, A-C6, A-X1]
+    note: >
+      A-C3 governs the chapter's shape: every failure is a recorded defect
+      first and a citation second. A-C6: four shapes from one corpus is not a
+      taxonomy, and the chapter says so rather than implying completeness.
+objective: >
+  It shows the reader that they are debugging a distributed system and that
+  this is good news, because the failures have names and the fixes are old. It
+  first borrows the vocabulary that makes the discussion possible -- fault,
+  error, failure as three different things -- because the corpus's defects are
+  mostly errors that surfaced as failures hours later somewhere else. It then
+  takes four recorded shapes, each with its issue: a race between an agent's
+  read of the tracker and the tracker's actual state, a task branch left from
+  a previous attempt that made a retry loop forever, a retry path with no
+  backoff at all, and a completion marked for a whole release after a single
+  task. Each gets its standard fix by name. The chapter closes by refusing to
+  present four defects from one corpus as a taxonomy, and points at the
+  published one for readers who want coverage rather than depth.
+prior_material:
+  - path: cobbler-scaffold
+    offers: >
+      Four recorded defects with fixes: GH-1475, a generator that stopped
+      prematurely because its open-issue check raced the GitHub API after
+      closing the last task; GH-1561, a stitch pass that looped forever when a
+      task branch survived a previous failed attempt; GH-1562, a generator
+      loop that retried failing tasks with no backoff; and GH-1361, a stitch
+      pass that marked an entire release implemented after completing one
+      task. All four are closed, so each failure can be shown beside what
+      changed.
+  - path: go-unix-utils
+    offers: >
+      analysis/datasets/runs.csv as the population these defects occurred in
+      -- 60 runs, 2,718 tasks over 2,621 unique task ids, 97 retries, and 7
+      runs ending abandoned -- which is what lets the chapter say how common a
+      shape was rather than only that it happened.
+citations:
+  - id: avizienis2004
+    role: anchor
+    note: >
+      Fault, error, failure as distinct things. The chapter's organising
+      vocabulary, and the reason it can say a defect was present for hours
+      before anything looked wrong without that sounding like a paradox.
+  - id: lamport1978
+    role: evidence
+    note: >
+      Why the race is not a bug in the tracker. Two processes with no shared
+      clock have no total order of events unless one is imposed, so an agent
+      asking "are there open issues" is asking a question whose answer has no
+      single truth at that instant.
+  - id: metcalfe1976
+    role: evidence
+    note: >
+      Exponential backoff, cited against the defect that had none. The fix for
+      GH-1562 is fifty years old, which is the chapter's point in its clearest
+      form.
+  - id: kung1981
+    role: evidence
+    note: the validate-before-commit step whose absence produces the race, carried forward from C5.4 rather than re-derived
+  - id: cemri2025
+    role: survey
+    note: >
+      The published taxonomy -- 14 modes in three categories across seven
+      frameworks -- which the chapter points at precisely because four defects
+      from one corpus are not a taxonomy.
+content:
+  - say: "An orchestrator's failures are the failures of any distributed system, which is the useful news: they have names and the fixes predate the problem."
+    cites: []
+  - say: "Three words are needed first, because the corpus's defects were mostly wrong state that stayed invisible for hours: the fault is the cause, the error is the corrupted state, the failure is what someone finally sees."
+    cites: [avizienis2004]
+  - say: "The first shape is a race: an agent checked whether work remained and acted on an answer that was already out of date."
+    cites: [lamport1978]
+  - say: "That is optimistic concurrency without validation, and the fix is to re-check under the condition that matters rather than to check earlier."
+    cites: [kung1981]
+  - say: "The second is stale work: a branch left by a previous attempt made the retry impossible, and the loop retried anyway, forever."
+    cites: []
+  - say: "The third is retry without backoff, whose fix has been in the literature since Ethernet and was simply absent."
+    cites: [metcalfe1976]
+  - say: "The fourth is premature completion: one task finished and a whole release was marked implemented, which is a failure of scope rather than of timing."
+    cites: []
+  - say: "Four shapes from one corpus is not a taxonomy, and a reader who wants coverage should read the one built from 1,600 traces across seven frameworks."
+    cites: [cemri2025]
+apparatus:
+  objectives:
+    - Distinguish fault, error, and failure, and use the words for one thing each.
+    - Recognise the four recurring shapes in a run log.
+    - Apply the standard fix for each, by its existing name.
+  sidebars:
+    - type: Common Error
+      about: reading a check's answer as still true when it is acted on, which is the race in its most general form and the hardest to see in one's own code
+    - type: Good Practice
+      about: making every retry path back off and cap, so a failing task costs a bounded amount rather than an unbounded one
+    - type: From the Field
+      about: the run that looped on a stale branch, and how long it ran before anyone noticed it was making no progress
+  key_terms: []
+  key_terms_note: >
+    definitions.yaml assigns no term here. The fault-error-failure vocabulary
+    is borrowed with attribution rather than coined, so it does not enter the
+    glossary as this book's (contract rule 2).
+figures:
+  - shows: "The four failure shapes as a timeline each, marking where the fault occurred, where the state became wrong, and where anyone could have seen it."
+    status: planned
+links:
+  requires: [C5.4, C5.6, C5.7]
+  supports: [C5.9, C6.3]
+gaps:
+  - >
+    outline.yaml mislabels GH-1361 as "premature stops". The issue is a stitch
+    pass marking an entire release implemented after one task, which is
+    premature *completion*; the premature stop is GH-1475, which the outline
+    files under race conditions -- correctly, since it is one, but the two
+    descriptions have been swapped in effect. This SRD uses the corrected
+    labels and the chapter must too. All nine issue numbers Part V cites were
+    checked at GH-69 and all resolve with matching subject matter, so this is
+    a labelling error rather than the numeric-claims class GH-92 covers.
+  - >
+    How common each shape was is not established. runs.csv gives the
+    population -- 60 runs, 97 retries across 2,718 tasks, 7 runs abandoned --
+    but nothing joins a defect to the runs it occurred in, so the chapter can
+    say a shape happened and not how often. Either the run logs are searched
+    for each signature during drafting, or the chapter presents four cases
+    without frequency and says so (A-C6).
+  - >
+    The boundary with C6.3 needs one sentence. This chapter names failures
+    from the inside, knowing what to look for; C6.3 reads logs without knowing
+    in advance. If both chapters teach log reading the book does it twice, so
+    C5.8 should name the shapes and C6.3 should own finding them.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The four shapes are stated before any is treated (V-S3), and each names its recorded defect with the corrected label.
+  - Each failure's fix is given by its existing name, since the chapter's argument is that none of them is new.
+  - The chapter states that four defects from one corpus are not a taxonomy and points at the published one (A-C6).
+  - No failure is dramatised or used to argue against orchestration (V-P2); the price was stated in C5.1 and is not re-charged here.

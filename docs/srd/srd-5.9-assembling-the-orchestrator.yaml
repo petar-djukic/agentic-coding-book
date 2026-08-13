@@ -1,0 +1,169 @@
+# SRD 5.9 -- Assembling the orchestrator.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+#
+# Closes Part V and discharges its build promise. This SRD claims
+# `knowledge_manager` for C5.9: the assembled orchestrator has a part that
+# decides what each sub-agent sees, and this is where it is named.
+
+meta:
+  chapter: C5.9
+  title: Assembling the orchestrator
+  parent: P5
+section_goal: put the parts into one loop the reader runs, and say what building it themselves gave them that adopting one would not
+goals:
+  - id: G4.25
+    goal: The reader can run a loop in which a planner proposes, a generator implements in isolation, and the board carries everything between them.
+  - id: G4.26
+    goal: The reader can name the fifth part -- the one deciding what each sub-agent sees -- and say why it is not the same as the prompt.
+  - id: G4.27
+    goal: The reader can choose between driving an agent as a subprocess and driving it through an SDK, from what each gives up.
+  - id: G6.11
+    goal: "The reader has assembled the orchestrator: planner, generator, blackboard, lifecycle manager, and context assembly in one loop that runs unattended and stops on a gate."
+chain:
+  - id: Q7
+    owns: partial
+    note: >
+      C5.9 closes Q7. The answer -- multiple agents coordinated through shared
+      state -- has been built rather than described by the end of it, which is
+      what distinguishes this part's claim from an architecture diagram.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S4, V-S5, V-S6, V-P1, V-P2]
+    note: >
+      V-S5 governs a build chapter. V-P2: the iteration history is reported
+      without triumph -- most of what it shows is failure, and a chapter that
+      makes building look easy will get readers to abandon at run four.
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C2, A-C4, A-C5, A-C6]
+    note: >
+      A-C2: the run history names its dataset and its date. A-C5: the CLI and
+      SDK comparison is the most perishable claim in the part and is dated
+      where it is made.
+objective: >
+  It assembles what the part built and runs it. The planner proposes, the
+  generator implements one task in a worktree, the board carries state and
+  claims between them, and the lifecycle manager ends what does not finish.
+  The chapter then names the fifth part, which readers routinely mistake for
+  the prompt: something decides what each sub-agent sees -- which
+  specification, which files, which prior results -- and that decision is
+  separable from the role and changes the output more than the wording does.
+  It treats the execution boundary next, where a sub-agent driven as a
+  subprocess and one driven through an SDK differ in what they give up, and
+  dates the comparison because it will not survive the edition. It closes on
+  the iteration history, honestly: the orchestrator behind this book's corpus
+  took dozens of runs to become useful, most of them producing nothing, and
+  the reason to build one anyway is that the parts are where the judgement
+  lives.
+prior_material:
+  - path: cobbler-scaffold
+    offers: >
+      The assembled orchestrator, including the part this chapter names:
+      a dedicated context-assembly package that builds each sub-agent's
+      prompt, constitution, and file set separately from the role definition.
+      It also carries the execution-mode boundary as implemented -- a
+      subprocess mode and an SDK mode selected by configuration, with worktree
+      isolation preserved across both -- and GH-687, which records what the
+      SDK mode was expected to buy: native streaming, direct token accounting,
+      and no process-level failures.
+  - path: go-unix-utils
+    offers: >
+      analysis/datasets/runs.csv as the iteration history in verifiable form:
+      60 runs totalling 2,718 tasks over 2,621 unique task ids, 97 retries,
+      1,951 wall-clock hours and $3,677.06, ending 37 merged, 8 finished, 8 in
+      progress and 7 abandoned -- with 23 of the 60 producing no tasks at all.
+  - path: meshintelligence.substack.com/three-commands-to-a-crude-orchestrator
+    offers: the smallest assembly that works -- three commands and a tracker -- as the counterweight to a chapter that could otherwise imply a large system is required
+  - path: meshintelligence.substack.com/how-to-glm-52-on-opencode
+    offers: >
+      The same loop driven with a different model and a different CLI, which is
+      the evidence that the assembly is the durable part and the model is
+      swappable. Also the cost framing, which C6.4 owns and this chapter
+      should not take.
+citations:
+  - id: latentpatterns-harness
+    role: anchor
+    note: >
+      The harness responsibilities the orchestrator is now composing at a
+      second level: it assembles context for each sub-agent the way a harness
+      assembles context for each turn. Naming that correspondence is what
+      makes the fifth part obvious rather than arbitrary.
+  - id: liu2023
+    role: evidence
+    note: why the context decision outweighs the wording -- what is included and where it sits determines what is attended to, so the assembler is a bigger lever than the prompt
+  - id: cemri2025
+    role: evidence
+    note: system-design failures as the category that assembly decisions produce, which is the argument for treating assembly as design rather than as plumbing
+  - id: kambhampati2024
+    role: context
+    note: the planner-with-verifiers shape, carried forward from C5.2, now visible as the whole loop rather than as a claim about one role
+content:
+  - say: "The loop is the parts in order: the planner proposes onto the board, the generator claims one task and works it in a worktree, the lifecycle manager ends what stalls, and the board carries everything between them."
+    cites: [kambhampati2024]
+  - say: "A fifth part has been present since the first chapter without being named: something decides what each sub-agent sees, and that is not the same decision as what the prompt says."
+    cites: [latentpatterns-harness]
+  - say: "It matters more than the wording, because what is included and where it sits determines what the model attends to."
+    cites: [liu2023]
+  - say: "Assembly decisions are design decisions, and the failures they produce are catalogued as such rather than as accidents."
+    cites: [cemri2025]
+  - say: "Driving a sub-agent as a subprocess and driving it through an SDK differ in what they give up -- process isolation against streaming and token accounting -- and the trade is current at the date it is stated."
+    cites: []
+  - say: "The history behind this book's corpus is 60 runs, of which 23 produced no tasks at all and 7 were abandoned, which is what building one actually looks like."
+    cites: []
+  - say: "The reason to build it anyway is that every part of it is a decision, and adopting someone else's orchestrator means adopting their answers to all of them."
+    cites: []
+apparatus:
+  objectives:
+    - Run a loop with a planner, a generator, a board, and a lifecycle manager.
+    - Name the context-assembly part and say why it is separable from the prompt.
+    - Choose between subprocess and SDK execution from what each gives up.
+    - Read an iteration history without reading it as a success story.
+  sidebars:
+    - type: Good Practice
+      about: keeping context assembly separate from the role definition, so what a sub-agent sees can be changed without editing what it is
+    - type: Common Error
+      about: tuning prompts when the problem is what was assembled into the context, which produces a lot of rewording and no change in output
+    - type: From the Field
+      about: what the early runs of the author's orchestrator actually produced, including the ones that produced nothing
+  key_terms: [knowledge_manager]
+figures:
+  - shows: "The assembled loop with all five parts and the board at the centre, annotated with which chapter built each part."
+    status: planned
+links:
+  requires: [C5.2, C5.3, C5.5, C5.6, C5.7, C5.8]
+  supports: [C6.1, C6.4, C6.5]
+gaps:
+  - >
+    outline.yaml calls for "the 31-tries iteration story" and no artifact
+    supports it. A search of go-unix-utils, cobbler-scaffold and this
+    repository at GH-69 found no record of 31 tries, 31 attempts, or a
+    thirty-one-iteration sequence; runs.csv holds 60 runs and a run labelled
+    run31 exists, which is the likely source of the number by confusion. This
+    SRD is written against the verifiable history instead -- 60 runs, 23 with
+    no tasks, 7 abandoned -- which tells the same story with a citation behind
+    it. If the author's own account of the iteration exists, it is field
+    material this contract would rather have; until then the chapter uses the
+    dataset. Related to GH-92, which covers outline.yaml's numeric claims.
+  - >
+    `knowledge_manager` is assigned to this chapter by GH-69, having been
+    recorded at part level with no owner. The assignment is defensible --
+    cobbler-scaffold implements context assembly as its own package, and this
+    is the chapter where the assembled parts are named -- but four sibling
+    roles remain orphaned: `critic`, `analyst`, `coordinator`, and `creator`
+    appear in definitions.yaml and nowhere else. Not in outline.yaml, not in
+    any drafted chapter, not in any SRD's content. They are vocabulary from an
+    earlier framing and should be struck or explicitly marked as companion-
+    volume terms rather than left looking like book vocabulary. Filed as
+    GH-94.
+  - >
+    The CLI-versus-SDK comparison is the most perishable claim in Part V and
+    the chapter should be written so it can be updated in one place. GH-687
+    records what the SDK mode was expected to buy; whether it delivered is not
+    recorded anywhere this SRD found, so the chapter states the trade and its
+    date rather than a verdict.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The reader runs an assembled loop by the end (V-S5); the chapter does not describe an architecture it never executes.
+  - "`knowledge_manager` is defined at first appearance and appears in the Key Terms table (V-S4)."
+  - The iteration history names its dataset and date (A-C2) and is presented without triumph (V-P2) -- most of what it records is failure.
+  - The execution-mode comparison is dated (A-C5) and stated as a trade rather than a recommendation.
+  - Part V closes having built the thing it named in C5.1, which is what distinguishes its claim from a survey.
