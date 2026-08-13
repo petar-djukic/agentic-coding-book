@@ -120,7 +120,7 @@ gaps:
     verifiable shape instead. Verified 2026-08-13 at GH-68.
   - >
     This is the second outline figure to fail verification -- GH-66 found "sort
-    R4: 104 turns" unreproducible for C2.7. Filed as a follow-up covering
+    R4: 104 turns" unreproducible for C2.7. Filed as GH-92, covering
     outline.yaml's numeric claims as a class, since two of the four checked do
     not reproduce and the remaining two cannot be checked against
     analysis/datasets/runs.csv, whose LOC columns are net deltas rather than
