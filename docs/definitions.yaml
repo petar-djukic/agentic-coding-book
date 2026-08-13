@@ -600,6 +600,7 @@ transient_code:
     it does not matter. Like a compiled binary: correct, necessary, not the
     thing you version.
   introduced: C2.1
+  status: reference
   see_also: [specification, software_entropy]
 
 software_entropy:

@@ -90,7 +90,7 @@ apparatus:
       about: describing the whole system in a single prompt and expecting one generation pass to produce it
     - type: Good Practice
       about: defining what end-to-end means for this system before generation starts, and writing the increment plan down
-  key_terms: [inner_loop, outer_loop, tracer_bullet, verification_gate]
+  key_terms: [inner_loop, outer_loop, tracer_bullet, verification_gate, increment, software_entropy]
 figures:
   - shows: "The outer loop governing a sequence of increments, each containing an inner loop, with a verification gate between them."
     status: drawn

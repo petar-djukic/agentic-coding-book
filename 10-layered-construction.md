@@ -22,7 +22,7 @@ The spiral has two concentric cycles.
 
 > **Definition: Outer loop** — the broader cycle that governs the project: gather requirements, make architectural decisions, decompose the system into layers, run the inner loop on each layer, validate that the layer is sound, then proceed to the next layer.
 
-The inner loop is the one people think about. The outer loop is the one that determines whether the project succeeds.
+The inner loop is the one people think about. The outer loop is the one that determines whether the project succeeds. Figure 7.1 draws both, with the gate between increments that the outer loop owns.
 
 **Figure 7.1** The inner and outer loops of software construction.
 
@@ -133,7 +133,7 @@ In practice, gate failures fall into two categories:
 
 **Specification defects.** The increment was built correctly according to the spec, but the spec was wrong. The endpoint returns exactly what the spec said, but the spec described the wrong behavior. The fix is to update the specification and regenerate. This is a normal part of iterative development — the outer loop's purpose is to surface these defects early, when they are cheap.
 
-**Generation defects.** The increment does not match the spec. The agent guessed wrong, misinterpreted a requirement, or introduced a structural decision that contradicts the specification. The fix is to improve the specification (make it less ambiguous) and regenerate. This is where the techniques in Part II (Requirements) apply.
+**Generation defects.** The increment does not match the spec. The agent guessed wrong, misinterpreted a requirement, or introduced a structural decision that contradicts the specification. The fix is to improve the specification (make it less ambiguous) and regenerate. The chapters that follow are about making that fix: where requirements come from, how a specification is written so an agent executes it, and how a defect in generated code is traced back to the specification that caused it.
 
 ### 7.5.2 Structural Quality Over Time
 
@@ -173,5 +173,7 @@ Software development has always been iterative: an inner loop (specify, write, t
 | **Outer loop** | The per-project development cycle: requirements, architecture, increment planning, validation. Determines construction order and increment boundaries |
 | **Tracer bullet** | The thinnest slice of functionality that works end-to-end through the system, proving the architecture before it is complete |
 | **Verification gate** | The set of automated checks that must pass after an increment before construction proceeds to the next |
+| **Increment** | One pass through the outer loop, adding a working end-to-end slice. Each increment is verified before the next builds on it |
+| **Software entropy** | The tendency of code to decay as changes accumulate. With generated code it arrives per increment rather than over months |
 | **Agent harness** | The orchestration layer around a language model that manages prompts, tool execution, policy checks, and loop control for one task at a time |
 

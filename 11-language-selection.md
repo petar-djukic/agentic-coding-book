@@ -30,7 +30,7 @@ The model interpolates from patterns in its training data (Chapter 5, Section 5.
 
 The training data is not evenly distributed across languages. The Stack, the largest permissively licensed source code dataset, contains 64GB of Python, roughly 1GB of OCaml, and roughly 0.5GB of Scheme [@kocetkov2022]. A 64:1 ratio in training data produces a measurable difference in generation quality.
 
-Code Llama 70B pass@1 rates on MultiPL-E HumanEval, which translates the same benchmark problems to multiple languages [@codellama2023]:
+Code Llama 70B pass@1 rates on MultiPL-E HumanEval, which translates the same benchmark problems to multiple languages, as published in 2023 [@codellama2023]:
 
 | Language | pass@1 |
 |---|---|
@@ -46,7 +46,7 @@ The same model, the same problems, different languages. Python and C++ are withi
 These numbers are misleading if read as a language recommendation. Pass@1 measures first-attempt success on isolated benchmark problems — short functions with clear specifications and test cases provided. It does not measure what happens next: how quickly errors are caught, how many survive into the verification gate, how many reach production. Python leads on benchmarks because the model has the most Python training data. It does not follow that Python is the best choice for agent-based development. Section 8.4 explains why.
 
 
-The gap is wider for low-resource languages. StarCoderBase-15B pass@1 rates [@cassano2024-transfer]:
+The gap is wider for low-resource languages. StarCoderBase-15B pass@1 rates, published in 2024 [@cassano2024-transfer]:
 
 | Language | pass@1 |
 |---|---|
@@ -77,7 +77,7 @@ Go is the clearest example. Go was designed to be simple — one way to format c
 
 C++ is the opposite. C++ has templates, template metaprogramming, SFINAE, concepts, constexpr, multiple inheritance, operator overloading, and a dozen ways to express the same pattern. The training data for C++ is diverse — the same problem solved in fundamentally different styles depending on the codebase, the era, and the programmer's preferences. The model interpolates from a diffuse cloud of distant patterns, and the interpolation is less reliable.
 
-This is not a claim about language quality. C++ is a powerful language precisely because it offers choice. But choice creates variance in the training data, and variance degrades interpolation.
+This is not a claim about language quality. The expressiveness is the point of C++, and it is exactly what offers the choice. But choice creates variance in the training data, and variance degrades interpolation.
 
 > **From the Field:** I spent 20 years becoming a C++ craftsman. Templates. Metaprogramming. Programming the compiler to write my code. Then I spent several days trying to get template metaprogramming to work with AI assistance. Each session, Claude delivered code with complete confidence. The compiler was less convinced. Research confirms the observation: LLM hallucinations in complex template scenarios can pass static checks and all test cases, failing only in production [@wang2024]. When I switched to Go, the same agent produced thousands of lines of reliable code. The language that removes mastery from the equation turns out to be the language that works best when mastery is not what is generating the code.
 
