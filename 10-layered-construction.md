@@ -48,14 +48,14 @@ The outer loop, which remains the programmer's job, looks like this:
 
 1. **Plan**: Gather requirements. Make architectural decisions. Identify the next increment — the thinnest slice of functionality that works end-to-end.
 2. **Build**: Run the inner loop on that increment. The agent generates code from the specification.
-3. **Verify**: Run the full verification pipeline — not just tests, but compilation, linting, coverage, security scanning, and specification conformance. This is more than the inner loop's quick compile-and-test cycle. It is a deliberate, thorough assessment of the increment as a whole.
+3. **Verify**: Run the full verification pipeline — compilation, linting, tests, coverage, security scanning, and specification conformance. This is more than the inner loop's quick compile-and-test cycle. It is a full assessment of the increment, run on purpose at the boundary rather than continuously.
 4. **Repair**: If verification finds defects, fix them. Repair is not the same as building — it operates on different context (error messages, failing tests, the original spec) and has different success criteria (previously-failing tests pass, no regressions introduced).
 5. **Improve**: After several increments, assess the accumulated code for structural quality. Identify inconsistencies, duplication, and drift from the architecture. Propose refactoring tasks that feed back into step 1.
 6. Repeat until the system is complete.
 
 The outer loop is where the programmer's experience, judgment, and architectural knowledge live. It is the thing the agent cannot generate for itself.
 
-> **From the Field:** The first time I ran an agent on a non-trivial project, I described the whole system and let it go. The code compiled. Some tests passed. But nothing actually worked end-to-end — the data model assumed one query pattern, the API assumed another, and the two did not meet. The second time, I built one feature all the way through: schema, query, endpoint, test. It was thin and incomplete, but it worked. Every subsequent feature built on a foundation I had already verified. The difference was not the agent. The difference was building end-to-end from the start.
+> **From the Field:** The first time I ran an agent on a project with more than a few moving parts, I described the whole system and let it go. The code compiled. Some tests passed. But nothing actually worked end-to-end — the data model assumed one query pattern, the API assumed another, and the two did not meet. The second time, I built one feature all the way through: schema, query, endpoint, test. It was thin and incomplete, but it worked. Every subsequent feature built on a foundation I had already verified. The difference was not the agent. The difference was building end-to-end from the start.
 
 ## 7.3 Why You Cannot Skip the Outer Loop
 
@@ -69,7 +69,7 @@ The cost of a defect increases with the amount of code built on top of it. A wro
 
 Agents are good enough at small tasks that the one-shot approach feels like it works. Describe a function, get a function. Describe a class, get a class. The programmer extrapolates: describe a system, get a system.
 
-The extrapolation fails because systems have internal dependencies that functions do not. A function is self-contained. A system has components that must agree with each other: the data model constrains the queries, the queries constrain the API, the API constrains the client. These constraints cross boundaries. When the agent generates everything at once, it resolves these constraints by guessing — and the guesses are consistent with each other but may not be consistent with the programmer's intent.
+Systems have internal dependencies that functions do not, which is where the extrapolation runs out. A function is self-contained, while a system has components that must agree with each other: the data model constrains the queries, the queries constrain the API, the API constrains the client. These constraints cross boundaries. When the agent generates everything at once, it resolves these constraints by guessing — and the guesses are consistent with each other but may not be consistent with the programmer's intent.
 
 The result compiles. The tests that the agent wrote for its own guesses pass. The system is internally consistent but externally wrong. The programmer discovers this only when trying to use the system for its intended purpose — at which point the fix requires reworking multiple components.
 
@@ -85,7 +85,7 @@ Tracer bullets say: build one feature through all the components. The data model
 
 ### 7.4.1 Why Tracer Bullets Work Better With Agents
 
-Agents generate code fast. This is an advantage when the code is correct and a liability when it is not. Horizontal layering maximizes the liability: the agent generates an entire data model layer — hundreds of lines — before any of it is tested against the layers that will use it. If the assumptions are wrong, hundreds of lines need rework.
+Agents write code quickly, and they write incorrect code at the same speed. Horizontal layering is where that hurts most, because the agent generates an entire data model layer — hundreds of lines — before any of it is tested against the layers that will use it. If the assumptions are wrong, hundreds of lines need rework.
 
 Tracer bullets limit the blast radius. Each increment is small. If the agent's assumptions are wrong, the programmer discovers it immediately — on the first end-to-end test — and the rework is bounded to one thin slice. The next increment benefits from the corrected assumptions.
 
@@ -107,7 +107,7 @@ Each increment boundary is a verification gate — a set of conditions that must
 
 > **Definition: Verification gate** — the set of automated checks that must pass after an increment before construction proceeds to the next. Gates prevent defects from accumulating across increments.
 
-A verification gate is not just "the tests pass." It is a deliberate checkpoint where the programmer asks: does this increment work end-to-end?
+A verification gate is not just "the tests pass." It is a checkpoint the programmer sets on purpose, and the question at it is whether this increment works end to end.
 
 The gate for a first increment of a web application might include:
 - The schema migration runs without errors
@@ -125,13 +125,13 @@ The specifics depend on the increment. The principle does not: every increment h
 
 ### 7.5.1 What Happens When a Gate Fails
 
-When a verification gate fails, the response is not to push through to the next increment. The response is to fix the current increment before proceeding. This is where the outer loop earns its value — a defect caught at a gate costs one increment of rework. A defect caught three increments later costs three increments of rework.
+When a verification gate fails, the response is not to push through to the next increment. The response is to fix the current increment before proceeding, and this is where the outer loop earns its value: a defect caught at a gate costs one increment of rework. A defect caught three increments later costs three increments of rework.
 
 Repair is a distinct activity from building. The context is different: the agent receives the error message, the failing test output, the relevant code, and the original specification — not a fresh task description. The success criterion is different: repair succeeds when previously-failing tests pass AND previously-passing tests still pass. The risk is different: a fix that introduces a regression is worse than the original defect.
 
 In practice, gate failures fall into two categories:
 
-**Specification defects.** The increment was built correctly according to the spec, but the spec was wrong. The endpoint returns exactly what the spec said, but the spec described the wrong behavior. The fix is to update the specification and regenerate. This is a normal part of iterative development — the outer loop's purpose is to surface these defects early, when they are cheap.
+**Specification defects.** The increment matches the spec and the spec was wrong. The endpoint returns exactly what the spec said, but the spec described the wrong behavior. The fix is to update the specification and regenerate. This is a normal part of iterative development — the outer loop's purpose is to surface these defects early, when they are cheap.
 
 **Generation defects.** The increment does not match the spec. The agent guessed wrong, misinterpreted a requirement, or introduced a structural decision that contradicts the specification. The fix is to improve the specification (make it less ambiguous) and regenerate. The chapters that follow are about making that fix: where requirements come from, how a specification is written so an agent executes it, and how a defect in generated code is traced back to the specification that caused it.
 
@@ -139,15 +139,15 @@ In practice, gate failures fall into two categories:
 
 Hunt and Thomas describe **software entropy** — the tendency of code to decay over time as changes accumulate [@hunt1999]. In manual development, entropy is a gradual process. A programmer adds a feature, takes a shortcut, leaves a TODO. Over months and years, shortcuts accumulate and the codebase becomes harder to work with. Refactoring — restructuring code without changing behavior — is the normal countermeasure. No one expects the code they write in month one to be the right structure for month twelve. The codebase evolves, and periodic refactoring keeps entropy in check.
 
-With agent-generated code, entropy is not gradual. It is immediate. Each increment is generated independently. The agent has no memory of the structural decisions it made in previous increments. It does not know that it already wrote a date parser in file A when it writes a different date parser in file B. It does not know that the error handling pattern in module C contradicts the pattern in module D. The result: structural decay that would take months to accumulate in manual development appears within days of agent-based generation.
+With agent-generated code the decay is not gradual at all, because each increment is generated independently. The agent has no memory of the structural decisions it made in previous increments. It does not know that it already wrote a date parser in file A when it writes a different date parser in file B. It does not know that the error handling pattern in module C contradicts the pattern in module D. The result: structural decay that would take months to accumulate in manual development appears within days of agent-based generation.
 
-Verification gates catch functional defects — code that does not do what it should. They do not catch this structural decay. After several increments, the accumulated code may have problems that no individual increment introduced: duplicated helper functions written independently by different tasks, inconsistent error handling patterns, three different ways to parse the same data format, abstractions that should exist but do not.
+Verification gates catch functional defects — code that does not do what it should — and structural decay is not one. After several increments the accumulated code carries problems that no individual increment introduced: duplicated helper functions written independently by different tasks, inconsistent error handling patterns, three different ways to parse the same data format, abstractions that should exist but do not.
 
-These are not bugs. The tests pass. The code works. But the codebase is harder to extend, harder to verify, and harder to specify future work against. Each new increment is more likely to introduce further inconsistencies because the agent interpolates from an increasingly inconsistent codebase — the entropy compounds.
+None of that is a bug. The tests pass and the code works, and the codebase is still harder to extend, harder to verify, and harder to specify future work against. Each new increment is more likely to introduce further inconsistencies because the agent interpolates from an increasingly inconsistent codebase — the entropy compounds.
 
-Refactoring is not a remedial activity. It is a normal part of software development. No one — human or agent — can foresee the final structure of a system at the beginning. The first increment reveals constraints the second increment must accommodate. The third increment introduces a pattern that, in hindsight, the first two should have used. This is not a failure of planning. It is the nature of building something complex iteratively. The structure emerges as the system grows, and refactoring is how the code catches up to the programmer's evolving understanding of what the structure should be.
+Refactoring belongs to normal development rather than to error recovery. No one — human or agent — foresees the final structure of a system at the beginning. The first increment reveals constraints the second increment must accommodate. The third increment introduces a pattern that, in hindsight, the first two should have used. That is how it goes when something complex is built a piece at a time, and it is not a failure of planning. The structure emerges as the system grows, and refactoring is how the code catches up to the programmer's evolving understanding of what the structure should be.
 
-The response is periodic structural review — analyzing the accumulated code for patterns, inconsistencies, and refactoring opportunities. The refactoring proposals feed back into the planning step as new tasks: consolidate the three parsers, extract the common error handling, introduce the abstraction that three modules independently need. With manual development, the programmer does this naturally — noticing duplication during code review, refactoring as they go. With agent-based development, it must be deliberate, because the agent will not notice and will not refactor on its own. Part V covers how an orchestration pipeline automates this review.
+The response is periodic structural review — analyzing the accumulated code for patterns, inconsistencies, and refactoring opportunities. The refactoring proposals feed back into the planning step as new tasks: consolidate the three parsers, extract the common error handling, introduce the abstraction that three modules independently need. With manual development, the programmer does this naturally — noticing duplication during code review, refactoring as they go. With agent-based development it has to be scheduled, because the agent will not notice and will not refactor on its own. Part V covers how an orchestration pipeline automates this review.
 
 ## 7.6 Incremental Construction and Autonomy Levels
 
