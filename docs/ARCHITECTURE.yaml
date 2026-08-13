@@ -133,8 +133,10 @@ structure:
           srd: docs/srd/srd-4.3-code-inspections-at-scale.yaml
         - id: C4.4
           title: Correctness by construction
+          srd: docs/srd/srd-4.4-correctness-by-construction.yaml
         - id: C4.5
           title: Confidence, not proof
+          srd: docs/srd/srd-4.5-confidence-not-proof.yaml
     - id: P5
       title: Agent Orchestration
       role: "Running agent work past a single context window, and the failure modes that follow."

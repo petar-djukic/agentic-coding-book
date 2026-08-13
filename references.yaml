@@ -781,3 +781,24 @@ references:
     needed, so the chapter neither assumes a second agent is a second opinion
     nor concludes that ensembling is worthless. Single version, June 2026, no
     venue -- still a preprint.
+
+- id: kourie2012
+  type: book
+  title: The Correctness-by-Construction Approach to Programming
+  author:
+    - family: Kourie
+      given: Derrick G.
+    - family: Watson
+      given: Bruce W.
+  publisher: Springer
+  ISBN: 9783642279188
+  DOI: 10.1007/978-3-642-27919-5
+  issued:
+    year: 2012
+  note: >
+    Verified 2026-08-13 (GH-68). Correctness by construction as a formal
+    discipline: derive the program from the specification so that it is correct
+    by the way it was built rather than by later testing. C4.4 borrows the
+    principle and states plainly what it does not inherit -- the formal
+    derivation is not what a coding agent does, and a tight specification
+    constrains the output without guaranteeing it.
