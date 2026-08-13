@@ -1,0 +1,159 @@
+# SRD 5.2 -- Planning and generating.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+#
+# This SRD claims `planner` and `generator` for C5.2. definitions.yaml
+# recorded both at part level; GH-69 assigns them here, where the roles are
+# introduced.
+
+meta:
+  chapter: C5.2
+  title: Planning and generating
+  parent: P5
+section_goal: separate the two agent roles by the job each does, and show why keeping them apart is a design decision rather than an organisational one
+goals:
+  - id: G4.4
+    goal: The reader can state what the planner and the generator each do, and what goes wrong when one agent does both.
+  - id: G4.5
+    goal: The reader can map the plan/generate cycle onto the outer-loop steps C2.1 named, so orchestration is recognisable as the same loop run by machinery.
+  - id: G4.6
+    goal: The reader can say why the planning role needs more external structure than the generating role, from the measured planning weakness rather than from intuition.
+chain:
+  - id: Q7
+    owns: partial
+    note: >
+      Q7's answer names multiple agents; C5.2 is where "multiple" acquires
+      content. The two roles are the minimum viable division, and the chapter
+      earns that minimum rather than presenting a role catalogue.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S2, V-S4, V-S5, V-S6, V-P1]
+    note: >
+      V-S4: both roles are defined at first appearance, since the rest of the
+      part uses the words constantly. V-P1: the planning weakness is stated
+      flatly -- the measurement is unflattering and hedging it would make the
+      chapter's design advice unmotivated.
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C2, A-C3, A-C4, A-C6]
+    note: >
+      A-C4: the role split rests on C1.5's context mechanism and C2.1's outer
+      loop, not on an organisational analogy. A-C3: the field observation that
+      combining the roles degraded both came first, and the planning
+      literature is cited after it.
+objective: >
+  It divides the work into two roles and defends the division. The planner
+  reads the specification and the current state and produces an ordered list
+  of tasks; the generator takes one task, works it in isolation, and produces
+  a commit. The chapter's argument is that this is not an org chart drawn on
+  agents but a consequence of two facts already established -- the two jobs
+  need different context, and the two jobs fail differently. It grounds the
+  planning half in the measured result that models plan badly alone and
+  usefully inside a structure with external verifiers, which is exactly the
+  structure the rest of the part builds. It closes by mapping plan and
+  generate onto the outer-loop steps C2.1 named, so the reader sees
+  orchestration as the loop they already know with the manual steps
+  mechanised.
+prior_material:
+  - path: meshintelligence.substack.com/three-commands-to-a-crude-orchestrator
+    offers: >
+      The field case for the split: planning and execution began as one
+      command and both degraded -- planning went shallow, implementation
+      scattered -- and separating them fixed both. Also the task-sizing range
+      the loop settled on, and the observation that oversized tasks pushed
+      architectural decisions down into the generator where they do not
+      belong.
+  - path: coding-skills
+    offers: make-work and do-work as the two roles in their smallest honest form, with the role boundary visible as a file boundary
+  - path: cobbler-scaffold
+    offers: the production form of both roles, including what the planner reads before it proposes and what the generator is given before it starts
+  - path: go-unix-utils
+    offers: per-task turn and cost data, which is where a comparison of what the two roles actually cost has to come from
+citations:
+  - id: valmeekam2023
+    role: anchor
+    note: >
+      The measured planning weakness -- roughly 12% autonomous success for the
+      strongest model tested, improving markedly when plans were checked or
+      seeded a sound planner. The chapter's reason for surrounding the planner
+      with structure instead of trusting it.
+  - id: kambhampati2024
+    role: anchor
+    note: >
+      The constructive half: a model paired with external verifiers in a
+      two-way loop is useful for planning even though it cannot plan alone.
+      This is the shape the planner role takes in Part V, and it is why the
+      blackboard and the gates are load-bearing rather than convenient.
+  - id: liu2023
+    role: evidence
+    note: >
+      Why the two roles need separate context rather than a shared larger one.
+      A planner's inputs and a generator's inputs compete for attention, and
+      the loser is attended to least.
+  - id: cemri2025
+    role: evidence
+    note: the failure category this chapter's split addresses -- inter-agent misalignment, which is what an unclear role boundary produces
+content:
+  - say: "The planner decomposes and orders; the generator implements one task in isolation and commits. Those are different jobs and they read different things, which is why one context serving both serves neither well."
+    cites: [liu2023]
+  - say: "Run as one agent, both jobs get worse: the planning goes shallow and the implementation scatters. That observation produced the split before any literature was consulted."
+    cites: []
+  - say: "Splitting them moves the failure rather than removing it -- an unclear boundary between roles is its own catalogued failure category."
+    cites: [cemri2025]
+  - say: "The literature agrees and is blunter -- models plan poorly on their own, and the strongest tested managed roughly one executable plan in eight."
+    cites: [valmeekam2023]
+  - say: "The same work shows what does help: a model whose plans are checked by something outside it, in a loop rather than a handoff."
+    cites: [kambhampati2024]
+  - say: "So the planner is the role that gets external structure -- the specification, the current state, the gates -- and the generator is the role that gets isolation."
+    cites: [kambhampati2024]
+  - say: "The two roles are the outer loop of Layered construction with the manual steps mechanised, which is why the cycle looks familiar rather than new."
+    cites: []
+apparatus:
+  objectives:
+    - State what each role does and what it reads.
+    - Say what goes wrong when one agent does both.
+    - Map plan and generate onto the outer-loop steps already named.
+    - Explain why the planner needs external structure and the generator needs isolation.
+  sidebars:
+    - type: Good Practice
+      about: giving the planner the specification and the state, and the generator one task and nothing else, so neither is reading past its job
+    - type: Common Error
+      about: an oversized task, which forces the generator to make architectural decisions the planner should have made
+    - type: Performance Observation
+      about: what a planning pass costs against a generation pass, and what the ratio implies about where to spend the better model
+  key_terms: [planner, generator, plan, generate]
+figures:
+  - shows: "The plan/generate cycle drawn against the outer-loop steps from Layered construction, with each step labelled by which role performs it and what that role reads."
+    status: planned
+links:
+  requires: [C1.5, C2.1, C2.4, C5.1]
+  supports: [C5.3, C5.6, C5.9]
+gaps:
+  - >
+    "Planning costs more than generation" is the outline's claim and this SRD
+    does not yet let the chapter make it. Cost in what -- tokens, turns,
+    wall-clock, or the price of getting it wrong? A-C2 requires the figure to
+    name its run, and no run in the corpus separates planning cost from
+    generation cost, because the planner and generator are invoked as the same
+    kind of task. Either the corpus is re-cut to distinguish them, or the
+    chapter makes the weaker claim the evidence supports: planning is the role
+    that degrades first when the two are combined, which the field observation
+    does carry.
+  - >
+    The role catalogue in definitions.yaml is larger than this chapter --
+    critic, analyst, coordinator, knowledge_manager, creator are all recorded
+    at part level and none is introduced by a Part V chapter yet. Either they
+    are introduced somewhere in C5.6-C5.9 or they are vocabulary the book
+    carries without using, and the second is worse. Flagged for the unit that
+    writes those SRDs.
+  - >
+    The C2.1 mapping has to be checked against what C2.1 actually says rather
+    than against the outline's summary of it. C2.1 was written before the
+    constitutions and its outer-loop step names are the ones this chapter
+    inherits; if they have drifted, this chapter is where the drift becomes
+    visible.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - Both roles are defined at first appearance (V-S4) and neither is re-coined.
+  - The field observation precedes the citation where they agree (A-C3).
+  - The planning weakness is stated flatly, with its measurement and date (V-P1, A-C2).
+  - The cost claim is either sourced to a run or replaced by the weaker claim the evidence supports.
+  - The mapping onto C2.1's outer-loop steps uses C2.1's own names, verified against the drafted chapter.

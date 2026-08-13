@@ -1,0 +1,160 @@
+# SRD 5.1 -- Why orchestrate.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+#
+# Opens Part V. V-V1 binds hardest here: the part is named for a tool, so the
+# chapter that opens it has to establish the problem before the word
+# "orchestrator" does any work.
+
+meta:
+  chapter: C5.1
+  title: Why orchestrate
+  parent: P5
+section_goal: establish what one agent session cannot do, and what a second agent costs, before any orchestration is proposed
+goals:
+  - id: G4.1
+    goal: The reader can name the three limits that end a single session -- context, task scope, and sustained execution -- and say which of the three they are actually hitting.
+  - id: G4.2
+    goal: The reader can state why more agents is not automatically more capacity, in terms of the failure modes coordination adds.
+  - id: G4.3
+    goal: The reader can decide whether their current problem needs orchestration or a better-scoped single session.
+chain:
+  - id: Q7
+    owns: partial
+    note: >
+      C5.1 opens Q7 by establishing that the question is forced rather than
+      chosen. Everything after it in Part V is machinery; this chapter is the
+      argument that the machinery is necessary, and it is the only place the
+      answer "do not orchestrate" is still available to the reader.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S2, V-S3, V-S6, V-V1, V-P2]
+    note: >
+      V-V1 is the governing rule: the problem comes before the tool, and in a
+      part named for the tool that ordering has to be enforced deliberately.
+      V-S3: the three limits are stated as a decomposition before any one is
+      treated. V-P2: orchestration is not sold.
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C2, A-C4, A-C5, A-C6]
+    note: >
+      A-C4: the context limit rests on C1.5's mechanism and C1.6's
+      externalized memory, not on a new claim. A-C5: the horizon figure is
+      dated at the point of use, since it is the fastest-moving number in the
+      book.
+objective: >
+  It establishes the problem Part V exists to solve and refuses to solve it
+  yet. Three limits end a single session and they are not the same limit: the
+  context window is a hard boundary on what one conversation can hold, task
+  scope is a soft boundary past which quality degrades before anything fails,
+  and sustained execution is the wall a session hits when the work outlasts
+  the sitting. The chapter separates them so a reader can tell which one they
+  are hitting, because the repair differs -- better context assembly, smaller
+  tasks, or a second agent. It then states the price of the third repair
+  before the rest of the part charges it: coordinating agents makes the work a
+  distributed system, and the measured failure taxonomy for multi-agent LLM
+  systems is the evidence that this is a real cost rather than a caveat.
+prior_material:
+  - path: meshintelligence.substack.com/three-commands-to-a-crude-orchestrator
+    offers: >
+      The origin story in the honest order -- a workflow that already worked,
+      the author noticing he was the step being repeated, and only then
+      automating himself out. It also carries the task-sizing range the loop
+      converged on and the observation that combining planning and execution
+      in one command degraded both, which C5.2 takes up.
+  - path: meshintelligence.substack.com/how-to-loop-engineering
+    offers: >
+      The stateless-session discipline: each command starts cold and pulls
+      what it needs from the tracker and the repository rather than
+      accumulating context across turns. The clearest statement of why the
+      context limit is answered by externalizing state rather than by longer
+      conversations.
+  - path: cobbler-scaffold
+    offers: runs long enough that no single session could have held them, as the concrete form of the limit
+  - path: coding-skills
+    offers: the four commands as the smallest thing that counts as orchestration, which is the counterexample to needing a framework
+citations:
+  - id: kwa2025
+    role: anchor
+    note: >
+      The 50%-success time horizon gives the sustained-execution limit a shape
+      and a trend rather than an anecdote. Cited for the shape; the number is
+      dated at the point of use per A-C5, because it doubles on a timescale
+      shorter than this book's production.
+  - id: cemri2025
+    role: counterpoint
+    note: >
+      The cost side. Fourteen failure modes in three categories from 1,600+
+      traces across seven frameworks, which is what the reader is buying along
+      with the extra capacity. Placed in this chapter rather than in C5.8 so
+      the reader meets the price before the sales pitch.
+  - id: liu2023
+    role: evidence
+    note: >
+      Why the context limit bites before the window is full -- position
+      matters, so a session degrades gradually rather than failing at a
+      boundary. Carried forward from C1.5 rather than re-argued.
+  - id: du2026
+    role: context
+    note: the survey framing of memory for autonomous agents, as the pointer for a reader who wants the mechanisms C1.6 introduced treated systematically
+content:
+  - say: "Three different limits end a single session, and the repair depends on which one it is: what the conversation can hold, how much work one task can carry, and how long the work outlasts the sitting."
+    cites: []
+  - say: "The context limit is not a cliff at the token count -- material in the middle of a long context is attended to least, so the session gets worse before it stops."
+    cites: [liu2023]
+  - say: "The sustained-execution limit has been measured as a task duration rather than a token count, and it is moving fast enough that any figure printed here is a dated observation."
+    cites: [kwa2025]
+  - say: "The answer to the first limit is not a longer conversation but state that outlives it, which is what Part I already established."
+    cites: [du2026]
+  - say: "A second agent buys capacity and costs coordination, and the failure modes that arrive with it have been catalogued rather than merely predicted."
+    cites: [cemri2025]
+  - say: "So the question this part answers is not how to orchestrate but whether to, and a better-scoped single session is the right answer more often than the literature's enthusiasm suggests."
+    cites: [cemri2025]
+apparatus:
+  objectives:
+    - Name the three limits and tell which one a given failure is.
+    - State what coordination costs, in failure modes rather than in effort.
+    - Decide whether a problem needs orchestration or a smaller task.
+  sidebars:
+    - type: Common Error
+      about: reaching for a second agent when the real problem is task scope, so the coordination cost is paid without the capacity being needed
+    - type: Performance Observation
+      about: what a session's quality does as it lengthens, against the cost of starting a fresh one with assembled context
+    - type: From the Field
+      about: the point at which the author stopped being the person running each step and became the step being repeated
+  key_terms: []
+  key_terms_note: >
+    definitions.yaml assigns no term here. `orchestrator` is C1.3's, where the
+    harness/orchestrator contrast is drawn and the Key Terms table already
+    defines it; this chapter uses the term and does not re-coin it (contract
+    rule 2).
+figures:
+  - shows: "The three limits on one axis of increasing work, with the repair for each marked, showing that only the third requires a second agent."
+    status: planned
+links:
+  requires: [C1.3, C1.5, C1.6, C2.1]
+  supports: [C5.2, C5.3, C5.8, C5.9]
+gaps:
+  - >
+    The chapter needs a run where a single session provably ran out, and the
+    corpus has to supply it rather than the argument asserting it. A task that
+    failed and then succeeded after decomposition is the strongest form; if
+    the runs do not record one cleanly, the chapter says so and argues from
+    the limit's shape instead of inventing a case.
+  - >
+    A-C5: the kwa2025 horizon figure will be stale before publication. The
+    contract requires it stated as a dated measurement with its trend, so the
+    argument survives the number changing. A chapter that leans on the
+    specific minutes will need re-editing every printing.
+  - >
+    Part V's build thread does not start until C5.5, so a reader following the
+    build arrives at four chapters of reading first. That may be correct --
+    there is nothing to build before the blackboard is designed -- but G6
+    promises the reader builds an orchestrator in this part, and the
+    distribution of build sections across C5.1-C5.4 should be a decision
+    rather than a residue. srd-5.5, srd-5.6 and srd-5.9 carry the G6 subgoals;
+    this SRD flags the front of the part as empty.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The three limits are stated before any is treated (V-S3), and each is named as a distinct failure with a distinct repair.
+  - The cost of coordination appears in this chapter, not deferred to C5.8, so orchestration is never proposed without its price (V-P2).
+  - The horizon figure is dated and stated as a trend (A-C5).
+  - The chapter leaves "do not orchestrate" available as a conclusion; a reader whose problem is task scope should finish it and stop.

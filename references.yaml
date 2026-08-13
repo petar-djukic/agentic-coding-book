@@ -802,3 +802,289 @@ references:
     principle and states plainly what it does not inherit -- the formal
     derivation is not what a coding agent does, and a tight specification
     constrains the output without guaranteeing it.
+
+- id: hayesroth1985
+  type: article-journal
+  author:
+  - {family: Hayes-Roth, given: Barbara}
+  title: A Blackboard Architecture for Control
+  container-title: Artificial Intelligence
+  volume: 26
+  issue: 3
+  page: 251-321
+  DOI: 10.1016/0004-3702(85)90063-3
+  issued: {year: 1985}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex; 1,143 citations. The blackboard
+    as a control architecture rather than only a data structure: independent
+    knowledge sources contribute to a shared solution state and a scheduler
+    decides which acts next. C5.3 cites it for the lineage and for the part
+    that transfers -- the agents coordinate through the board and not with
+    each other.
+
+- id: erman1980
+  type: article-journal
+  author:
+  - {family: Erman, given: Lee D.}
+  - {family: Hayes-Roth, given: Frederick}
+  - {family: Lesser, given: Victor R.}
+  - {family: Reddy, given: D. Raj}
+  title: "The Hearsay-II Speech-Understanding System: Integrating Knowledge to Resolve Uncertainty"
+  container-title: ACM Computing Surveys
+  volume: 12
+  issue: 2
+  page: 213-253
+  DOI: 10.1145/356810.356816
+  issued: {year: 1980}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex; 1,351 citations. The system the
+    blackboard model was extracted from. Cited as context for what the
+    original was built to solve -- combining uncertain evidence from
+    independent sources -- which is not the coding-agent problem, so C5.3
+    borrows the structure and says which motivation it is not inheriting.
+
+- id: nii1986
+  type: article-journal
+  author:
+  - {family: Nii, given: H. Penny}
+  title: The Blackboard Model of Problem Solving
+  container-title: AI Magazine
+  volume: 7
+  issue: 2
+  page: 38-53
+  DOI: 10.1609/aimag.v7i2.537
+  issued: {year: 1986}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex; 542 citations. The retrospective
+    that names the model's parts -- the board, the knowledge sources, the
+    control component -- and is the readable entry point for a reader who
+    wants the lineage without the speech-recognition detail.
+
+- id: gelernter1985
+  type: article-journal
+  author:
+  - {family: Gelernter, given: David}
+  title: Generative Communication in Linda
+  container-title: ACM Transactions on Programming Languages and Systems
+  volume: 7
+  issue: 1
+  page: 80-112
+  DOI: 10.1145/2363.2433
+  issued: {year: 1985}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex; 2,274 citations. Tuple space:
+    processes coordinate by posting and matching tuples in a shared space
+    rather than by addressing each other. The blackboard's contemporary and
+    its closest structural cousin, cited by C5.3 because a task queue with
+    claims is nearer to a tuple space than to Hearsay-II, and the reader
+    should know both names.
+
+- id: cemri2025
+  type: paper-conference
+  author:
+  - {family: Cemri, given: Mert}
+  - {family: Pan, given: Melissa Z.}
+  - {literal: et al.}
+  title: Why Do Multi-Agent LLM Systems Fail?
+  container-title: Advances in Neural Information Processing Systems (NeurIPS)
+  URL: https://arxiv.org/abs/2503.13657
+  DOI: 10.48550/arXiv.2503.13657
+  issued: {year: 2025}
+  note: >
+    Verified 2026-08-14 (GH-69); NeurIPS 2025, 507 citations as of that date.
+    MAST, a failure taxonomy of 14 modes in three categories -- system design,
+    inter-agent misalignment, and task verification -- derived from 1,600+
+    annotated traces across seven multi-agent frameworks. The counterpoint
+    Part V is checked against: adding agents adds failure modes, and C5.1
+    states that before proposing orchestration.
+
+- id: kwa2025
+  type: paper-conference
+  author:
+  - {family: Kwa, given: Thomas}
+  - {family: West, given: Ben}
+  - {literal: et al.}
+  title: Measuring AI Ability to Complete Long Software Tasks
+  container-title: Advances in Neural Information Processing Systems (NeurIPS)
+  URL: https://arxiv.org/abs/2503.14499
+  DOI: 10.48550/arXiv.2503.14499
+  issued: {year: 2025}
+  note: >
+    Verified 2026-08-14 (GH-69); NeurIPS 2025. The 50%-success time horizon --
+    the human-expert task duration at which a model succeeds half the time --
+    reported at roughly 50 minutes for Claude 3.7 Sonnet and doubling about
+    every seven months since 2019. C5.1 cites it for the shape of the limit
+    rather than the number, which A-C5 dates and which will be stale before
+    the book ships.
+
+- id: valmeekam2023
+  type: paper-conference
+  author:
+  - {family: Valmeekam, given: Karthik}
+  - {family: Marquez, given: Matthew}
+  - {family: Sreedharan, given: Sarath}
+  - {family: Kambhampati, given: Subbarao}
+  title: "On the Planning Abilities of Large Language Models: A Critical Investigation"
+  container-title: Advances in Neural Information Processing Systems (NeurIPS), Spotlight
+  URL: https://arxiv.org/abs/2305.15771
+  DOI: 10.48550/arXiv.2305.15771
+  issued: {year: 2023}
+  note: >
+    Verified 2026-08-14 (GH-69); NeurIPS 2023 Spotlight. GPT-4 produced
+    executable plans autonomously at about 12% average success across the
+    domains tested, and did better when its plans seeded a sound planner or
+    were corrected by external feedback. C5.2's evidence that the planner is
+    the role needing the most external structure.
+
+- id: kambhampati2024
+  type: paper-conference
+  author:
+  - {family: Kambhampati, given: Subbarao}
+  - {family: Valmeekam, given: Karthik}
+  - {literal: et al.}
+  title: "LLMs Can't Plan, But Can Help Planning in LLM-Modulo Frameworks"
+  container-title: Proceedings of the 41st International Conference on Machine Learning (ICML), PMLR 235
+  URL: https://arxiv.org/abs/2402.01817
+  DOI: 10.48550/arXiv.2402.01817
+  issued: {year: 2024}
+  note: >
+    Verified 2026-08-14 (GH-69); ICML 2024. The constructive half of the same
+    group's result: a model paired with external verifiers in a two-way loop
+    is useful for planning even though it cannot plan alone. C5.2 cites it as
+    the shape the planner role has to take, which is also why the blackboard
+    and the verification gates are load-bearing rather than convenient.
+
+- id: kung1981
+  type: article-journal
+  author:
+  - {family: Kung, given: H. T.}
+  - {family: Robinson, given: John T.}
+  title: On Optimistic Methods for Concurrency Control
+  container-title: ACM Transactions on Database Systems
+  volume: 6
+  issue: 2
+  page: 213-226
+  DOI: 10.1145/319566.319567
+  issued: {year: 1981}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex; 1,446 citations. Optimistic
+    concurrency control: act, then validate before committing, and roll back
+    on conflict. C5.4 cites it because a task board reached through an API
+    that offers no compare-and-set is running optimistic control without the
+    validation phase, which is the shape of the races the corpus recorded.
+
+- id: gray1989
+  type: paper-conference
+  author:
+  - {family: Gray, given: Cary G.}
+  - {family: Cheriton, given: David R.}
+  title: "Leases: An Efficient Fault-Tolerant Mechanism for Distributed File Cache Consistency"
+  container-title: Proceedings of the 12th ACM Symposium on Operating Systems Principles (SOSP)
+  page: 202-210
+  DOI: 10.1145/74850.74870
+  issued: {year: 1989}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex; 486 citations. A lease is a
+    claim with an expiry, so a holder that dies releases what it held without
+    anyone intervening. C5.4 and C5.6 both need it: a task claimed by a
+    sub-agent that never returns is the same problem, and a claim without an
+    expiry is why stale branches accumulate.
+
+- id: maddox2016
+  type: article-journal
+  author:
+  - {family: Maddox, given: Michael}
+  - {family: Goehring, given: David}
+  - {literal: et al.}
+  title: "Decibel: The Relational Dataset Branching System"
+  container-title: Proceedings of the VLDB Endowment
+  volume: 9
+  issue: 9
+  page: 624-635
+  DOI: 10.14778/2947618.2947619
+  issued: {year: 2016}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex. Branching and versioning as
+    first-class relational operations, which is what a versioned database
+    offers a blackboard that a file cannot: concurrent writers and a queryable
+    history in the same store. C5.5 cites it for what the graduation buys,
+    since the corpus has no versioned-database blackboard to point at.
+
+- id: lamport1978
+  type: article-journal
+  author:
+  - {family: Lamport, given: Leslie}
+  title: Time, Clocks, and the Ordering of Events in a Distributed System
+  container-title: Communications of the ACM
+  volume: 21
+  issue: 7
+  page: 558-565
+  DOI: 10.1145/359545.359563
+  issued: {year: 1978}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex; 8,461 citations. Events in a
+    distributed system have no total order unless one is imposed, so "before"
+    is a relation that has to be constructed. C5.8 cites it because an
+    orchestrator reading a tracker is asking what happened first across
+    processes that share no clock, which is the same question.
+
+- id: avizienis2004
+  type: article-journal
+  author:
+  - {family: Avizienis, given: Algirdas}
+  - {family: Laprie, given: Jean-Claude}
+  - {family: Randell, given: Brian}
+  - {family: Landwehr, given: Carl}
+  title: Basic Concepts and Taxonomy of Dependable and Secure Computing
+  container-title: IEEE Transactions on Dependable and Secure Computing
+  volume: 1
+  issue: 1
+  page: 11-33
+  DOI: 10.1109/TDSC.2004.2
+  issued: {year: 2004}
+  note: >
+    Verified 2026-08-14 (GH-69) via Crossref. The fault-error-failure
+    vocabulary: a fault is the cause, an error the corrupted state, a failure
+    the visible deviation. C5.8 borrows the distinction because the corpus's
+    defects are mostly errors that took hours to become failures, and a
+    chapter about failure modes needs the word to mean one thing.
+
+- id: metcalfe1976
+  type: article-journal
+  author:
+  - {family: Metcalfe, given: Robert M.}
+  - {family: Boggs, given: David R.}
+  title: "Ethernet: Distributed Packet Switching for Local Computer Networks"
+  container-title: Communications of the ACM
+  volume: 19
+  issue: 7
+  page: 395-404
+  DOI: 10.1145/360248.360253
+  issued: {year: 1976}
+  note: >
+    Verified 2026-08-14 (GH-69) via Crossref. The origin of exponential
+    backoff: contending stations retry after a randomised, growing interval
+    rather than immediately. C5.8 cites it against a recorded defect -- a
+    generator loop that retried failing tasks with no backoff at all -- so the
+    fix has a fifty-year-old name rather than being invented locally.
+
+- id: saltzer1984
+  type: article-journal
+  author:
+  - {family: Saltzer, given: Jerome H.}
+  - {family: Reed, given: David P.}
+  - {family: Clark, given: David D.}
+  title: End-to-End Arguments in System Design
+  container-title: ACM Transactions on Computer Systems
+  volume: 2
+  issue: 4
+  page: 277-288
+  DOI: 10.1145/357401.357402
+  issued: {year: 1984}
+  note: >
+    Verified 2026-08-14 (GH-69) via OpenAlex; 2,128 citations for the
+    canonical version. A correctness check belongs where the knowledge to make
+    it lives, and lower layers can only make it cheaper, not sufficient. C5.7
+    cites it for where state consistency has to be enforced: the orchestrator
+    can commit after every write, and only the next run's check can tell
+    whether the state is true.

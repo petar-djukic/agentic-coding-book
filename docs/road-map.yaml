@@ -156,15 +156,46 @@ releases:
     units: [C4.1, C4.2, C4.3, C4.4, C4.5]
     gate: "rel04.srd complete, and rel03.0 (correctness is the stronger claim testing cannot make on its own)."
 
+  - id: rel05.srd
+    name: "Part V specification"
+    status: complete
+    units: [C5.1, C5.2, C5.3, C5.4, C5.5, C5.6, C5.7, C5.8, C5.9]
+    gate: "rel04.srd complete."
+    completed: >
+      Nine SRDs written under EPIC GH-69, 2026-08-14. Ownership settled for
+      four glossary terms that had sat at part level: planner and generator to
+      C5.2, knowledge_manager to C5.9, and orchestrator to C1.3, whose Key
+      Terms table already defines it to draw the harness/orchestrator
+      contrast.
+
+      The two blocking gaps are now specific rather than general. Beads is
+      thinly evidenced rather than missing -- the bd commands exist in
+      coding-skills and three repositories carry a .beads/issues.jsonl, whose
+      record shape is C5.3's four records exactly, but the corpora hold 6 and
+      15 records against a GitHub tracker with four-digit issue numbers, so
+      what is absent is a run at scale. Dolt is absent outright: no schema, no
+      run, and no mention anywhere in cobbler-scaffold. srd-5.5 is therefore
+      written file-first with the database treated generically, so drafting is
+      not blocked on a product the corpus does not have.
+
+      Two outline defects recorded. GH-1361 is labelled "premature stops" but
+      is premature completion; the premature stop is GH-1475. And "the
+      31-tries iteration story" has no artifact behind it -- srd-5.9 is
+      written against runs.csv instead, where 60 runs, 23 of them producing no
+      tasks and 7 abandoned, tell the same story verifiably. GH-92 covers the
+      numeric claims as a class.
+
   - id: rel05.0
     name: "Part V -- Agent Orchestration"
     status: pending
     units: [C5.1, C5.2, C5.3, C5.4, C5.5, C5.6, C5.7, C5.8, C5.9]
     gate: >
-      rel04.0 complete. C5.4 additionally needs the beads (bd) usage
-      walkthrough and C5.5 the Dolt blackboard schema sketch, background
-      material that outline.yaml records as missing; they cannot be drafted
-      from the current evidence base.
+      rel04.0 complete and rel05.srd complete. Two chapters carry background
+      dependencies the SRDs state precisely: C5.4 needs a beads run at
+      something like the scale of the GitHub half, and C5.5 needs a decision
+      rather than a document -- build a versioned-database blackboard, or keep
+      the chapter file-first and name no product. srd-5.4 and srd-5.5 hold the
+      detail in their gaps fields.
 
   - id: rel06.0
     name: "Part VI -- Instrumentation"

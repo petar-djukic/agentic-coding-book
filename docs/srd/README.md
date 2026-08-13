@@ -98,10 +98,10 @@ demanded `agentic_loop`, which C1.4 introduces, and `srd-1.6` demanded
 
 ## Coverage
 
-Parts I through IV have an SRD per chapter. Part I was written at GH-17 against
+Parts I through V have an SRD per chapter. Part I was written at GH-17 against
 the arc EPIC #4 established; Part II at GH-66, where C2.1 and C2.2 were written
-against prose that already existed and the other five before drafting. Parts
-V–VI are follow-on work:
+against prose that already existed and the other five before drafting. Part VI
+is the remaining follow-on work:
 
 | Part | Chapters | SRD status |
 |---|---|---|
@@ -109,7 +109,7 @@ V–VI are follow-on work:
 | P2 — Construction and Requirements | C2.1–C2.7 | written (GH-66); C2.1 and C2.2 were written against existing prose, and their `gaps` fields carry the draft-versus-contract disagreements |
 | P3 — Testing | C3.1–C3.5 | written (GH-67) |
 | P4 — Correctness | C4.1–C4.5 | written (GH-68) |
-| P5 — Agent Orchestration | C5.1–C5.9 | to write; C5.4 and C5.5 are blocked on missing background material |
+| P5 — Agent Orchestration | C5.1–C5.9 | written (GH-69); C5.4 and C5.5 carry background dependencies in their `gaps` fields, and `road-map.yaml` gates `rel05.0` on them |
 | P6 — Instrumentation | C6.1–C6.7 | to write |
 
 The Parts II–VI SRDs wait on those parts stabilizing rather than on effort:

@@ -1,0 +1,161 @@
+# SRD 5.3 -- The blackboard.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+#
+# The concept chapter. C5.4 and C5.5 are its implementations, so what this
+# chapter fixes is the requirement list they are judged against.
+
+meta:
+  chapter: C5.3
+  title: The blackboard
+  parent: P5
+section_goal: fix what a coordination substrate has to record before any implementation is chosen, so the two implementation chapters have something to be measured against
+goals:
+  - id: G4.7
+    goal: The reader can state what shared state agents must be able to read and write, independent of the technology holding it.
+  - id: G4.8
+    goal: The reader can say why agents coordinate through a board rather than by talking to each other, and what that buys.
+  - id: G4.9
+    goal: The reader can evaluate a candidate substrate -- a tracker, a file, a database -- against a requirement list rather than by preference.
+chain:
+  - id: Q7
+    owns: partial
+    note: >
+      Q7's answer turns on "shared state the harness can reach". C5.3 is where
+      that phrase becomes a specification. Without this chapter the two
+      implementation chapters are a tools survey; with it they are two answers
+      to a stated requirement.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S3, V-S4, V-S5, V-S6, V-V1]
+    note: >
+      V-S3: the four things a board must record are stated as a decomposition
+      before any is treated. V-V1: the requirement precedes GitHub, beads,
+      YAML and Dolt, none of which is named in this chapter's argument.
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C2, A-C3, A-C6, A-X1]
+    note: >
+      A-C6: the blackboard lineage is forty years old and was built for a
+      different problem, so the chapter borrows the structure and states which
+      motivation it is not inheriting. A-C3: the tracker-as-infrastructure
+      observation is the author's own and comes before the lineage.
+objective: >
+  It specifies the coordination substrate before naming any. Agents that never
+  address each other need somewhere to leave what the next one must know, and
+  the chapter fixes that as four things the board records: the state of each
+  task, the claim that says who is working it, the handoff that carries
+  results forward, and the history that makes the run reconstructable. It then
+  places the idea in its lineage -- the blackboard model, and the tuple space
+  beside it -- and is careful about what transfers. The original was built to
+  combine uncertain evidence from independent knowledge sources, which is not
+  the coding problem; what transfers is the topology, where independence
+  between workers is bought by routing everything through shared state. The
+  chapter closes on the consequence that makes the rest of the part
+  intelligible: once agents are the workers, the project tracker stops being
+  documentation and becomes infrastructure, with the uptime and correctness
+  obligations that implies.
+prior_material:
+  - path: meshintelligence.substack.com/how-to-use-github-as-long-term-memory
+    offers: >
+      The tracker-as-infrastructure argument in its original form, with the
+      before-and-after the author measured: planning cycles that re-proposed
+      completed work, duplicated code across sessions that had no shared
+      state, and both dropping once the tracker held the claims. Also the
+      issue-body test -- could an outsider run the task from the body alone --
+      which is a requirement on what a board must record.
+  - path: meshintelligence.substack.com/how-to-loop-engineering
+    offers: the stateless-session discipline that makes the board necessary rather than convenient -- if sessions start cold, everything they need has to be on the board
+  - path: cobbler-scaffold
+    offers: the production board, including the fields that turned out to be load-bearing and the ones that were never read
+  - path: coding-skills
+    offers: the minimum viable board -- issues, labels, and comments -- as the existence proof that the requirement is small
+citations:
+  - id: hayesroth1985
+    role: anchor
+    note: >
+      The blackboard as a control architecture: independent knowledge sources
+      contribute to shared solution state and a scheduler decides which acts
+      next. The direct ancestor of a planner and generators around a task
+      board, and the reason the chapter does not have to derive the topology
+      from scratch.
+  - id: erman1980
+    role: context
+    note: >
+      The system the model was extracted from. Cited for what it was built to
+      do -- resolve uncertainty by combining weak evidence -- which is the
+      part that does not transfer, and saying so is what keeps the borrowing
+      honest.
+  - id: nii1986
+    role: survey
+    note: the readable retrospective naming the model's parts, as the pointer for a reader who wants the lineage without the speech-recognition detail
+  - id: gelernter1985
+    role: context
+    note: >
+      Tuple space: coordination by posting and matching in a shared space
+      rather than by addressing a peer. Structurally nearer to a task queue
+      with claims than Hearsay-II is, and the reader should have both names
+      before choosing an implementation.
+  - id: cemri2025
+    role: evidence
+    note: inter-agent misalignment as a measured failure category, which is the class a board with claims and handoffs exists to remove
+content:
+  - say: "Agents that never speak to each other still have to leave each other information, and the shape of that information is the design problem this chapter solves."
+    cites: []
+  - say: "A board records four things: what state each task is in, who has claimed it, what a finished task hands to the next one, and what happened, in an order that can be replayed."
+    cites: []
+  - say: "Coordination through shared state rather than between peers is an old architecture, and it was chosen then for the same reason it works now -- the workers stay independent and the board carries the coupling."
+    cites: [hayesroth1985]
+  - say: "What does not transfer is the motivation. The original combined uncertain evidence from several knowledge sources; a task board is not resolving uncertainty, it is preventing two agents from doing the same work twice."
+    cites: [erman1980]
+  - say: "The nearer relative is the tuple space, where a worker takes a posted item and the space records that it is taken, which is what a claim is."
+    cites: [gelernter1985]
+  - say: "Without claims and handoffs the failures are the catalogued ones: agents duplicating work, contradicting each other, and finishing without anyone knowing."
+    cites: [cemri2025]
+  - say: "Once agents are the workers, the tracker is infrastructure. It has to be correct and available in a way documentation never had to be, because the run stops when it is wrong."
+    cites: []
+apparatus:
+  objectives:
+    - Name the four things a coordination substrate must record.
+    - Say why agents coordinate through a board instead of with each other.
+    - Evaluate a candidate substrate against the requirement rather than by preference.
+  sidebars:
+    - type: Good Practice
+      about: writing a task so an outsider could run it from the body alone, which is the readable test for whether the handoff is complete
+    - type: Common Error
+      about: treating the tracker as a record of what happened rather than as the thing the run reads, so state drifts from the code and the planner proposes finished work
+    - type: From the Field
+      about: the run where the planner proposed a package that was already built, and what was missing from the board that let it
+  key_terms: [blackboard]
+figures:
+  - shows: "The planner and several generators with no edges between them, each connected only to the board, and the board's four records labelled -- state, claim, handoff, history."
+    status: planned
+links:
+  requires: [C1.6, C5.1, C5.2]
+  supports: [C5.4, C5.5, C5.6, C5.7, C5.8]
+gaps:
+  - >
+    The before-and-after figures in the source article are the author's own
+    published reporting, not derived from a dataset in this repository -- the
+    share of planning cycles that re-proposed finished work, the duplicated
+    lines before and after, the turn counts with and without contracts.
+    A-C2 requires each to name the run it came from. Either they are
+    re-derived from the corpus for the chapter, or they are presented as dated
+    field observations with that provenance stated. They must not be lifted
+    from the article as if they were measurements from the book's datasets.
+    This is the same class GH-92 covers for outline.yaml.
+  - >
+    The boundary with C1.6 needs stating once. C1.6 introduced externalized
+    memory for one agent across sessions; this chapter is the same mechanism
+    for several agents at once. The chapter should name that as a
+    generalisation rather than re-deriving the idea, and C1.6 is drafted
+    already, so the wording can be checked rather than guessed.
+  - >
+    The four records are this SRD's decomposition, not a result taken from the
+    literature. If drafting finds a fifth that C5.4 or C5.5 needs -- schema
+    version, priority, and retry count are the candidates -- the list changes
+    here first, because the two implementation chapters are judged against it.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The four records are stated before any implementation is named (V-S3, V-V1); no chapter section requires GitHub, beads, YAML or Dolt to make its point.
+  - The borrowed lineage states what does not transfer (A-C6), not only what does.
+  - The field observation precedes the citation (A-C3), and its numbers name their source or are dropped.
+  - The requirement list is written so C5.4 and C5.5 can be scored against it, since that is this chapter's job in the part.

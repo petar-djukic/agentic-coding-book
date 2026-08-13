@@ -1,0 +1,159 @@
+# SRD 5.7 -- State management and recovery.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+#
+# Takes the boundary srd-5.6 proposed: C5.6 owns ending a sub-agent that is
+# still running, C5.7 owns what the next start finds.
+
+meta:
+  chapter: C5.7
+  title: State management and recovery
+  parent: P5
+section_goal: make a run survive its own interruption, by separating the state that must be true from the state that can be rebuilt
+goals:
+  - id: G4.19
+    goal: The reader can tell which of their run's state is authoritative and which is derived, and stop protecting the derived kind.
+  - id: G4.20
+    goal: The reader can restart an interrupted run without losing completed work or repeating it.
+  - id: G4.21
+    goal: The reader can name the window in which a crash leaves state inconsistent, and shrink it deliberately rather than hoping.
+chain:
+  - id: Q7
+    owns: partial
+    note: >
+      A run that spans context windows spans interruptions, so Q7's answer is
+      incomplete until restart is defined. This is the chapter where the
+      blackboard stops being a coordination device and becomes the thing the
+      run is reconstructed from.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S2, V-S5, V-S6, V-P1, V-V4]
+    note: >
+      V-P1: the inconsistency window is stated as a fact with a duration, not
+      softened into a risk. V-V4: the recovery rules are given as a mechanism
+      in the prose and as imperatives only inside sidebars.
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C2, A-C3, A-C4, A-X1]
+    note: >
+      A-C3: all three defects here were lived before they were read about, so
+      the run comes first and the citation follows. A-C4: the claim that the
+      board is authoritative rests on C5.3's requirement, not on a preference
+      for files.
+objective: >
+  It divides the run's state into two kinds and treats them differently. The
+  authoritative kind is what the board records -- which tasks exist, which are
+  claimed, which are done -- and it is authoritative because nothing else can
+  reconstruct it. The derived kind is everything computable from the
+  repository: what is built, what compiles, what the tests say. The chapter's
+  argument is that most recovery pain comes from protecting derived state and
+  under-protecting authoritative state, and it grounds that in three recorded
+  defects: state updated but never committed, a status set and never reverted
+  when the run was stopped, and a start that reset requirement state so no run
+  could continue another. It then treats the window between doing a thing and
+  recording it as the quantity to shrink, since it cannot be closed, and ends
+  on the check that makes recovery honest -- verifying the board against the
+  repository at the top of the loop, because a board that disagrees with the
+  code is worse than no board.
+prior_material:
+  - path: cobbler-scaffold
+    offers: >
+      The three defects with their fixes readable beside them: GH-1385, where
+      requirements.yaml was updated by a stitch pass and not committed;
+      GH-1469, where stopping the generator left an implemented status
+      standing after a specs-only reset; and GH-1389, where starting a run
+      reset all requirement state so there was no continuity across runs.
+      Also the recovery path itself -- stale-task recovery and a worktree
+      prune at the top of the loop.
+  - path: agentic-coding-book
+    offers: >
+      This repository as the small case: road-map status, per-chapter state,
+      and an audit that fails when the documents disagree with each other.
+      A file-based board with a consistency check, which is what this chapter
+      argues for at a size the reader can see whole.
+  - path: meshintelligence.substack.com/how-to-loop-engineering
+    offers: the stateless-session premise that makes restart the normal case rather than the exceptional one -- if every session starts cold, every session is a recovery
+citations:
+  - id: saltzer1984
+    role: anchor
+    note: >
+      Where the consistency check belongs. Lower layers can make the window
+      smaller -- commit after every write, transactions where available -- but
+      only the layer with the knowledge can decide whether the state is true,
+      which is why the top-of-loop verification is not redundant with any of
+      them.
+  - id: avizienis2004
+    role: evidence
+    note: >
+      The fault-error-failure distinction, which this chapter needs because
+      all three recorded defects were errors long before they were failures.
+      Uncommitted state is wrong the moment it is written and visible only on
+      the next run.
+  - id: gray1989
+    role: evidence
+    note: expiring claims as the mechanism that makes an abandoned task recoverable without anyone deciding it was abandoned, carried forward from C5.4 and C5.6
+  - id: hayesroth1985
+    role: context
+    note: the board as the run's authoritative state, carried forward from C5.3 so the authoritative/derived split is a consequence of the requirement rather than a new claim
+content:
+  - say: "Run state comes in two kinds: what only the board knows, and what the repository can be asked. Recovery is easy for the second and impossible for the first if it was lost."
+    cites: [hayesroth1985]
+  - say: "The recorded failures are all in the first kind: state written and not committed, a status set and never reverted, and a start that discarded what the previous run had established."
+    cites: []
+  - say: "None of them looked like a failure when it happened, which is the distinction between a corrupted state and a visible deviation, and the reason recovery bugs are found late."
+    cites: [avizienis2004]
+  - say: "The window between doing something and recording it cannot be closed, only shortened, so it is a quantity to state rather than a risk to accept."
+    cites: []
+  - say: "Committing every board write puts the history in the repository and shrinks the window to a single operation."
+    cites: [saltzer1984]
+  - say: "A claim that expires turns an abandoned task into a recoverable one without anyone having to notice it was abandoned."
+    cites: [gray1989]
+  - say: "Recovery ends with a check, not a restore: the board is verified against the repository at the top of the loop, because a board that disagrees with the code is worse than no board."
+    cites: [saltzer1984]
+apparatus:
+  objectives:
+    - Separate authoritative state from derived state.
+    - Restart an interrupted run without losing or repeating work.
+    - State the inconsistency window and shrink it deliberately.
+  sidebars:
+    - type: Good Practice
+      about: verifying the board against the repository at the top of the loop, so a stale claim is caught before it produces duplicate work
+    - type: Common Error
+      about: a status written by one command and never reverted by the command that stops it, so the next run reads a completion that never happened
+    - type: Performance Observation
+      about: what the top-of-loop verification costs per run against the cost of one duplicated task, which is the trade that decides how thorough it should be
+  key_terms: []
+  key_terms_note: >
+    definitions.yaml assigns no term here. If the chapter coins one for the
+    authoritative/derived split, it reaches the glossary in the same unit
+    (contract rule 2).
+figures:
+  - shows: "A run interrupted mid-task, with the board's records and the repository's state side by side at the moment of the crash, and the reconciliation each needs on restart."
+    status: planned
+links:
+  requires: [C5.3, C5.5, C5.6]
+  supports: [C5.8, C5.9]
+gaps:
+  - >
+    The inconsistency window is stated as a quantity the chapter should give a
+    duration to, and no measurement exists. runs.csv records per-run totals,
+    not the interval between a task's completion and its record being
+    committed. Either an instrumented run supplies it -- C6 is the part that
+    would -- or the chapter describes the window structurally and says it is
+    unmeasured, which is honest but weaker.
+  - >
+    C5.7 takes the boundary srd-5.6 proposed: C5.6 ends a sub-agent that is
+    still running, C5.7 handles what the next start finds. The stale-task
+    recovery code sits inside the lifecycle, so the split is by tense rather
+    than by file, and both chapters must say so in one place. This SRD accepts
+    the boundary; the drafter should not re-litigate it while writing.
+  - >
+    This repository is used as prior material for a Part V chapter, which is
+    new -- the corpus map feeds it to no part. It earns the place by being the
+    only file-based board with a working consistency check that the author
+    operates daily, but ARCHITECTURE's material_sources should record it if
+    the drafting keeps it.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - The authoritative/derived split is stated before any recovery mechanism is given, since the mechanisms only make sense once the two are separated.
+  - Each of the three recorded defects names its issue and what the fix changed (A-C2, A-C3).
+  - The inconsistency window is stated as a window, with either a measurement or an explicit statement that it is unmeasured.
+  - Recovery ends in a verification against the repository, not in a restore from the board alone.
