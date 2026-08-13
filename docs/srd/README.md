@@ -47,8 +47,11 @@ they have to land (GH-52). Separator style does not matter: the glossary key
 **What belongs in `apparatus.key_terms`.** Only terms the chapter itself
 introduces, which `definitions.yaml` records per term in its `introduced`
 field. A chapter's table may repeat a term defined elsewhere for the reader's
-convenience, but the SRD should not require it: listing a term owned by another
-chapter is how five of the six gaps in GH-50 arose -- `srd-1.1` and `srd-1.3`
+convenience, but the SRD must not require it. **`mage audit` enforces this
+since GH-88**, where the rule had gone unchecked long enough for seven Part I
+entries to break it -- `srd-1.4` alone required four, including one a Part II
+chapter introduces, which inverted the book's dependency direction. Listing a
+term owned by another chapter is also how five of the six gaps in GH-50 arose -- `srd-1.1` and `srd-1.3`
 demanded `agentic_loop`, which C1.4 introduces, and `srd-1.6` demanded
 `knowledge_manager` and `constitution`, owned by P5 and C2.5.
 

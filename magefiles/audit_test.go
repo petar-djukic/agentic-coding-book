@@ -959,3 +959,55 @@ func TestEveryChapterOwnsADerivationChainLink(t *testing.T) {
 		}
 	}
 }
+
+// ------------------------------------------- key-term ownership (GH-88)
+
+// docs/srd/README.md: an SRD lists only the terms its own chapter introduces.
+// The rule existed and nothing checked it, so seven Part I entries broke it.
+func TestSRDMayNotRequireATermAnotherChapterIntroduces(t *testing.T) {
+	files := cleanTree()
+	files["docs/definitions.yaml"] = `
+agent:
+  introduced: C1.1
+  definition: A state machine plus tools.
+
+harness:
+  introduced: C1.3
+  definition: The software around the model.
+`
+	files["docs/srd/srd-1.1-what-is-an-agent.yaml"] = strings.Replace(
+		files["docs/srd/srd-1.1-what-is-an-agent.yaml"],
+		"  key_terms: [agent]", "  key_terms: [agent, harness]", 1)
+	err := auditTree(t, files)
+	if err == nil {
+		t.Fatal("an SRD requiring a term another chapter introduces should be a finding")
+	}
+	for _, want := range []string{"harness is introduced by C1.3", "may repeat it but the contract may not require it"} {
+		if !strings.Contains(err.Error(), want) {
+			t.Errorf("finding should mention %q, got:\n%v", want, err)
+		}
+	}
+}
+
+// The chapter's own terms are fine, which is the common case.
+func TestSRDMayRequireItsOwnTerms(t *testing.T) {
+	if err := auditTree(t, cleanTree()); err != nil {
+		t.Fatalf("a term the chapter introduces is not a finding, got:\n%v", err)
+	}
+}
+
+// The existence check still runs, and reports the absence rather than an
+// ownership mismatch, so the two failures stay distinguishable.
+func TestSRDTermMissingFromGlossaryStillReportsAbsence(t *testing.T) {
+	files := cleanTree()
+	files["docs/srd/srd-1.1-what-is-an-agent.yaml"] = strings.Replace(
+		files["docs/srd/srd-1.1-what-is-an-agent.yaml"],
+		"  key_terms: [agent]", "  key_terms: [agent, nonesuch]", 1)
+	err := auditTree(t, files)
+	if err == nil || !strings.Contains(err.Error(), "nonesuch is not in docs/definitions.yaml") {
+		t.Fatalf("an unknown term should report absence, got:\n%v", err)
+	}
+	if strings.Contains(err.Error(), "nonesuch is introduced by") {
+		t.Error("an absent term should not also report an ownership mismatch")
+	}
+}

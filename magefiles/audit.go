@@ -119,7 +119,10 @@ type spec struct {
 	srds        []srdDoc
 	ruleIDs     map[string]bool
 	definitions map[string]bool
-	references  map[string]bool
+	// definedIn maps a glossary term to the chapter or part that introduces it,
+	// which is what arbitrates key-term ownership (GH-88).
+	definedIn  map[string]string
+	references map[string]bool
 }
 
 type outlineDoc struct {
@@ -214,6 +217,7 @@ func loadSpec(root string) (*spec, []finding) {
 	s := &spec{
 		ruleIDs:     map[string]bool{},
 		definitions: map[string]bool{},
+		definedIn:   map[string]string{},
 		references:  map[string]bool{},
 	}
 	fail := func(path string, err error) {
@@ -263,6 +267,7 @@ func loadSpec(root string) (*spec, []finding) {
 	}
 	for k, v := range defs {
 		s.definitions[k] = true
+		s.definedIn[k] = v.Introduced
 		// Every defined term records the chapter or part that introduces it.
 		// That field is what arbitrates where a term belongs -- GH-50 used it to
 		// settle every disputed key term -- so an entry without one leaves the
@@ -490,6 +495,15 @@ func checkSpec(s *spec) []finding {
 		for _, k := range d.Apparatus.KeyTerms {
 			if !s.definitions[k] {
 				add(d.path, "apparatus.key_terms", "%s is not in docs/definitions.yaml", k)
+				continue
+			}
+			// docs/srd/README.md: an SRD lists only the terms its own chapter
+			// introduces. A chapter's Key Terms table may repeat a term defined
+			// elsewhere for the reader, but the contract must not require one --
+			// that is how five of the six gaps at GH-50 arose, and the rule sat
+			// unenforced until seven Part I entries broke it (GH-88).
+			if owner := s.definedIn[k]; owner != "" && owner != d.Meta.Chapter {
+				add(d.path, "apparatus.key_terms", "%s is introduced by %s, not by this chapter; a table may repeat it but the contract may not require it", k, owner)
 			}
 		}
 	}
