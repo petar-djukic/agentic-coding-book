@@ -68,6 +68,10 @@ content:
     cites: [latentpatterns-harness]
   - say: "Coding with an agent is using a harness, whether or not the user thinks of it that way. The distinction matters because the harness is configurable and the model is not."
     cites: []
+  - say: "The term has a published definition to measure this book's against -- middleware orchestrating system prompts, tool execution, context management and reasoning loops -- and this chapter's four responsibilities cut the same layer differently."
+    cites: [bensghaier2026]
+  - say: "The layer is worth naming because it carries measurable weight: taking a planning harness apart layer by layer puts the largest single gain in a declarative layer that makes no model calls at all."
+    cites: [jung2026]
   - say: "Policy is where the harness says no: which tools exist, which paths are reachable, which actions need approval."
     cites: [tmforum-ig1218]
   - say: "The harness is the protagonist of this book. Every later chapter is about shaping one of its four responsibilities."
