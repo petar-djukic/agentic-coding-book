@@ -648,3 +648,69 @@ references:
     behaviour rather than the expected one. That is the circularity problem of
     C3.2 stated as a measured result rather than as a worry. Single version,
     October 2024, no venue -- still a preprint, and the chapter says so.
+
+- id: claessen2000
+  type: paper-conference
+  title: "QuickCheck: a lightweight tool for random testing of Haskell programs"
+  author:
+    - family: Claessen
+      given: Koen
+    - family: Hughes
+      given: John
+  container-title: "Proceedings of the Fifth ACM SIGPLAN International Conference on Functional Programming (ICFP '00)"
+  page: 268-279
+  issued:
+    year: 2000
+  note: >
+    Verified 2026-08-13 (GH-67). The origin of property-based testing as a
+    practice: state an invariant, let the tool generate cases, shrink a failure
+    to its minimum. Cited in C3.4 for the technique rather than for Haskell --
+    the lineage runs through Hypothesis, gopter and the rest.
+
+- id: miller1990
+  type: article-journal
+  title: An Empirical Study of the Reliability of UNIX Utilities
+  author:
+    - family: Miller
+      given: Barton P.
+    - family: Fredriksen
+      given: Lars
+    - family: So
+      given: Bryan
+  container-title: Communications of the ACM
+  volume: 33
+  issue: 12
+  page: 32-44
+  issued:
+    year: 1990
+    month: 12
+  note: >
+    Verified 2026-08-13 (GH-67). The paper that started fuzzing, and it started
+    it by feeding random input to Unix utilities -- the same programs
+    go-unix-utils regenerates. Cited in C3.4 for the technique's origin and for
+    the coincidence being worth naming: the book's evidence base is the
+    original fuzzing target.
+
+- id: demillo1978
+  type: article-journal
+  title: "Hints on Test Data Selection: Help for the Practicing Programmer"
+  author:
+    - family: DeMillo
+      given: Richard A.
+    - family: Lipton
+      given: Richard J.
+    - family: Sayward
+      given: Frederick G.
+  container-title: Computer
+  volume: 11
+  issue: 4
+  page: 34-41
+  issued:
+    year: 1978
+    month: 4
+  note: >
+    Verified 2026-08-13 (GH-67). Introduces mutation testing and the coupling
+    effect. Cited in C3.5 as the answer to what a coverage number is worth:
+    mutation score asks whether the tests detect a change, which is the question
+    coverage only appears to answer. Page range is cited as 34-41 in most
+    sources and 34-43 in some; 34-41 used here.

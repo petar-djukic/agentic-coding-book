@@ -114,8 +114,10 @@ structure:
           srd: docs/srd/srd-3.3-test-infrastructure.yaml
         - id: C3.4
           title: Property-based and fuzz testing
+          srd: docs/srd/srd-3.4-property-based-and-fuzz-testing.yaml
         - id: C3.5
           title: Coverage and confidence
+          srd: docs/srd/srd-3.5-coverage-and-confidence.yaml
     - id: P4
       title: How Do You Know Your Code Is Correct?
       role: "What correctness means when the volume exceeds human review capacity."
