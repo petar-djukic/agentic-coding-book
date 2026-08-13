@@ -58,14 +58,23 @@ prior_material:
     offers: >
       analysis/datasets/economics_summary.yaml, read at GH-70: cost per kLOC
       of $10.14 mean and $9.78 median over the 28 runs with LOC recorded; cost
-      per requirement of $0.4664 mean and $0.4482 median over 113 SRDs; a
-      cost-versus-requirement-count fit with slope $0.0099 per requirement on
-      an intercept of $1.315; cache hit rates with a within-run median of
+      per requirement of $0.4664 mean and $0.4482 median over 113 SRDs;
+      cache hit rates with a within-run median of
       44.23% in run gh-4209-run42 across its 445 tasks and an across-run
       median of 45.68% over 38 runs; cmd/ls as the most expensive utility at
       $20.74 average; and a same-utility coefficient of variation reaching
       1.88, worst for pkg/format, across the 30 utilities with three or more
       runs.
+  - path: go-unix-utils
+    offers: >
+      analysis/datasets/specs_summary.yaml, which is the floor's real
+      evidence and was read at GH-71. Every fit from a specification property
+      to cost is flat: requirement count against cost has an r-squared of
+      0.00022 over 2,367 tasks, specification text length 0.00037, and
+      specification weight 0.0000023. Weight against duration is 0.00093. The
+      fitted intercepts -- $1.315, $1.326, $1.347 -- are within cents of the
+      mean task cost of $1.354, because a line with no slope is the mean.
+      Nothing measured about a specification predicts what its task will cost.
   - path: go-unix-utils
     offers: >
       analysis/datasets/waste_summary.yaml for the per-task distribution --
@@ -99,9 +108,11 @@ content:
     cites: []
   - say: "In this corpus the median task costs about a dollar, the mean is a third higher, and the most expensive single task cost just under seven."
     cites: []
-  - say: "Fitting cost against requirement count gives a floor: roughly $1.32 before any work, and about a penny for each requirement asked."
+  - say: "Nothing measured about a specification predicts what its task costs: requirement count, text length, and weight all fit cost with an r-squared near zero."
     cites: []
-  - say: "That floor is the whole argument about task sizing, and it is also what makes cost per line a number nobody should compare with."
+  - say: "So the cost is effectively a per-task constant, and the fitted lines are flat at the mean rather than sloping with the work asked."
+    cites: []
+  - say: "That constant is the floor, and it is the whole argument about task sizing -- it is also what makes cost per line a number nobody should compare with."
     cites: [jones1978]
   - say: "A pipeline halves its cost per line by doubling its task size, having changed nothing about how efficiently it works."
     cites: [jones1978]
@@ -109,6 +120,8 @@ content:
     cites: [liu2023]
   - say: "The same utility generated in different runs varies enormously in cost, which is the figure that should stop anyone quoting a single price for a piece of work."
     cites: []
+  - say: "Coordination is a line on this receipt rather than a quality risk, which is where Part V's price for orchestration shows up in money."
+    cites: [cemri2025]
   - say: "Every price here is dated, about one pipeline, in one language, on one billing arrangement, and none of those four qualifications is decorative."
     cites: [kwa2025]
 apparatus:
@@ -153,13 +166,16 @@ gaps:
     second is the defensible one and the first should not appear, but a
     drafter reading the file top to bottom will meet the weaker number first.
   - >
-    The cost-versus-requirements fit is a linear fit whose quality is not
-    recorded -- no correlation coefficient or residual is in the dataset. The
-    floor claim rests on the intercept, so if the fit is poor the intercept is
-    not a floor but an artifact. Either the fit quality is computed during
-    drafting and stated, or the floor is argued from the per-task cost
-    distribution instead, where the median of $1.09 makes the same point
-    without depending on a regression.
+    Resolved at GH-71, and the answer changed the chapter. The fit quality is
+    recorded after all, in analysis/datasets/specs_summary.yaml, and every
+    specification-property-to-cost fit is flat: r-squared of 0.00022 for
+    requirement count, 0.00037 for text length, 0.0000023 for weight. The
+    intercept is therefore not a slope's floor but the mean, which the
+    per-task distribution gives directly. The chapter is stronger for it --
+    the finding is not "a task costs $1.32 plus a penny per requirement" but
+    "no measured property of a specification predicts what its task will
+    cost", which is a harder claim and a better one. srd-6.5 takes the same
+    evidence from the other side.
 acceptance:
   - Every citation id resolves in references.yaml.
   - Every figure names the dataset file it was read from (A-C2); no number in this chapter is unattributed.

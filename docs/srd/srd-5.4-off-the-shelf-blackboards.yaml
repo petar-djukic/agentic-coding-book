@@ -149,7 +149,9 @@ gaps:
     decomposition is right, and it should be made explicitly rather than left
     for the reader to notice.
   - >
-    outline.yaml mislabels one of the issues Part V cites, and C5.8 inherits
+    Corrected in outline.yaml at GH-71; recorded here because the drafter of
+    C5.8 should know which description was wrong and why. outline.yaml
+    mislabelled one of the issues Part V cites, and C5.8 would have inherited
     the error. GH-1361 is listed as "premature stops" but is actually a stitch
     pass marking an entire release implemented after one task; the premature
     stop is GH-1475, which the outline files under race conditions. Both

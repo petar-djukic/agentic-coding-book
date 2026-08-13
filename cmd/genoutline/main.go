@@ -28,20 +28,24 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// chapterRef is named rather than anonymous so the render helpers can take a
+// part's chapters as a parameter (GH-71).
+type chapterRef struct {
+	ID    string `yaml:"id"`
+	Title string `yaml:"title"`
+	SRD   string `yaml:"srd"`
+}
+
 type architecture struct {
 	Meta struct {
 		Name string `yaml:"name"`
 	} `yaml:"meta"`
 	Structure struct {
 		Parts []struct {
-			ID       string `yaml:"id"`
-			Title    string `yaml:"title"`
-			Role     string `yaml:"role"`
-			Chapters []struct {
-				ID    string `yaml:"id"`
-				Title string `yaml:"title"`
-				SRD   string `yaml:"srd"`
-			} `yaml:"chapters"`
+			ID       string       `yaml:"id"`
+			Title    string       `yaml:"title"`
+			Role     string       `yaml:"role"`
+			Chapters []chapterRef `yaml:"chapters"`
 		} `yaml:"parts"`
 	} `yaml:"structure"`
 }
@@ -53,6 +57,10 @@ type vision struct {
 }
 
 type roadmap struct {
+	Releases []struct {
+		ID   string `yaml:"id"`
+		Gate string `yaml:"gate"`
+	} `yaml:"releases"`
 	Parts []struct {
 		Chapters []struct {
 			ID     string `yaml:"id"`
@@ -116,11 +124,24 @@ func run(docs string, out *os.File) error {
 	// road-map.yaml supplies status for chapters that have no SRD; a missing
 	// road-map costs the status column, not the outline.
 	status := map[string]string{}
+	// gatedBy maps a chapter id to the releases whose gate text names it. A gap
+	// in such a chapter is not merely worth filling; it is holding a release,
+	// and the background-needed appendix says so (GH-71).
+	gatedBy := map[string][]string{}
 	var rm roadmap
 	if err := load(filepath.Join(docs, "road-map.yaml"), &rm); err == nil {
 		for _, p := range rm.Parts {
 			for _, c := range p.Chapters {
 				status[c.ID] = c.Status
+			}
+		}
+		for _, p := range rm.Parts {
+			for _, c := range p.Chapters {
+				for _, rel := range rm.Releases {
+					if c.ID != "" && strings.Contains(rel.Gate, c.ID) {
+						gatedBy[c.ID] = append(gatedBy[c.ID], rel.ID)
+					}
+				}
 			}
 		}
 	}
@@ -141,6 +162,7 @@ func run(docs string, out *os.File) error {
 		if part.Role != "" {
 			fmt.Fprintf(&b, "*%s*\n", oneLine(part.Role))
 		}
+		writeBuildThread(&b, part.Chapters, srds)
 		for _, ch := range part.Chapters {
 			s, ok := srds[ch.ID]
 			if !ok {
@@ -150,8 +172,85 @@ func run(docs string, out *os.File) error {
 			writeChapter(&b, ch.ID, ch.Title, status[ch.ID], s)
 		}
 	}
+	writeBackgroundNeeded(&b, arch, srds, gatedBy, status)
 	_, err = out.WriteString(b.String())
 	return err
+}
+
+// writeBuildThread renders what the reader builds in this part. The build
+// thread is specified as G6 subgoals distributed across the chapters that
+// deliver them, so it is derived from the SRDs rather than restated in a
+// second place. A part with no G6 subgoal renders nothing (GH-71).
+func writeBuildThread(b *strings.Builder, chapters []chapterRef, srds map[string]srd) {
+	type item struct{ id, chapter, goal string }
+	var items []item
+	for _, ch := range chapters {
+		s, ok := srds[ch.ID]
+		if !ok {
+			continue
+		}
+		for _, g := range s.Goals {
+			if strings.HasPrefix(g.ID, "G6.") {
+				items = append(items, item{g.ID, ch.ID, oneLine(g.Goal)})
+			}
+		}
+	}
+	if len(items) == 0 {
+		return
+	}
+	b.WriteString("\n**Build thread.** By the end of this part the reader has built:\n\n")
+	for _, it := range items {
+		fmt.Fprintf(b, "- **%s** (%s) %s\n", it.id, it.chapter, it.goal)
+	}
+	b.WriteString("\n")
+}
+
+// writeBackgroundNeeded collects every SRD's gaps into one appendix. Scattered
+// across 39 files they are unreadable; collected they are the book's
+// pre-drafting work list. A gap in a chapter a release gate names is marked,
+// because that one is holding a release rather than merely waiting (GH-71).
+func writeBackgroundNeeded(b *strings.Builder, arch architecture, srds map[string]srd, gatedBy map[string][]string, status map[string]string) {
+	var any bool
+	for _, s := range srds {
+		if len(s.Gaps) > 0 {
+			any = true
+			break
+		}
+	}
+	if !any {
+		return
+	}
+	b.WriteString("\n# Appendix — Background needed\n\n")
+	b.WriteString("Every chapter contract records what must exist before the chapter can be " +
+		"drafted. Collected here, they are the book's pre-drafting work list. Items marked " +
+		"**gating** sit in a chapter a release gate names, so they hold a release rather " +
+		"than merely waiting. A chapter already drafted carries its status here too, because " +
+		"its entries are mostly decisions taken and recorded rather than work outstanding.\n")
+	for _, part := range arch.Structure.Parts {
+		var wrote bool
+		for _, ch := range part.Chapters {
+			s, ok := srds[ch.ID]
+			if !ok || len(s.Gaps) == 0 {
+				continue
+			}
+			if !wrote {
+				fmt.Fprintf(b, "\n## %s — %s\n", part.ID, part.Title)
+				wrote = true
+			}
+			mark := ""
+			if st := status[ch.ID]; st != "" {
+				mark = fmt.Sprintf(" — %s", st)
+			}
+			if rels := gatedBy[ch.ID]; len(rels) > 0 {
+				mark += fmt.Sprintf(" — **gating** %s", strings.Join(rels, ", "))
+			}
+			fmt.Fprintf(b, "\n**%s %s**%s\n\n", ch.ID, ch.Title, mark)
+			for _, g := range s.Gaps {
+				fmt.Fprintf(b, "- %s\n", oneLine(g))
+			}
+		}
+	}
+	b.WriteString("\n")
 }
 
 func writeHeader(b *strings.Builder, artifact string, n int) {

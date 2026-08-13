@@ -146,6 +146,42 @@ func auditTree(t *testing.T, files tree) error {
 	return audit(write(t, files), nil, nil)
 }
 
+// A term no chapter introduces is legal only when it says so. Both escape
+// hatches are exercised, because a check whose escape hatch is untested is a
+// check that will be worked around rather than used (GH-71).
+func TestOwnershipEscapeHatchesAreAccepted(t *testing.T) {
+	for _, tc := range []struct {
+		name  string
+		entry string
+	}{
+		{"reference vocabulary", "\nsoftware_factory:\n  introduced: P5\n  status: reference\n  definition: A system that compiles specifications into code.\n"},
+		{"retired vocabulary", "\nold_term:\n  introduced: P5\n  status: retired\n  definition: Vocabulary from an earlier draft.\n"},
+		{"the introduction owns terms", "\nvibe_coding:\n  introduced: Introduction\n  definition: Coding by prompting without reading the output.\n"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			f := cleanTree()
+			f["docs/definitions.yaml"] += tc.entry
+			if err := auditTree(t, f); err != nil {
+				t.Fatalf("%s should audit clean, got:\n%v", tc.name, err)
+			}
+		})
+	}
+}
+
+// The escape hatch must not be a blanket exemption: a status the convention
+// does not define leaves the term unowned and still fails.
+func TestUnknownStatusDoesNotExemptOwnership(t *testing.T) {
+	f := cleanTree()
+	f["docs/definitions.yaml"] += "\ncritic:\n  introduced: P5\n  status: draft\n  definition: The agent role that evaluates output.\n"
+	err := auditTree(t, f)
+	if err == nil {
+		t.Fatal("an unrecognised status should not exempt a term from ownership")
+	}
+	if !strings.Contains(err.Error(), "critic is introduced by") {
+		t.Fatalf("wrong finding: %v", err)
+	}
+}
+
 func TestAuditPassesOnACleanSpec(t *testing.T) {
 	if err := auditTree(t, cleanTree()); err != nil {
 		t.Fatalf("clean tree should audit clean, got:\n%v", err)
@@ -205,6 +241,32 @@ func TestAuditCatchesEachBreakage(t *testing.T) {
 				f["docs/srd/srd-1.1-what-is-an-agent.yaml"] = replace(f, "key_terms: [agent]", "key_terms: [harness]")
 			},
 			want: "harness is not in docs/definitions.yaml",
+		},
+		{
+			// The third ownership direction (GH-71). These cases write
+			// docs/definitions.yaml directly rather than through replace(),
+			// which only searches four other files and would silently no-op
+			// here -- the failure mode that shipped two dead tests at GH-86.
+			name: "glossary term is owned by a part rather than a chapter",
+			break_: func(f tree) {
+				f["docs/definitions.yaml"] += `
+orchestrator:
+  introduced: P1
+  definition: The system managing the outer loop.
+`
+			},
+			want: "orchestrator is introduced by \"P1\", which is not a chapter",
+		},
+		{
+			name: "glossary term is owned by a chapter that does not exist",
+			break_: func(f tree) {
+				f["docs/definitions.yaml"] += `
+blackboard:
+  introduced: C9.9
+  definition: Shared state agents read and write.
+`
+			},
+			want: "blackboard is introduced by \"C9.9\", which is not a chapter",
 		},
 		{
 			name: "SRD governs a chapter that does not exist",

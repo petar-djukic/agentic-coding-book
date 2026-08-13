@@ -36,7 +36,7 @@ objective: >
   It states the oracle problem, then shows the case where it is already solved:
   a reference implementation answers what the output should be, so verification
   becomes execution and comparison. The worked evidence is go-unix-utils, where
-  123 utilities were verified against the GNU binaries. It also states the
+  107 utilities were verified against the GNU binaries. It also states the
   limits honestly -- an oracle fixes behaviour and not structure, it exists for
   reimplementations and migrations rather than for new work, and matching a
   reference means inheriting its bugs along with its behaviour.

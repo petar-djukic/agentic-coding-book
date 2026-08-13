@@ -19,6 +19,22 @@ meta:
     passes mage audit before its release closes -- no unaccepted finding
     against constitutions/voice.yaml -- and every claim resolves to a
     citation in references.yaml.
+  specification: >
+    The specification program closed at GH-71. All 39 chapters carry a
+    drafting contract under docs/srd/, every derivation-chain link Q1-Q9 is
+    owned, and the six relNN.srd releases are complete. Every drafting release
+    below now gates on a real SRD rather than on background material the
+    outline recorded as missing.
+
+    Two things the program produced that are worth knowing before drafting.
+    The contracts are not uniform in depth: the Part I objectives run around
+    290 characters and the Part VI ones around 930, because the format matured
+    across the five epics that wrote them. That is recorded rather than
+    corrected -- padding the early ones would add words and no contract -- and
+    a drafter reading the outline end to end should expect Part I to say less
+    per chapter. And every figure the book states is pinned to the dataset
+    snapshot recorded in outline.yaml's header, not refreshed against a
+    growing corpus.
 
 status_values:
   drafted: "full draft in the repository, cited, passing mage audit"

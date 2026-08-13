@@ -5,6 +5,30 @@ title: "Agentic Coding"
 subtitle: "How to Build Software with Coding Agents — and Build the Agents Themselves"
 author: "Petar Djukic"
 
+# Figures in this book are pinned to a snapshot, not refreshed against a
+# growing corpus (GH-71). The corpora keep generating; a book cannot chase
+# them, and a figure that silently changes between printings is worse than a
+# dated one. So every number in the outline, the introduction, and the
+# chapters names the dataset it came from, and the dataset is the snapshot
+# recorded in go-unix-utils analysis/datasets/ at the state described below.
+# A-C2 already requires each number to name its run; this fixes what "its
+# run" means across the book.
+#
+# The snapshot, read at GH-71:
+#   60 pipeline runs, of which 37 merged, 8 finished, 8 in progress, 7
+#   abandoned, and 23 produced no tasks at all
+#   2,706 tasks over 2,610 unique task ids (economics_summary.yaml); note
+#   runs.csv sums to 2,718 and the two are not reconciled -- cite the file
+#   45,789 lines of production Go at peak, 32,975 at latest
+#   115 specified targets: 109 commands and 6 packages; 107 command
+#   implementations present on disk
+#   $3,677.06 total cost, 1,951 wall-clock hours
+#   659 task ids with turn-level transcripts -- roughly a quarter, so every
+#   per-turn figure is over the instrumented subset and must say so
+#
+# Refreshing the snapshot means re-reading every figure that cites it, which
+# is the cost of the policy and the reason to do it once, late.
+
 # The build thread (GH-62). The reader builds a small declarative coding
 # harness across the book and grows it into an orchestrator in Part V. Each
 # part's prose stays mechanism-first; each part ends having added a working
@@ -164,9 +188,10 @@ parts:
           generated code defect back to the spec that caused it.
       - title: "Task decomposition"
         description: >
-          Scoping work for agents. One requirement per task. What happens when
-          tasks are too big (sort R4: 104 turns) or too small (overhead per
-          task). The calibration problem. (go-unix-utils #167, #45)
+          Scoping work for agents. One requirement per task. What happens
+          when tasks are too big or too small, read off the measured turn
+          distribution rather than from a single case. The calibration
+          problem. (go-unix-utils #167, #45)
     background_needed:
       - Example PRDs from go-unix-utils (good and bad)
       - The execution constitution YAML
@@ -242,8 +267,10 @@ parts:
     chapters:
       - title: "The trust problem"
         description: >
-          You can't read 44,628 lines. You can't review every function. What
-          does "correct" mean when the programmer didn't write the code?
+          You can't read the output of a pipeline that generated tens of
+          thousands of lines across 60 runs. You can't review every
+          function. What does "correct" mean when the programmer didn't
+          write the code?
       - title: "Mechanical verification"
         description: >
           Compiler, linter, test suite, differential tests: the stack of
@@ -262,9 +289,10 @@ parts:
           (ambiguous domains).
       - title: "Confidence, not proof"
         description: >
-          In practice, you're building confidence through layers of evidence,
-          not proving correctness. The churn metric (3.7% in Run 31). When to
-          ship and when to hold.
+          In practice, you're building confidence through layers of
+          evidence, not proving correctness. Reading a run's waste as
+          evidence -- retries, zero-output tasks, near-timeouts -- and
+          deciding when to ship and when to hold.
     background_needed:
       - Examples of code that passed all tests but was still wrong
       - Examples of spec-level fixes that prevented entire classes of defects
@@ -321,10 +349,12 @@ parts:
           diffable, no rate limits.
       - title: "Build your own blackboard"
         description: >
-          A YAML-file blackboard first — diffable, single-writer, enough
-          for one orchestrator. Then the Dolt graduation: concurrent
-          writers, SQL queries, a versioned audit trail. When to graduate,
-          and what each step buys.
+          A YAML-file blackboard first -- diffable, single-writer, enough
+          for one orchestrator. Then the three pressures that end it:
+          concurrent writers, queries about the run rather than about a
+          task, and audit. What a versioned store supplies for each, and
+          why the graduation is a condition to check rather than a step to
+          take.
       - title: "The sub-agent lifecycle"
         description: >
           The orchestrator spawns, configures, monitors, collects, and
@@ -337,14 +367,18 @@ parts:
           reverted (#1469), when progress is lost on restart (#1389).
       - title: "Failure modes"
         description: >
-          Race conditions with GitHub API (#1475), stale branches causing
-          infinite retries (#1561), no backoff on failures (#1562), premature
-          stops (#1361). Distributed systems problems in agent orchestration.
+          Race conditions with the GitHub API, which also produce
+          premature stops (#1475), stale branches causing infinite retries
+          (#1561), no backoff on failures (#1562), and a whole release
+          marked implemented after a single task (#1361). Distributed
+          systems problems in agent orchestration.
       - title: "Assembling the orchestrator"
         description: >
           The parts become the whole: planner, generator, blackboard, and
-          lifecycle manager in one loop. CLI vs. SDK (#687). The 31-tries
-          iteration story, and why building it yourself is the point.
+          lifecycle manager in one loop. CLI vs. SDK (#687). The iteration
+          history as runs.csv records it -- 60 runs, 23 of which produced
+          no tasks and 7 abandoned -- and why building it yourself is the
+          point.
     background_needed:
       - "Beads: a bd usage walkthrough for the off-the-shelf chapter"
       - "Dolt: a blackboard schema sketch for the build-your-own chapter"
@@ -384,20 +418,23 @@ parts:
           tells you.
       - title: "Reading the logs"
         description: >
-          Spotting thrashing (40+ turn tasks), waste patterns (edit-match-fail
-          loops, redundant comparisons, compile-fix cycles), context
-          degradation. (#1453 three waste patterns)
+          Spotting thrashing as a tail of your own turn distribution
+          rather than at a borrowed threshold, the waste patterns behind
+          it (edit-match-fail loops, compile-fix cycles), and context
+          degradation. (#1453)
       - title: "The economics"
         description: >
-          Reading the receipt. $139.24 for 44,628 lines. Where the money goes.
-          Cost trends across runs. The floor. What cost per line means and
-          doesn't mean.
+          Reading the receipt at task granularity. Where the money goes,
+          cost trends across runs, and the floor -- no measured property
+          of a specification predicts what its task will cost. What cost
+          per line means and doesn't mean.
       - title: "Building intuition"
         description: >
-          After enough instrumented runs, you start predicting which tasks
-          will be expensive before they run. Compound scope, behavior
-          interactions, byte-level matching. This intuition feeds back into
-          how you write requirements.
+          After enough instrumented runs you develop a sense for which
+          work goes badly -- compound scope, behavior interactions, byte-
+          level matching -- and the corpus's own attempt to formalise that
+          sense shows why it stays a human skill. This intuition feeds
+          back into how you write requirements.
       - title: "Non-determinism"
         description: >
           Same prompt, different results. Thinking token variance cascading
@@ -412,4 +449,4 @@ parts:
       - cobbler-scaffold logging output examples
       - Generation run reports (run 28, run 31)
       - Examples of stats before/after instrumentation improvements
-      - The sort R4 turn-by-turn analysis as a debugging walkthrough
+      - A turn-by-turn analysis of one long-running task as a debugging walkthrough (the sort R4 case named here does not resolve; see GH-92)

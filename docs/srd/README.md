@@ -44,6 +44,18 @@ the packaging/capability distinction both were -- and the glossary is where
 they have to land (GH-52). Separator style does not matter: the glossary key
 `file_system_access` and the table row **File-system access** are one term.
 
+`mage audit` checks glossary ownership in three directions, and the third was
+added at GH-71 because the first two leave a hole. A term an SRD *requires*
+must be introduced by that chapter (GH-88); a term a chapter's table *defines*
+must exist in the glossary (GH-52); and now every glossary term must name the
+chapter -- or the Introduction -- that introduces it. Nothing caught a term no
+chapter mentions at all, which is how fifteen entries reached
+`definitions.yaml` owned by a part rather than a chapter, invisible to every
+check until the specification was finished and someone counted. A term no
+chapter introduces is legal when it says so: `status: reference` for
+vocabulary a reader may meet in a cited corpus, `status: retired` for
+vocabulary kept so earlier drafts still resolve.
+
 **What belongs in `apparatus.key_terms`.** Only terms the chapter itself
 introduces, which `definitions.yaml` records per term in its `introduced`
 field. A chapter's table may repeat a term defined elsewhere for the reader's
@@ -71,6 +83,15 @@ demanded `agentic_loop`, which C1.4 introduces, and `srd-1.6` demanded
 | `links` | `requires`: chapter ids this one builds on, which must precede it in reading order; `supports`: chapter ids that consume its output |
 | `gaps` | corpus holes worth filling before or during drafting |
 | `acceptance` | drafting-readiness checks |
+
+## Figures are pinned to a snapshot
+
+Every number a chapter states names the dataset it came from, and those
+datasets are a snapshot rather than a live total. The policy, the snapshot's
+contents, and the reason for it are recorded in the header of
+[../../outline.yaml](../../outline.yaml) (GH-71). Two consequences for a
+drafter: a figure that cannot name its file does not go in, and a per-turn
+figure covers roughly a quarter of the corpus and has to say so.
 
 ## The drafting contract
 

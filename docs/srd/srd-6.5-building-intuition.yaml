@@ -68,6 +68,13 @@ prior_material:
       analysis/datasets/quality_summary.yaml and the per-task cost and turn
       data behind C6.3 and C6.4, which is where the expensive tail is
       identified before anything is predicted about it.
+  - path: go-unix-utils
+    offers: >
+      analysis/datasets/specs_summary.yaml, read at GH-71, which rules out the
+      obvious predictors before the chapter proposes any: requirement count,
+      specification text length, and specification weight each fit cost with an
+      r-squared below 0.001 over roughly 2,350 tasks. Whatever predicts an
+      expensive task, it is not how much the specification asks for.
   - path: cobbler-scaffold
     offers: the requirement text the tasks were generated from, without which outcomes cannot be joined back to the properties that produced them
 citations:
@@ -91,6 +98,8 @@ content:
     cites: []
   - say: "The expensive tail usually has something in common, and in this corpus it is the shape of the requirement rather than the size of it."
     cites: [wang2024]
+  - say: "Size in particular is not it: requirement count, specification length, and specification weight all fit task cost with an r-squared near zero, so bigger asks do not cost more."
+    cites: []
   - say: "The obvious next step is to fit a model, and the corpus contains one, which is more useful for its failures than its fit."
     cites: []
   - say: "It predicts tool calls rather than cost, most of its inputs are only known after the task has run, and on failed builds it does worse than predicting the average."

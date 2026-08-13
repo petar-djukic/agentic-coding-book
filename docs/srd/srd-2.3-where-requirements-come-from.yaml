@@ -34,7 +34,7 @@ objective: >
   It treats requirements as something found rather than authored: standards,
   reference implementations, RFCs, existing codebases, and domain knowledge
   already encode the behavior a system must have. It shows the extraction on
-  the go-unix-utils corpus, where 123 utilities were specified from POSIX and
+  the go-unix-utils corpus, where 107 utilities were specified from POSIX and
   the GNU implementations, and it establishes the recording discipline that
   makes an extraction checkable -- a pinned commit, a named source file, a line
   number for the behavior in question.

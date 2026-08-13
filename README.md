@@ -8,14 +8,17 @@ orchestrating agent loops past the limits of a single context window.
 A build thread runs through every part: the reader builds a small
 declarative coding harness and grows it into an orchestrator by Part V.
 
-The material comes from production runs rather than demos — 44,628 lines
-of Go generated across 31 pipeline runs, and 123 Unix utilities
+The material comes from production runs rather than demos — 45,789 lines
+of production Go at peak across 60 pipeline runs, and 107 Unix utilities
 regenerated from specification and verified against the GNU reference
-binaries by differential testing.
+binaries by differential testing. Those figures name a snapshot of the
+datasets rather than a running total; `outline.yaml` records which.
 
 **Work in progress, written in the open.** Part I is drafted
 mechanism-first — the harness is the protagonist. All six chapters are
-written; the remaining parts are outlines. Chapters also run as articles at
+written. Every remaining chapter is specified rather than merely outlined:
+all 39 carry a drafting contract under `docs/srd/`, so what a chapter must
+establish, cite, and answer is fixed before it is written. Chapters also run as articles at
 [Mesh Intelligence](https://meshintelligence.substack.com?utm_source=github&utm_campaign=agentic-coding-book). Star or watch to follow the drafts.
 
 ## Contents
@@ -42,16 +45,16 @@ mechanism, so that every prescription in Parts II–VI has a fact behind it.
 |---|---|---|
 | [Layered Construction](10-layered-construction.md) | drafted | Inner and outer loops; tracer bullets; verification gates; why agents automate only one loop |
 | [Language Selection](11-language-selection.md) | drafted | Language-model pairing; interpolation density; grammar complexity; the compiler in the inner loop |
-| Where requirements come from · Writing specs for agents · The constitution · Spec defects · Task decomposition | outline | Externalizing intent so agents execute it without guessing |
+| Where requirements come from · Writing specs for agents · The constitution · Spec defects · Task decomposition | specified | Externalizing intent so agents execute it without guessing |
 
 ### Parts III–VI
 
 | Part | State | Subject |
 |---|---|---|
-| [III — Testing](12-part-iii-testing.md) | outline | Verifying code no human wrote; differential testing; the generated-test circularity problem |
-| [IV — Correctness](13-part-iv-correctness.md) | outline | What "correct" means when you did not write the code |
-| [V — Orchestration](14-part-v-orchestration.md) | outline | Planners and generators; the blackboard — GitHub, beads, or build your own; the sub-agent lifecycle; failure and recovery |
-| [VI — Instrumentation](15-part-vi-instrumentation.md) | outline | Logging, cost analysis, failure diagnosis |
+| [III — Testing](12-part-iii-testing.md) | specified | Verifying code no human wrote; differential testing; the generated-test circularity problem |
+| [IV — Correctness](13-part-iv-correctness.md) | specified | What "correct" means when you did not write the code |
+| [V — Orchestration](14-part-v-orchestration.md) | specified | Planners and generators; the blackboard — GitHub, beads, or build your own; the sub-agent lifecycle; failure and recovery |
+| [VI — Instrumentation](15-part-vi-instrumentation.md) | specified | Logging, cost analysis, failure diagnosis |
 
 One drafted chapter is parked outside the sequence:
 [Intent, Autonomy, and Verification](unplaced-intent-autonomy-and-verification.md)
@@ -60,13 +63,14 @@ concepts in it are still needed — behavioral versus constructional
 intent, the autonomy levels, and the verification stack — and
 `docs/road-map.yaml` tracks where they land.
 
-`outline.yaml` holds the full chapter-level plan; `dictionary.yaml`
-holds the term definitions used across the book.
+`outline.yaml` holds the full chapter-level plan and the snapshot policy for
+every figure the book states; `docs/definitions.yaml` holds the term
+definitions, each naming the chapter that introduces it.
 
 ## The evidence base
 
 Claims trace to public repositories:
-[go-unix-utils](https://github.com/petar-djukic/go-unix-utils) (123 Unix
+[go-unix-utils](https://github.com/petar-djukic/go-unix-utils) (107 Unix
 utilities generated from specification, verified against GNU binaries),
 [cobbler-scaffold](https://github.com/petar-djukic/cobbler-scaffold)
 (the specifications and constitutions governing generation), and
@@ -104,9 +108,12 @@ mage clean    # remove generated artifacts
 than from the chapters: it reads `docs/ARCHITECTURE.yaml` for the part and
 chapter order, `docs/road-map.yaml` for per-chapter status, and every
 `docs/srd/*.yaml` for that chapter's goal, objective, subgoals, content
-spine, figures, and gaps. Chapters with no SRD are listed with their status,
-so the outline doubles as a coverage report. It needs at least one SRD and
-fails with a message naming the directory otherwise.
+spine, figures, and gaps. It also renders what the reader builds in each part
+and collects every contract's gaps into one background-needed appendix,
+marking those that hold a release. Chapters with no SRD are listed with their
+status, so the outline doubles as a coverage report — there are none left. It
+needs at least one SRD and fails with a message naming the directory
+otherwise.
 
 `mage audit` checks three things and reports every finding together, each
 naming the rule or document field it comes from. **Specification consistency**:

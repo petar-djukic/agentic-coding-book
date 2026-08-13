@@ -119,12 +119,11 @@ gaps:
     definition and run are named, so the contract is written against the run's
     verifiable shape instead. Verified 2026-08-13 at GH-68.
   - >
-    This is the second outline figure to fail verification -- GH-66 found "sort
-    R4: 104 turns" unreproducible for C2.7. Filed as GH-92, covering
-    outline.yaml's numeric claims as a class, since two of the four checked do
-    not reproduce and the remaining two cannot be checked against
-    analysis/datasets/runs.csv, whose LOC columns are net deltas rather than
-    lines generated.
+    Resolved at GH-71: outline.yaml no longer carries the churn figure, and
+    C4.5's description now asks for a run's waste read as evidence -- retries,
+    zero-output tasks, near-timeouts -- which analysis/datasets/waste_summary.yaml
+    supplies directly. GH-92 covered the numeric claims as a class and the
+    outline reconciliation closed it.
   - >
     The hand-off from C3.5 has to be agreed in one direction. srd-3.5 says it
     grades the evidence and this chapter says what the evidence is not; written

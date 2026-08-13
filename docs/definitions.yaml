@@ -31,6 +31,23 @@
 
 # --- Retired terminology -------------------------------------------------
 
+# Term ownership. Every entry's `introduced` field names the chapter -- or the
+# Introduction -- that introduces the term, and `mage audit` enforces it
+# (GH-71). Two statuses are exempt, and both have to be stated rather than
+# inferred:
+#
+#   status: retired    vocabulary from earlier drafts, kept so those drafts
+#                      still resolve; nothing introduces it
+#   status: reference  vocabulary a reader may meet in a cited corpus --
+#                      chiefly the declarative-agents and
+#                      agentic-applications volumes and the software-factory
+#                      framing this book's Part V no longer uses -- which no
+#                      chapter of this book introduces
+#
+# The escape hatch is explicit because silence is what let fifteen terms
+# accumulate here unowned and unnoticed until the specification was finished
+# and someone counted (GH-94, GH-71).
+
 clauding:
   status: retired
   definition: >
@@ -136,6 +153,7 @@ specification_delta:
     cost the most because they affect every downstream layer.
   types: [requirement_delta, use_case_delta, architecture_delta, test_delta]
   introduced: P5
+  status: reference
   see_also: [evolution, specification]
 
 # --- Specification layers ------------------------------------------------
@@ -621,6 +639,7 @@ verify:
     repair phase.
   cobbler_phase: inspect
   introduced: P5
+  status: reference
   see_also: [generate, repair, verification_stack]
 
 repair:
@@ -630,6 +649,7 @@ repair:
     criterion includes no regressions, and the retry logic differs.
   cobbler_phase: mend
   introduced: P5
+  status: reference
   see_also: [verify, generate]
 
 improve:
@@ -640,6 +660,7 @@ improve:
     entropy.
   cobbler_phase: pattern
   introduced: P5
+  status: reference
   see_also: [plan, software_entropy]
 
 # --- Coordination substrate ----------------------------------------------
@@ -695,6 +716,7 @@ critic:
     assessment.
   coding_analogue: "cobbler inspect"
   introduced: P5
+  status: reference
   see_also: [generator, guardian]
 
 guardian:
@@ -731,6 +753,7 @@ coordinator:
     and consensus when agents propose different approaches.
   coding_analogue: "cobbler task scheduling, merge management"
   introduced: P5
+  status: reference
   see_also: [orchestrator]
 
 knowledge_manager:
@@ -749,6 +772,7 @@ creator:
     instances.
   coding_analogue: "worktree management, sub-agent lifecycle"
   introduced: P5
+  status: reference
   see_also: [orchestrator]
 
 # --- Lifecycle -----------------------------------------------------------
@@ -759,6 +783,7 @@ genesis:
     identify the need, compose the specification, run generation against an
     empty codebase, validate, deploy. Constructive -- building from nothing.
   introduced: P5
+  status: reference
   see_also: [evolution, specification]
 
 evolution:
@@ -769,6 +794,7 @@ evolution:
     tests, deploy with rollback. Surgical -- modifying what exists while
     preserving what works.
   introduced: P5
+  status: reference
   see_also: [genesis, specification_delta]
 
 drift:
@@ -778,6 +804,7 @@ drift:
     not matter, and accumulated gaps eventually make the software wrong for
     its context. The threshold for triggering evolution is a judgment call.
   introduced: P5
+  status: reference
   see_also: [evolution, software_entropy]
 
 # --- Autonomy ------------------------------------------------------------
@@ -803,6 +830,7 @@ software_factory:
     plan/generate cycle. Takes specifications in, produces working code out.
   autonomy_level: L4+
   introduced: P5
+  status: reference
   see_also: [specification_factory, orchestrator]
 
 specification_factory:
@@ -812,6 +840,7 @@ specification_factory:
     acceptance criteria. Does not exist in practice.
   autonomy_level: L5
   introduced: P5
+  status: reference
   see_also: [software_factory, autonomy_level]
 
 guided_component:
@@ -822,6 +851,7 @@ guided_component:
     coding agents are guided components.
   capabilities: [self-programming, "self-reflection (limited)"]
   introduced: P5
+  status: reference
   see_also: [recursive_component, agent_harness]
 
 recursive_component:
@@ -832,6 +862,7 @@ recursive_component:
     orchestrators approximate it by coordinating guided components.
   capabilities: [self-programming, self-reflection, self-orienting, self-architecting]
   introduced: P5
+  status: reference
   see_also: [guided_component, software_factory]
 
 aade_loop:
@@ -841,4 +872,5 @@ aade_loop:
     plan the intervention, carry it out. The same pattern as OODA and PDCA.
   phases: [assure, analyze, decide, execute]
   introduced: P5
+  status: reference
   see_also: [inner_loop, outer_loop]
