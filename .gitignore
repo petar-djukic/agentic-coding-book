@@ -9,3 +9,6 @@ generated-files/
 
 # Compiled helper binaries (built by `go build ./cmd/...`).
 /genoutline
+# `go build ./...` inside the package dir drops the binary beside its source,
+# which the root-anchored rule above does not catch (GH-71).
+cmd/genoutline/genoutline

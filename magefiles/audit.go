@@ -121,8 +121,13 @@ type spec struct {
 	definitions map[string]bool
 	// definedIn maps a glossary term to the chapter or part that introduces it,
 	// which is what arbitrates key-term ownership (GH-88).
-	definedIn  map[string]string
-	references map[string]bool
+	definedIn map[string]string
+	// definedStatus carries each term's status, so the ownership check can
+	// exempt the two kinds of term no chapter introduces: retired vocabulary
+	// kept so earlier drafts still resolve, and reference vocabulary the reader
+	// may meet in a cited corpus (GH-71).
+	definedStatus map[string]string
+	references    map[string]bool
 }
 
 type outlineDoc struct {
@@ -215,10 +220,11 @@ type srdDoc struct {
 func loadSpec(root string) (*spec, []finding) {
 	var findings []finding
 	s := &spec{
-		ruleIDs:     map[string]bool{},
-		definitions: map[string]bool{},
-		definedIn:   map[string]string{},
-		references:  map[string]bool{},
+		ruleIDs:       map[string]bool{},
+		definitions:   map[string]bool{},
+		definedIn:     map[string]string{},
+		definedStatus: map[string]string{},
+		references:    map[string]bool{},
 	}
 	fail := func(path string, err error) {
 		findings = append(findings, finding{File: path, Rule: "spec", Detail: err.Error()})
@@ -268,6 +274,7 @@ func loadSpec(root string) (*spec, []finding) {
 	for k, v := range defs {
 		s.definitions[k] = true
 		s.definedIn[k] = v.Introduced
+		s.definedStatus[k] = v.Status
 		// Every defined term records the chapter or part that introduces it.
 		// That field is what arbitrates where a term belongs -- GH-50 used it to
 		// settle every disputed key term -- so an entry without one leaves the
@@ -400,6 +407,45 @@ func checkSpec(s *spec) []finding {
 				add("outline.yaml", "structure", "%s has %d chapters, ARCHITECTURE has %d",
 					ap.ID, len(op.Chapters), len(ap.Chapters))
 			}
+		}
+	}
+
+	// Every glossary term is owned by a chapter, or says explicitly that it is
+	// not. Two directions were already enforced -- a term an SRD requires must
+	// be introduced by that chapter (GH-88), and a term a Key Terms table
+	// defines must exist in the glossary (GH-52) -- and neither catches a term
+	// no chapter mentions at all. That is how fifteen terms reached the
+	// glossary with an introduced field naming a part, invisible to every
+	// check, until the specification was finished and someone counted (GH-71).
+	//
+	// `status: reference` is the escape hatch, for vocabulary a reader may meet
+	// in a cited corpus and that no chapter of this book introduces. It has to
+	// be stated rather than inferred, because the whole point is that silence
+	// is what let the fifteen accumulate.
+	terms := make([]string, 0, len(s.definedIn))
+	for k := range s.definedIn {
+		terms = append(terms, k)
+	}
+	sort.Strings(terms)
+	for _, k := range terms {
+		switch s.definedStatus[k] {
+		case "retired", "reference":
+			continue
+		}
+		owner := s.definedIn[k]
+		if owner == "" {
+			continue // already reported as a missing introduced field
+		}
+		// The introduction defines terms and is not in ARCHITECTURE's chapter
+		// list, because it is dropped before section numbers are assigned
+		// (GH-35). It is still a real place in the book, so it owns terms.
+		if owner == "Introduction" {
+			continue
+		}
+		if !chapterIDs[owner] {
+			add("docs/definitions.yaml", "definitions: ownership",
+				"%s is introduced by %q, which is not a chapter; name the chapter that introduces it, or mark it `status: reference`",
+				k, owner)
 		}
 	}
 

@@ -138,6 +138,15 @@ gaps:
     that degrades first when the two are combined, which the field observation
     does carry.
   - >
+    The plan/generate/verify/repair/improve cycle is split across two
+    ownership states and this chapter is where that should be settled. C5.2
+    owns `plan` and `generate`; the remaining three phases were marked
+    `status: reference` at GH-71 because no chapter uses them and the
+    restructured Part V runs plan and generate against Part IV's gates rather
+    than naming a five-phase cycle. If drafting finds the chapter wants the
+    full cycle, it claims the three terms here and drops their reference
+    marker; if not, the marker is already correct and nothing changes.
+  - >
     The role catalogue in definitions.yaml is larger than this chapter --
     critic, analyst, coordinator, knowledge_manager, creator are all recorded
     at part level and none is introduced by a Part V chapter yet. Either they
