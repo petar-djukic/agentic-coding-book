@@ -1,0 +1,124 @@
+# SRD 2.6 -- Spec defects.
+# Drafting contract per docs/srd/README.md. Written before the chapter.
+
+meta:
+  chapter: C2.6
+  title: Spec defects
+  parent: P2
+section_goal: give the failure modes of specifications a taxonomy, and show how a defect in generated code is traced back to the specification that caused it
+goals:
+  - id: G2.20
+    goal: The reader can name the recurring ways a specification fails and recognize each in a draft of their own.
+  - id: G2.21
+    goal: The reader can trace a defect in generated code back to the specification text that produced it, rather than treating it as a model error.
+  - id: G2.22
+    goal: The reader can tell a specification defect from a generation defect, and say which fix each one calls for.
+chain:
+  - id: Q5
+    owns: partial
+    note: >
+      C2.6's share of Q5 is the negative one: what goes wrong in what was
+      written down. It is the chapter that makes the rest of Part II checkable,
+      because a specification practice with no failure taxonomy cannot be
+      debugged.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S4, V-S5, V-S6, V-P1]
+    note: "V-S5 binds hardest: every defect class needs a specification fragment and the code it produced, not a description of the class."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C2, A-C4, A-X1]
+    note: >
+      A-C2: any claim about how often a defect class occurs names the run it was
+      counted in. A taxonomy asserted without frequencies is acceptable; a
+      frequency without a run is not.
+objective: >
+  It gives the defect classes a name and a signature -- ambiguity, missing edge
+  cases, contradictory rules, under-specification -- and shows each one as a
+  specification fragment beside the code it produced. It then gives the tracing
+  procedure that runs backwards from a failure to its cause, and separates the
+  two repairs: a specification defect is fixed by changing the specification and
+  regenerating, a generation defect by making the specification harder to
+  misread. C2.1 already draws that distinction at its verification gate; this
+  chapter is where it becomes a method.
+prior_material:
+  - path: go-unix-utils
+    offers: >
+      The specification corpus and the differential test results beside it, so a
+      defect in a generated utility can be traced to the spec text and to the
+      reference behaviour it failed to match.
+  - path: cobbler-scaffold
+    offers: generation runs where regeneration after a specification fix is visible as a separate attempt on the same task
+citations:
+  - id: wang2024
+    role: anchor
+    note: >
+      Hallucination phenomena in practical code generation, which supplies the
+      failure signatures the taxonomy has to account for -- output that passes
+      static checks and tests while being wrong.
+  - id: iso29148
+    role: context
+    note: >
+      The standards lineage has its own vocabulary for requirement quality --
+      unambiguous, verifiable, complete. Cited as the prior art the taxonomy
+      adapts, with the difference stated: those criteria were written for a
+      human reader who can ask.
+  - id: liu2023
+    role: evidence
+    note: a constraint present but badly placed is a distinct defect class from a constraint absent, and the position effect is why
+content:
+  - say: "A defect in generated code is more often a defect in the specification than a failure of the model, and the two call for different repairs."
+    cites: []
+  - say: "The classes recur: ambiguity the model resolves silently, edge cases the specification never mentions, rules that contradict each other, and requirements too thin to constrain the output."
+    cites: [iso29148]
+  - say: "A constraint that is present but buried is its own class, because the specification is complete and the output still ignores it."
+    cites: [liu2023]
+  - say: "The tracing runs backwards: from the failing behaviour, to the generated code that produced it, to the specification text the code is a faithful reading of."
+    cites: []
+  - say: "Fluent, confident, wrong output is the normal shape of a specification defect, which is why review by reading does not find these and differential tests do."
+    cites: [wang2024]
+apparatus:
+  objectives:
+    - Name the recurring specification failure modes.
+    - Trace a generated defect back to the specification text that caused it.
+    - Distinguish a specification defect from a generation defect.
+  sidebars:
+    - type: Common Error
+      about: fixing the generated code and leaving the specification that produced it unchanged, so the next regeneration reproduces the defect
+    - type: From the Field
+      about: a defect traced back to a single ambiguous sentence, and what the sentence had seemed to say
+    - type: Performance Observation
+      about: the cost of regenerating after a specification fix against the cost of patching the output
+  key_terms: []
+  key_terms_note: >
+    definitions.yaml assigns no term to this chapter yet. The taxonomy will coin
+    names for the defect classes, and contract rule 2 requires them to reach the
+    glossary in the same unit that coins them -- mage audit enforces both
+    directions since GH-52, so a coined term that never lands in
+    definitions.yaml fails the gate.
+figures:
+  - shows: "One defect traced end to end: the specification fragment, the generated code that reads it faithfully, the failing differential test, and the corrected fragment."
+    status: planned
+links:
+  requires: [C1.5, C2.1, C2.3, C2.4, C2.5]
+  supports: [C3.1, C3.2, C4.1]
+gaps:
+  - >
+    The chapter's terms do not exist yet. Whatever the taxonomy names its
+    classes, those names are new vocabulary and belong in definitions.yaml with
+    introduced: C2.6 before the chapter is drafted, not after.
+  - >
+    The tracing procedure needs a real worked case, and the strongest available
+    is a go-unix-utils utility whose differential test failed against the GNU
+    reference for a reason present in its specification. Identifying that case
+    is drafting work, and it is the one thing in this chapter that cannot be
+    written from the taxonomy alone.
+  - >
+    C2.1 section 7.5.1 already distinguishes specification defects from
+    generation defects, in two paragraphs. This chapter owns the distinction, so
+    either C2.1 defers to it or the two say the same thing in two places. The
+    Part II close-out should settle which.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - Every defect class is shown as a specification fragment beside the code it produced (V-S5), not described.
+  - Every frequency claim names the run it was counted in (A-C2); a taxonomy without frequencies is acceptable, an unattributed number is not.
+  - Every coined class name exists in definitions.yaml with introduced: C2.6 (contract rule 2).

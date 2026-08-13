@@ -88,11 +88,28 @@ releases:
       first meant the Part I chapters get drafted into a sequence that is
       already correct.
 
+  - id: rel02.srd
+    name: "Part II specification"
+    status: complete
+    units: [C2.1, C2.2, C2.3, C2.4, C2.5, C2.6, C2.7]
+    gate: "rel01.0 complete, and Q9 existing in argument.yaml -- C2.1 and C2.2 owned no derivation-chain link until GH-86, so their contracts could not be written."
+    completed: >
+      Seven SRDs written under EPIC GH-66, 2026-08-13. C2.1 and C2.2 were
+      written against existing prose per contract rule 1, so their gaps fields
+      carry the draft-versus-contract disagreements that rel02.0 reframes. The
+      other five were written before drafting, in the intended order.
+
+      Open seams recorded in the SRDs rather than settled here: the Build split
+      between C2.4's spec loader and C2.5's constitution gate, which
+      outline.yaml names as one obligation; and the specification-versus-
+      generation defect distinction that C2.1 section 7.5.1 already draws and
+      C2.6 owns.
+
   - id: rel02.0
     name: "Part II -- Construction and Requirements"
     status: pending
     units: [C2.1, C2.2, C2.3, C2.4, C2.5, C2.6, C2.7]
-    gate: "rel01.0 complete. C2.1 and C2.2 are already drafted and need reframing against Part I rather than first drafting."
+    gate: "rel02.srd complete. C2.1 and C2.2 are already drafted and need reframing against their contracts rather than first drafting; the disagreement lists are in the two SRDs."
 
   - id: rel03.0
     name: "Part III -- Testing"
@@ -303,12 +320,12 @@ unplaced:
   - source: unplaced-intent-autonomy-and-verification.md
     status: unplaced
     holds: >
-      Three concepts still needing a home, in a chapter whose framing GH-5
-      retired. GH-43 narrowed this entry: what remains is the fuller treatment
-      of behavioral and constructional intent (the worked notification-system
-      example, its Strategy-pattern figure, and a Common Error sidebar; the boxed
-      definition of agentic_coding that used to sit here went to
-      01-introduction.md at GH-60);
+      Two concepts still needing a home, in a chapter whose framing GH-5
+      retired. The intent material now has a destination: srd-2.4 claims the
+      worked notification-system example, its Strategy-pattern figure, and the
+      Common Error sidebar (GH-66), so it moves when C2.4 is drafted rather than
+      waiting on a decision. The boxed definition of agentic_coding that used to
+      sit here went to 01-introduction.md at GH-60. What remains unplaced is
       the per-level autonomy walkthrough with its bottleneck-by-level and
       programmer-role-by-level tables; and the six-layer verification stack
       with its Good Practice and From the Field sidebars.

@@ -22,7 +22,7 @@ This changes the decision. The question is no longer "what language am I good at
 
 > **Definition: Language-model pairing** — the combination of a programming language and a specific model, evaluated by how reliably the model generates correct code in that language. A strong pairing produces code that compiles, passes tests, and matches the specification on the first or second attempt. A weak pairing produces code that looks correct but fails in ways that require the programmer to debug at the language level.
 
-The rest of this chapter explains what determines the strength of a pairing: training data volume, grammar complexity, compiler feedback quality, and ecosystem coverage. These are not opinions. They are properties of how the interpolation machine (Chapter 3) interacts with different languages.
+The rest of this chapter explains what determines the strength of a pairing: training data volume, grammar complexity, compiler feedback quality, and ecosystem coverage. These are not opinions. They are properties of how the interpolation machine (Chapter 5) interacts with different languages.
 
 ## 8.2 Training Data and Interpolation Density
 
@@ -109,7 +109,7 @@ Most readers will not build FSM-constrained decoders. But the mechanism explains
 
 ## 8.4 The Compiler in the Inner Loop
 
-The inner loop (Chapter 2) is specify → generate → verify → fix. The compiler participates in the "verify" step. A stronger compiler catches more errors, earlier, with clearer messages — and this affects how quickly the inner loop converges.
+The inner loop (Chapter 7) is specify → generate → verify → fix. The compiler participates in the "verify" step. A stronger compiler catches more errors, earlier, with clearer messages — and this affects how quickly the inner loop converges.
 
 The type system paradox: the MultiPL-E benchmark found no statistically significant effect of static versus dynamic typing on pass@1 rates (p=0.33 on HumanEval, p=0.23 on MBPP) [@cassano2023]. The model does not generate better code on the first try in statically typed languages. This seems to contradict the intuition that types help.
 

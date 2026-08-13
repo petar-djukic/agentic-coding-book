@@ -549,3 +549,34 @@ references:
     spec-driven development means rather than as a recommendation (VN-4). The
     practice has several implementations -- Kiro, OpenSpec, fspec among them --
     and no academic treatment settling the term.
+
+- id: iso29148
+  type: standard
+  title: "ISO/IEC/IEEE 29148:2018 -- Systems and software engineering: Life cycle processes: Requirements engineering"
+  author:
+    - literal: ISO/IEC/IEEE
+  issued:
+    year: 2018
+  URL: https://www.iso.org/standard/72089.html
+  note: >
+    Verified 2026-08-13 (GH-66). The current requirements-engineering standard;
+    it obsoletes IEEE 830-1998, the recommended practice for software
+    requirements specifications that most PRD templates descend from. Cited for
+    what a requirement is required to contain, not as a process to adopt -- the
+    book's specifications are written for an agent to execute rather than for a
+    procurement gate.
+
+- id: posix2024
+  type: standard
+  title: "IEEE Std 1003.1-2024, Portable Operating System Interface (POSIX) Base Specifications, Issue 8"
+  author:
+    - literal: IEEE and The Open Group
+  issued:
+    year: 2024
+  URL: https://pubs.opengroup.org/onlinepubs/9799919799/
+  note: >
+    Verified 2026-08-13 (GH-66). POSIX.1-2024 is simultaneously IEEE Std
+    1003.1-2024 and The Open Group Base Specifications Issue 8, maintained by
+    the Austin Group. Cited in C2.3 as the worked case of a standard used as a
+    requirements source: go-unix-utils extracted utility behaviour from it and
+    from the GNU implementations, then verified against the reference binaries.

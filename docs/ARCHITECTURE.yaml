@@ -80,18 +80,25 @@ structure:
       chapters:
         - id: C2.1
           title: Layered construction
+          srd: docs/srd/srd-2.1-layered-construction.yaml
         - id: C2.2
           title: Language selection
+          srd: docs/srd/srd-2.2-language-selection.yaml
         - id: C2.3
           title: Where requirements come from
+          srd: docs/srd/srd-2.3-where-requirements-come-from.yaml
         - id: C2.4
           title: Writing specs for agents
+          srd: docs/srd/srd-2.4-writing-specs-for-agents.yaml
         - id: C2.5
           title: The constitution
+          srd: docs/srd/srd-2.5-the-constitution.yaml
         - id: C2.6
           title: Spec defects
+          srd: docs/srd/srd-2.6-spec-defects.yaml
         - id: C2.7
           title: Task decomposition
+          srd: docs/srd/srd-2.7-task-decomposition.yaml
     - id: P3
       title: Testing
       role: "Verifying code no human wrote, and the circularity problem when the tests are generated too."

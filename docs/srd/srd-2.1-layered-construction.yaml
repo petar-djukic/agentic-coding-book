@@ -1,0 +1,135 @@
+# SRD 2.1 -- Layered construction.
+# Drafting contract per docs/srd/README.md.
+#
+# Written after the draft, not before it (contract rule 1). 10-layered-construction.md
+# existed before this contract, so the contract describes what the chapter does and
+# the `gaps` field records every place the two disagree. That list is the reframing
+# work rel02.0 anticipates; it is not a to-do for this SRD.
+
+meta:
+  chapter: C2.1
+  title: Layered construction
+  parent: P2
+  written_against: 10-layered-construction.md
+section_goal: establish the two loops and the discipline of incremental construction, so a system is decomposed into increments that each work end to end
+goals:
+  - id: G2.1
+    goal: The reader can distinguish the inner loop from the outer loop, and say which one an agent automates and which one does not.
+  - id: G2.2
+    goal: The reader can identify a tracer bullet for a system they are building and put the increments in an order.
+  - id: G2.3
+    goal: The reader can state what a verification gate checks between increments, and what the response is when one fails.
+  - id: G2.4
+    goal: The reader can diagnose the one-shot failure mode -- a system internally consistent and externally wrong -- from its symptoms.
+chain:
+  - id: Q9
+    owns: partial
+    note: >
+      Q9 asks how a system is built when an agent writes the code. C2.1 answers
+      the sequencing half -- increments, order, gates -- and C2.2 answers the
+      substrate half. Q9 was added at GH-86; before that this chapter owned no
+      link, which is why it had no contract.
+constitutions:
+  - file: ../constitutions/voice.yaml
+    rules: [V-S1, V-S3, V-S5, V-S6, V-P2]
+    note: "V-S3 binds: the chapter decomposes into two loops and states the decomposition before solving either."
+  - file: ../constitutions/argument.yaml
+    rules: [A-C1, A-C4, A-X1]
+    note: >
+      This is Part II, so prescription is permitted -- but A-X1 requires each
+      prescription to name the Part I fact it rests on. The increment discipline
+      rests on Q3 (the harness reads and writes per task) and Q4 (the model
+      emits fluent output whether or not it is right).
+objective: >
+  It separates the per-task inner loop from the per-project outer loop, shows
+  that agents automate the first and not the second, and derives incremental
+  construction from what happens when the outer loop is skipped: the parts of a
+  system that must agree with each other are resolved by guessing, and the
+  guesses agree with each other rather than with the programmer.
+prior_material:
+  - path: cobbler-scaffold
+    offers: an orchestrator that runs the outer loop explicitly, with the gate between increments visible in code
+  - path: go-unix-utils
+    offers: 123 utilities built as increments, each verified against a reference binary before the next began
+citations:
+  - id: hunt1999
+    role: anchor
+    note: >
+      Carries two of the chapter's terms -- tracer bullets and software entropy.
+      Cited in 7.4 and 7.5.2.
+  - id: boehm1986
+    role: context
+    note: the spiral model, cited to place iterative construction as older than agents rather than to derive anything from it
+  - id: latentpatterns-harness
+    role: context
+    note: the harness as the thing that runs the inner loop for one task at a time
+content:
+  - say: "Development has always run two nested cycles: a per-task inner loop and a per-project outer loop."
+    cites: [boehm1986]
+  - say: "Agents automate the inner loop. The outer loop -- decomposition, ordering, the decision that an increment is sound -- stays with the programmer, because the agent has no model of what must be true before the next increment can be trusted."
+    cites: [latentpatterns-harness]
+  - say: "Skipping the outer loop produces a system that compiles and passes its own tests while being wrong as a whole, because the agent resolves cross-component constraints by guessing and its guesses are mutually consistent."
+    cites: []
+  - say: "The discipline is the tracer bullet: the thinnest slice that works end to end, built and verified before the next slice starts."
+    cites: [hunt1999]
+  - say: "Each increment boundary is a verification gate, and a gate failure is repaired before the next increment rather than after it."
+    cites: []
+  - say: "Structural decay is immediate rather than gradual with generated code, because each increment is generated without memory of the decisions the last one made."
+    cites: [hunt1999]
+apparatus:
+  objectives:
+    - Distinguish the inner loop from the outer loop.
+    - Explain why agents automate the first and not the second.
+    - Identify tracer bullets and define the increment order.
+    - Identify when an increment is sound enough to build on.
+    - Recognize the failure mode of skipping the outer loop.
+  sidebars:
+    - type: From the Field
+      about: the first non-trivial project described in one pass, and what did not meet in the middle
+    - type: Common Error
+      about: describing the whole system in a single prompt and expecting one generation pass to produce it
+    - type: Good Practice
+      about: defining what end-to-end means for this system before generation starts, and writing the increment plan down
+  key_terms: [inner_loop, outer_loop, tracer_bullet, verification_gate]
+figures:
+  - shows: "The outer loop governing a sequence of increments, each containing an inner loop, with a verification gate between them."
+    status: drawn
+    path: figures/fig-7-1-inner-outer-loops.puml
+    label: "Figure 7.1"
+links:
+  requires: [C1.4, C1.5, C1.6]
+  supports: [C2.6, C2.7, C5.1]
+gaps:
+  - >
+    Figure 7.1 is captioned but never referenced from the prose, which
+    voice.yaml figures.checks requires. Accepted in docs/audit-baseline.yaml
+    against GH-57; clearing it is a one-sentence edit in 7.1.
+  - >
+    definitions.yaml assigns seven terms to this chapter -- increment,
+    inner_loop, outer_loop, software_entropy, tracer_bullet, transient_code,
+    verification_gate -- and the Key Terms table defines four. software_entropy
+    appears in bold in 7.5.2 without a table row; increment and transient_code
+    are not defined anywhere in the draft. apparatus.key_terms above lists only
+    the four the chapter actually defines, so the audit passes today. Either the
+    table gains the other three or the glossary reassigns them, and that is a
+    reframing decision rather than a contract error.
+  - >
+    The Key Terms table defines agent_harness, which C1.3 introduces. A table
+    may repeat a term for the reader's convenience, so this is not a defect, but
+    the SRD does not list it -- listing terms owned elsewhere caused five of the
+    six gaps at GH-50.
+  - >
+    Section 7.5 sends the reader to "the techniques in Part II (Requirements)"
+    from inside Part II. Under the arc this chapter was drafted for, requirements
+    were a different part. It should name the later chapters of this part,
+    C2.3 through C2.6.
+  - >
+    Voice debt deferred by GH-57: the chapter scores LIKELY-AI on filter-tells
+    with 5 HIGH and 10 MEDIUM antithesis findings, and uses "deliberate" three
+    times and "correctly" once. It predates docs/constitutions/, and reframing
+    it against Part I is the same edit as clearing this.
+acceptance:
+  - Every citation id resolves in references.yaml.
+  - Both loops are defined before either is solved (V-S3), and the reader is told which one the agent runs.
+  - Each prescription names the Part I fact it rests on (A-X1); the increment discipline names Q3 and Q4.
+  - The figure is referenced from the prose, which is currently the one open audit finding against this chapter.
