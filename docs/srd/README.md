@@ -56,6 +56,20 @@ chapter introduces is legal when it says so: `status: reference` for
 vocabulary a reader may meet in a cited corpus, `status: retired` for
 vocabulary kept so earlier drafts still resolve.
 
+That third direction checks the claim as well as its form since GH-105. Naming
+a chapter is not enough; the chapter has to say the word. `transient_code`
+named C2.1 while the term appeared nowhere in the book, which passed because
+C2.1 is a real chapter id. The match runs over the whole chapter file, table
+and prose together, because a chapter may legitimately define a term in its
+Key Terms table without using the phrase in body prose. Separator style does
+not matter and inflection does: `file_system_access` matches "File-system
+access" and would not match a plural.
+
+Only a drafted chapter can be checked this way, so the direction is partial on
+purpose and gains coverage as chapters are written -- a term wrongly assigned
+to an undrafted chapter passes today and starts failing the day that chapter
+exists. At GH-105 it covered 40 of the 61 chapter-owned terms.
+
 **What belongs in `apparatus.key_terms`.** Only terms the chapter itself
 introduces, which `definitions.yaml` records per term in its `introduced`
 field. A chapter's table may repeat a term defined elsewhere for the reader's

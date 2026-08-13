@@ -146,6 +146,78 @@ func auditTree(t *testing.T, files tree) error {
 	return audit(write(t, files), nil, nil)
 }
 
+// The third ownership direction only validates that an owner is a chapter.
+// A term can name a real chapter that never mentions it, which is how
+// transient_code came to name C2.1 while the word appeared nowhere in the
+// book (GH-105). These cases write docs/definitions.yaml directly rather than
+// through replace(), which searches four other files and would no-op here --
+// the failure that shipped two dead tests at GH-86.
+func TestTermMustAppearInTheChapterThatOwnsIt(t *testing.T) {
+	f := cleanTree()
+	f["docs/definitions.yaml"] += "\ntransient_code:\n  introduced: C1.1\n  definition: Code that need not survive.\n"
+	err := auditTree(t, f)
+	if err == nil {
+		t.Fatal("a term whose owning chapter never says it should be a finding")
+	}
+	if !strings.Contains(err.Error(), "transient_code names C1.1 as the chapter that introduces it") {
+		t.Fatalf("wrong finding: %v", err)
+	}
+}
+
+// Four ways a term legitimately passes. Each is a decision the check makes on
+// purpose, so each is pinned: silence here would let any of them be tightened
+// later without anyone noticing the cost.
+func TestTermOwnershipAcceptsTheLegitimateCases(t *testing.T) {
+	for _, tc := range []struct {
+		name  string
+		setup func(tree)
+	}{
+		{
+			// The word is in the prose, which is the ordinary case.
+			name: "term appears in the chapter's prose",
+			setup: func(f tree) {
+				f["docs/definitions.yaml"] += "\nstate_machine:\n  introduced: C1.1\n  definition: States and transitions.\n"
+			},
+		},
+		{
+			// Several chapters define a term in the table and never use the
+			// phrase in body prose. Firing on those would be wrong, so the
+			// match covers the whole file.
+			name: "term appears only in the Key Terms table",
+			setup: func(f tree) {
+				f["03-what-is-an-agent.md"] += "| **Tool call** | An invocation the harness performs |\n"
+				f["docs/definitions.yaml"] += "\ntool_call:\n  introduced: C1.1\n  definition: An invocation the harness performs.\n"
+			},
+		},
+		{
+			// Separator style differs across the glossary, the table, and the
+			// prose, and all three name one term (GH-52).
+			name: "separator style differs between glossary and prose",
+			setup: func(f tree) {
+				f["03-what-is-an-agent.md"] += "\nThe agent needs file-system access to do anything.\n"
+				f["docs/definitions.yaml"] += "\nfile_system_access:\n  introduced: C1.1\n  definition: Reading and writing the tree.\n"
+			},
+		},
+		{
+			// C1.2 has no chapter file in the fixture. The check is partial by
+			// design and grows teeth as chapters are drafted; a term owned by
+			// an undrafted chapter has no prose to be absent from.
+			name: "owning chapter is not drafted yet",
+			setup: func(f tree) {
+				f["docs/definitions.yaml"] += "\nblackboard:\n  introduced: C1.2\n  definition: Shared state agents read and write.\n"
+			},
+		},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			f := cleanTree()
+			tc.setup(f)
+			if err := auditTree(t, f); err != nil {
+				t.Fatalf("%s should audit clean, got:\n%v", tc.name, err)
+			}
+		})
+	}
+}
+
 // A term no chapter introduces is legal only when it says so. Both escape
 // hatches are exercised, because a check whose escape hatch is untested is a
 // check that will be worked around rather than used (GH-71).
