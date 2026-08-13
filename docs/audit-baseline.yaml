@@ -24,6 +24,23 @@
 accepted:
   # --- Prose written before voice.yaml existed (GH-28) ---
 
+  # --- Author's text, agent's blame (GH-107) ---
+
+  - file: 10-layered-construction.md
+    rule: 'voice.yaml: sidebars V-B4 authorship'
+    detail: '"From the Field" sidebar #1 was last touched by the do-work skill; V-B4 is author_only'
+    issue: GH-107
+    note: >
+      Different in kind from the two GH-44 entries below, and the difference
+      matters. Those two sidebars were written by an agent, so the prose is
+      not the author's. This one's prose is the author's original, byte for
+      byte: GH-57 edited it to clear a cliche, then reverted the edit, and a
+      revert does not restore authorship. Only the blame is an agent's.
+
+      GH-107 clears it with one commit from the author touching the paragraph.
+      Until then the finding is honest and should stay visible -- the last
+      hand on that sidebar was not his.
+
   - file: 03-what-is-an-agent.md
     rule: 'voice.yaml: sidebars V-B4 authorship'
     detail: '"From the Field" sidebar #1 was last touched by the do-work skill; V-B4 is author_only'
