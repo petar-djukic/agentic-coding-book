@@ -52,17 +52,21 @@ structure_rules:
       a Build section: the last numbered section before the summary, its
       heading beginning "Build:", constructing the piece of the part's build
       deliverable (outline.yaml: build_thread) that the chapter's mechanism
-      explains. Listings follow the figure apparatus: a bold "Listing N.M"
-      line above a fenced code block with a language tag, an italic caption
-      below, and a reference from the prose. The section demonstrates the
-      mechanism as running code; it does not prescribe practice, so
-      argument.yaml A-X1 binds inside it the same as outside.
+      explains. The deliverable is a declarative worked example (GH-114):
+      where the build thread states the piece as a profile or a declared
+      tool, the section builds it in that form, and it may cite the
+      declarative-agents reference implementation as the grown version of
+      the same design. Listings follow the figure apparatus: a bold
+      "Listing N.M" line above a fenced code block with a language tag, an
+      italic caption below, and a reference from the prose. The section
+      demonstrates the mechanism as running code; it does not prescribe
+      practice, so argument.yaml A-X1 binds inside it the same as outside.
     check: >
       Where a section heading contains "Build:", it is the last numbered
       section before Summary; every "Listing N.M" is followed by a fenced
       code block with a language tag and an italic caption, and is
       referenced from the section's prose.
-    source: "GH-62 (build thread); GH-63 applies it to Part I"
+    source: "GH-62 (build thread); GH-63 applies it to Part I; GH-114 repositions the deliverables as declarative worked examples"
 
 prose_rules:
   - id: V-P1

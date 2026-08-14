@@ -25,7 +25,7 @@ chain:
       being either enthusiasm or dismissal.
 constitutions:
   - file: ../constitutions/voice.yaml
-    rules: [V-S1, V-S2, V-S5, V-S6, V-P1]
+    rules: [V-S1, V-S2, V-S5, V-S6, V-S7, V-P1]
     note: "V-P1: the reviewer-of-the-reviewer result is stated as measured, not hedged."
   - file: ../constitutions/argument.yaml
     rules: [A-C1, A-C2, A-C3, A-C5, A-X1]
@@ -46,6 +46,11 @@ objective: >
   opinion, and ensembles still help. It closes on where human reading is worth
   spending, since it cannot be spent everywhere.
 prior_material:
+  - path: declarative-agents
+    offers: >
+      the critic agents in the catalog (GH-114): a reviewing agent with its
+      own context and tool set -- the reference for the inspector the reader
+      builds
   - path: cobbler-scaffold
     offers: >
       The inspector role in the orchestrator -- a reviewing agent with its own

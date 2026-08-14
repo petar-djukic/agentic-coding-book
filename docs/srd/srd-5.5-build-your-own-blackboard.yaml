@@ -29,7 +29,7 @@ chain:
       inspectable, since a file can be read in full and an API cannot.
 constitutions:
   - file: ../constitutions/voice.yaml
-    rules: [V-S1, V-S2, V-S5, V-S6, V-P1, V-V1]
+    rules: [V-S1, V-S2, V-S5, V-S6, V-S7, V-P1, V-V1]
     note: >
       V-S5 governs: this is a build chapter and nothing is asserted about the
       design that the reader does not then implement. V-P1: the graduation
@@ -55,6 +55,11 @@ objective: >
   graduation by default, because the file is sufficient for longer than the
   usual advice suggests.
 prior_material:
+  - path: declarative-agents
+    offers: >
+      applications/coding-agent (GH-114): planner, executor, and critic
+      coordinated through shared state -- the composition the reader's
+      blackboard serves
   - path: cobbler-scaffold
     offers: >
       The state files the orchestrator already keeps beside its tracker --

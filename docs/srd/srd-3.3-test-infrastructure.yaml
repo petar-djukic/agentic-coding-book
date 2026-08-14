@@ -25,7 +25,7 @@ chain:
       something the generation loop can use.
 constitutions:
   - file: ../constitutions/voice.yaml
-    rules: [V-S1, V-S5, V-S6, V-V1, V-V4]
+    rules: [V-S1, V-S5, V-S6, V-S7, V-V1, V-V4]
     note: "V-S5: the harness is shown as code, since a chapter about infrastructure that shows no interface is describing rather than teaching."
   - file: ../constitutions/argument.yaml
     rules: [A-C1, A-C4, A-C5, A-X1]
@@ -42,6 +42,11 @@ objective: >
   builds the harness themselves, since Part III's build-thread deliverable is a
   differential harness standing alone before Part IV wires it into the loop.
 prior_material:
+  - path: declarative-agents
+    offers: >
+      the build-thread reference (GH-114): a declared tool run by a critic-
+      style agent whose verdict is data -- the form the reader's
+      differential harness takes
   - path: go-unix-utils
     offers: >
       pkg/testutils as the reference design: BuildBinary, RunDiffTests over a

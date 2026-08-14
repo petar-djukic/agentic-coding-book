@@ -18,7 +18,7 @@ goals:
   - id: G5.21
     goal: The reader can check their own statistics against the source, having seen how measurement code goes wrong quietly.
   - id: G6.12
-    goal: "The reader has instrumented their own harness: per-task records joined into a run report, so the receipts they learned to read in this part are their own."
+    goal: "The reader has instrumented their own composition: monitor and collector agents joining per-task records into a run report, so the receipts they learned to read in this part are their own (declarative form at GH-114)."
 chain:
   - id: Q8
     owns: partial
@@ -29,7 +29,7 @@ chain:
       run once and having an instrumented pipeline.
 constitutions:
   - file: ../constitutions/voice.yaml
-    rules: [V-S1, V-S4, V-S5, V-S6, V-P1, V-V5]
+    rules: [V-S1, V-S4, V-S5, V-S6, V-S7, V-P1, V-V5]
     note: >
       V-S5 governs a build chapter. V-P1: the stats defects are stated as what
       they were -- wrong numbers presented confidently -- since softening them
@@ -56,6 +56,11 @@ objective: >
   wrong source. All three produced confident output, which is worse than
   producing none, and the chapter ends on the discipline that catches them.
 prior_material:
+  - path: declarative-agents
+    offers: >
+      the monitor and collector agents in the catalog (GH-114):
+      instrumentation as agents in the composition rather than code bolted
+      around it
   - path: cobbler-scaffold
     offers: >
       The generation report as implemented, and three recorded defects in the

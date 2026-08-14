@@ -12,7 +12,7 @@ goals:
   - id: G1.2
     goal: The reader can identify the loop, the state, and the tool boundary in any system presented to them as an agent.
   - id: G6.1
-    goal: The reader can implement the skeleton -- states, transitions, and a tool table -- in Go, as the first increment of the build thread (outline.yaml, added at GH-63).
+    goal: The reader can implement the skeleton as one executor agent -- the states, transitions, and tool table declared as a profile, and a minimal Go runtime that interprets it -- as the first increment of the build thread (outline.yaml, added at GH-63; declarative form at GH-114).
 chain:
   - id: Q1
     owns: partial
@@ -25,15 +25,22 @@ constitutions:
     rules: [A-C1, A-C4, A-X2]
     note: "A-X2 is the live risk: a chapter naming real agent frameworks slides into advocacy easily."
 objective: >
-  It defines an agent as a state machine paired with tools, uses declarative
-  agents as the reference lens because that is the form where the skeleton is
-  still visible, and cross-references the Agentic Applications volume for
-  building agents this way rather than repeating it.
+  It defines an agent as a state machine paired with tools, and establishes
+  the declarative agent -- profile as data, runtime as interpreter -- as the
+  book's working model, the form the reader builds in across every part
+  (GH-114): that is the form where the skeleton is still visible. It
+  cross-references the Agentic Applications volume, which owns every
+  application of agents that is not a coding harness.
 prior_material:
   - path: declarative-agents
-    offers: the agent model in the form where the state machine and the tool boundary are explicit rather than buried in a framework
+    offers: >
+      the agent model in the form where the state machine and the tool
+      boundary are explicit rather than buried in a framework, and the
+      reference implementation for the build thread (GH-114) -- the
+      profile-driven runtime the reader's own minimal version is checked
+      against
   - path: agentic-applications-book
-    offers: the companion volume that builds agents this way; this chapter borrows the lens and points there
+    offers: the companion volume; owns every application of agents that is not a coding harness (GH-114, decision 1)
 citations:
   - id: latentpatterns-harness
     role: anchor
@@ -61,7 +68,7 @@ content:
     cites: [latentpatterns-harness]
   - say: "Industry vocabulary grades autonomy without settling what an agent is, which is why a structural definition is worth more than a taxonomy."
     cites: [tmforum-ig1218]
-  - say: "The definition survives construction: the Build section implements the skeleton in Go -- states as an enum, transitions as assignments, the tool table as a map, the model behind an interface -- and opens the build thread the later parts extend. Evidence type is mechanism; the listing demonstrates the chapter's own claim."
+  - say: "The definition survives construction: the Build section implements the skeleton as one executor agent -- the states, transitions, and tool table declared as a YAML profile, and a minimal Go runtime that loads and interprets it, the model behind an interface -- and opens the build thread the later parts extend. Evidence type is mechanism; the listing demonstrates the chapter's own claim in the chapter's own model."
     cites: []
 apparatus:
   objectives:
