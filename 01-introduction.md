@@ -92,8 +92,8 @@ thread runs alongside: each part ends with the reader adding a piece of
 their own agent — the profile and the runtime that interprets it in
 Part I, the spec loader and constitution gate in Part II, the
 differential harness in Part III, the verification gates and inspector
-in Part IV, the orchestrator in Part V, and its instrumentation in
-Part VI. The pieces check their work against
+in Part IV, and the orchestrator in Part V. The pieces check their work
+against
 [declarative-agents](https://github.com/Nokia-Bell-Labs/declarative-agents),
 the reference implementation the build thread mirrors.
 
@@ -104,7 +104,6 @@ the reference implementation the build thread mirrors.
 | III | Testing: verifying code no human wrote |
 | IV | Correctness: what "correct" means when you did not write the code |
 | V | Orchestration: planners and generators coordinated through a blackboard, at the scale of hundreds of tasks |
-| VI | Instrumentation: observing what the agents actually did |
 
 **Work in progress, written in the open.** Part I is drafted; the remaining
 parts are outlines and notes. Chapters

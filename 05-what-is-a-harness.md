@@ -62,7 +62,7 @@ This book is about the harness.
 
 That is a claim about where a programmer's decisions have effect, and it follows from the split in §3.1. The model is the same model for everyone. Two teams pointing the same model at the same repository get different results, and the difference lives in the tools they exposed, the files they let it read, the loop they let it run, and the approvals they required.
 
-Each of the four responsibilities is the subject of later parts. Specifications and decomposition shape what enters the context, which is file-system access and the assembly built on it. Testing and verification shape loop control, because the verifier's output is what the next iteration is conditioned on. Orchestration is loop control at a scale above the single task. Instrumentation is how any of it becomes visible. Each of those parts is a question about configuration, addressed at the length the answer takes.
+Each of the four responsibilities is the subject of later parts. Specifications and decomposition shape what enters the context, which is file-system access and the assembly built on it. Testing and verification shape loop control, because the verifier's output is what the next iteration is conditioned on. Orchestration is loop control at a scale above the single task. Each of those parts is a question about configuration, addressed at the length the answer takes.
 
 The model is a component in that layer. It is an unusual component — the only one that cannot be inspected or patched — but the system around it is ordinary software, and it responds to engineering.
 
