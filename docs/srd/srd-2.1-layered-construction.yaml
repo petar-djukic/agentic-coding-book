@@ -101,6 +101,23 @@ links:
   supports: [C2.6, C2.7, C5.1]
 gaps:
   - >
+    GH-43's parked autonomy material was resolved against this chapter rather
+    than moved into it. The per-level walkthrough is already here: 7.6 treats
+    L2, L3 and L4 one at a time and maps each to which loop the programmer
+    still drives, which is the part a construction chapter needs. C1.6 carries
+    the definition and the L0 and L5 endpoints. What stayed parked is L1 and a
+    fuller L5, and neither earns a section in a chapter about building in
+    increments.
+
+    The programmer-role-by-level table is retired rather than placed. Its
+    L2, L3 and L4 rows restate 7.6 in a table, and putting the same content in
+    both a Part I chapter and a Part II one is how a reader learns to skip
+    tables. One sentence in it is not restated anywhere and is worth keeping
+    if this chapter is revised: at every level the programmer's contribution
+    is the thing the system cannot generate for itself. That is the claim 7.6
+    makes implicitly by describing what the programmer still does at each
+    level, and stating it outright would strengthen the section's close.
+  - >
     Figure 7.1 is captioned but never referenced from the prose, which
     voice.yaml figures.checks requires. Accepted in docs/audit-baseline.yaml
     against GH-57; clearing it is a one-sentence edit in 7.1.

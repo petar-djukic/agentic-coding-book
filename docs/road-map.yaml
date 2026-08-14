@@ -450,15 +450,17 @@ unplaced:
       questions -- code against specification, specification against intent --
       is claimed by srd-4.1.
 
-      The per-level autonomy walkthrough and its two tables, bottleneck by
-      level and programmer role by level: split at GH-68. The bottleneck table
-      goes to C4.5, whose subject is what evidence supports a decision and
-      whose top row is a verification-trust question. The walkthrough and the
-      programmer-role table stay Part II material and belong with the
-      construction chapters; GH-43 is titled for Part II and that reading
-      holds for these two. Neither destination is an SRD claim yet, so this is
-      the one fragment still needing a prior_material entry when Part II is
-      revisited.
+      The per-level autonomy walkthrough and its two tables: resolved at
+      GH-43, which found less left to move than GH-68 assumed. The
+      bottleneck-by-level table is claimed by srd-4.5, whose closing argument
+      is that table's L5 row -- what stops a system managing its own evolution
+      is verification trust rather than capability. The walkthrough is already
+      drafted: C2.1 section 7.6 treats L2, L3 and L4 one at a time against the
+      two loops, and C1.6 carries the definition with the L0 and L5 endpoints.
+      What stayed parked is L1 and a fuller L5, neither of which earns a
+      section. The programmer-role-by-level table is retired rather than
+      placed, because its middle rows restate 7.6 in a table; srd-2.1 records
+      the one sentence in it worth keeping if that chapter is revised.
 
       Already absorbed and removed from the file: the in-the-loop and
       on-the-loop definitions to C1.6 section 6.4 at GH-11; the
@@ -467,10 +469,13 @@ unplaced:
       GH-11; and the boxed definition of agentic_coding to 01-introduction.md
       at GH-60, which took the last use of the retired term with it.
     owner: >
-      Needs an owner. GH-12 parked the file outside the numbered sequence so
-      the build skips it and the prose survives, and retired the term it was
-      named for, but placing the three concepts is a drafting decision nobody
-      holds yet.
+      No longer needs one. GH-12 parked the file outside the numbered sequence
+      so the build skips it and the prose survives; every fragment now has
+      either a destination named by an SRD or a recorded reason for being
+      retired. The file stays until the chapters that claim it are drafted,
+      because srd-2.4, srd-4.1, srd-4.2 and srd-4.5 point at it by path and
+      deleting the prose would leave four contracts citing material that no
+      longer exists.
 
 # The migration this file completes.
 supersedes:
