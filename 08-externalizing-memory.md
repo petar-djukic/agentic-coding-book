@@ -87,27 +87,30 @@ That is the hinge this part has been building toward. The mechanism is establish
 
 ## 6.6 Build: What the Skeleton Writes Down
 
-The skeleton assembled across this part holds everything it knows in one slice: the transcript. The process exits, the slice is garbage-collected, and the next run starts empty — section 6.1's gap, reproduced in a single variable. Closing it takes less code than any earlier Build section, because the mechanism is nothing more than reading a file at the start and appending to it at the end.
+The runtime assembled across this part holds everything it knows in one slice: the transcript. The process exits, the slice is garbage-collected, and the next run starts empty — section 6.1's gap, reproduced in a single variable. Closing it takes less code than any earlier Build section: one line in the profile naming the file, and a read at the start with an append at the end in the runtime.
+
+```yaml
+memory:
+  notes: NOTES.md
+```
 
 Listing 6.1 closes the gap Figure 6.1 draws.
 
 **Listing 6.1** Externalized memory: a notes file loaded before the task and appended at session end.
 
 ```go
-const notesPath = "NOTES.md"
-
 // Start runs before Run: externalized state enters the transcript
 // first, so the notes precede the task Run appends.
-func (a *Agent) Start() {
-	notes, err := os.ReadFile(filepath.Join(a.root, notesPath))
+func (r *Runtime) Start() {
+	notes, err := os.ReadFile(filepath.Join(r.root, r.profile.Memory.Notes))
 	if err == nil {
-		a.transcript = append(a.transcript, string(notes))
+		r.transcript = append(r.transcript, string(notes))
 	}
 }
 
 // End writes what the next session is allowed to know.
-func (a *Agent) End(decision string) error {
-	f, err := os.OpenFile(filepath.Join(a.root, notesPath),
+func (r *Runtime) End(decision string) error {
+	f, err := os.OpenFile(filepath.Join(r.root, r.profile.Memory.Notes),
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
 	if err != nil {
 		return err
@@ -122,7 +125,7 @@ func (a *Agent) End(decision string) error {
 
 The load-bearing element is the `decision` argument, and the listing cannot supply it. Something has to choose which sentence is worth carrying forward, and in this skeleton that something is whoever calls `End` — which makes section 6.4's wiring question visible in a call site. A programmer typing the sentence at the end of each session is in the loop, serving as the selector. A specification committed to the repository, read by `Start` the same way the notes are, is that selection done in advance, and the programmer who wrote it has left this particular loop.
 
-The part's Build sections now add up to the machine Part I described: a tool boundary, a policy check on writes, a gate feeding consequences back, and a memory that survives the process. What the skeleton does not have is anything to remember — it has never been given a specification or a constitution. Writing those artifacts is the practice the next part opens with, and the skeleton is ready to read them.
+The part's Build sections now add up to the machine Part I described: a tool boundary, a policy check on writes, a gate feeding consequences back, and a memory that survives the process — the states and wiring declared in one profile, the behavior supplied by one runtime. What the machine does not have is anything to remember — it has never been given a specification or a constitution. Writing those artifacts is the practice the next part opens with, and the runtime is ready to read them.
 
 ## Summary
 

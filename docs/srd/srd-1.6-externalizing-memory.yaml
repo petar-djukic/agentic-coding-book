@@ -14,7 +14,7 @@ goals:
   - id: G1.15
     goal: The reader can name the moment the human leaves the loop, and what has to be true before that is safe.
   - id: G6.3
-    goal: The reader can give the build-thread skeleton externalized memory -- state written at session end and read back at the next start -- closing Part I's increment (added at GH-63).
+    goal: The reader can give the build-thread runtime externalized memory -- state written at session end and read back at the next start, in a notes file the profile names rather than the code hard-codes -- closing Part I's increment (added at GH-63; declarative form at GH-114).
 chain:
   - id: Q5
     owns: partial
@@ -80,7 +80,7 @@ content:
     cites: []
   - say: "The moment the human leaves the loop is the moment that stops. What was carried in their head is either written down or it is gone, and the loop proceeds on what remains."
     cites: [hunt1999]
-  - say: "The Build section gives the skeleton a notes file read at Start and appended at End, making the gap an if-statement. The unsupplied decision argument locates the wiring question of 6.4 in a call site, and the closing paragraph hands the part to Part II: the skeleton can read; the artifacts worth reading are the practice parts' subject. Evidence type is mechanism."
+  - say: "The Build section gives the runtime a notes file -- named in the profile, read at Start and appended at End -- making the gap an if-statement. The unsupplied decision argument locates the wiring question of 6.4 in a call site, and the closing paragraph hands the part to Part II: the skeleton can read; the artifacts worth reading are the practice parts' subject. Evidence type is mechanism."
     cites: []
 apparatus:
   objectives:

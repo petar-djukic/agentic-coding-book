@@ -108,6 +108,14 @@ type Profile struct {
 	Tools       []struct{ Name, Root string }
 }
 
+// Tool is the only path from the process to anything outside it.
+// The runtime turns each declaration in the profile's tools list
+// into one of these from its library.
+type Tool interface {
+	Name() string
+	Run(args map[string]string) (string, error)
+}
+
 // Model supplies one signal per step: the next call, or done.
 type Model interface {
 	Decide(transcript []string) (call Call, done bool)
