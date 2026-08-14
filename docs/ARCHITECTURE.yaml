@@ -211,17 +211,17 @@ material_sources:
     offers: "the author's published articles -- loop engineering, GitHub as long-term memory, worktree isolation, the three-command orchestrator, and running a cheaper model on OpenCode. Field material to quarry, not literature to cite: the figures in them are the author's own reporting and name their run before they enter a chapter (A-C2)"
     feeds: [P5, P6]
   - path: declarative-agents
-    offers: "the agent model in the form where the state machine and tools are still visible"
-    feeds: [P1]
+    offers: "the reference implementation for the build thread (GH-114): the profile-driven runtime, the agent catalog, and applications/coding-agent -- a planner, executor, and critic composed from catalog blocks. The agent model in the form where the state machine and tools are still visible"
+    feeds: [P1, P2, P3, P4, P5, P6]
   - path: agentic-applications-book
-    offers: "the companion volume; building applications out of agents"
+    offers: "the companion volume; owns every application of agents that is not a coding harness (GH-114, decision 1)"
     feeds: [P1]
   - path: references.yaml
     offers: "the bibliography behind every cited claim"
     feeds: [P1, P2, P3, P4, P5, P6]
 
 traceability:
-  - "Vision goals map onto parts: G1 (orient) is Part I; G2 (specify) is Part II; G3 (verify) is Parts III and IV; G4 (orchestrate) is Part V; G5 (instrument) is Part VI; G6 (build the tools) runs across every part through the build thread (outline.yaml: build_thread) and culminates in Parts V and VI; it is not a part of its own."
+  - "Vision goals map onto parts: G1 (orient) is Part I; G2 (specify) is Part II; G3 (verify) is Parts III and IV; G4 (orchestrate) is Part V; G5 (instrument) is Part VI; G6 (build the agent) is the organizing goal (GH-114): it runs across every part through the build thread (outline.yaml: build_thread) and culminates in Parts V and VI; it is not a part of its own, and G1-G5 name the capabilities the agent under construction needs."
   - "Vision goals map onto constitution rules: G1 links to voice.yaml chapter apparatus and definitions-before-use; G2-G5 link to argument.yaml claim discipline; G6 links to argument.yaml observation-over-advocacy, since the tooling argument is the one most likely to slide into advocacy."
   - "Constitution rules bind chapters through the SRDs: each SRD names the rule sets its section is checked against, and mage audit reports findings by rule id."
   - "Chapters feed the corpus: every citation resolves to references.yaml, and every term to docs/definitions.yaml."

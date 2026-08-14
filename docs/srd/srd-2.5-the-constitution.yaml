@@ -24,7 +24,7 @@ chain:
       the difference is lifetime rather than subject.
 constitutions:
   - file: ../constitutions/voice.yaml
-    rules: [V-S1, V-S2, V-S4, V-S6, V-V1]
+    rules: [V-S1, V-S2, V-S4, V-S6, V-S7, V-V1]
   - file: ../constitutions/argument.yaml
     rules: [A-C1, A-C4, A-X1]
     note: >
@@ -41,6 +41,11 @@ objective: >
   mechanical, through tool permissions, and probabilistic, through the rule text
   the model reads -- and says which constraints belong on which path.
 prior_material:
+  - path: declarative-agents
+    offers: >
+      the constitution-enforcement agent in the catalog (GH-114): a declared
+      policy gate the runtime enforces without the model's cooperation --
+      the reference for the gate the reader builds
   - path: cobbler-scaffold
     offers: >
       docs/constitutions/, nine constitution files -- design, execution,

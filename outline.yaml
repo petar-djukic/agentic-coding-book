@@ -29,21 +29,33 @@ author: "Petar Djukic"
 # Refreshing the snapshot means re-reading every figure that cites it, which
 # is the cost of the policy and the reason to do it once, late.
 
-# The build thread (GH-62). The reader builds a small declarative coding
-# harness across the book and grows it into an orchestrator in Part V. Each
-# part's prose stays mechanism-first; each part ends having added a working
-# component, recorded per part under build_deliverable. The artifact is
+# The build thread (GH-62, repositioned at GH-114). Building a coding agent
+# is the book's primary goal, not a side thread. The reader builds a minimal
+# declarative runtime — an agent is a YAML profile the runtime interprets —
+# and grows it into a harness that is a composition of agents, assembled
+# into an orchestrator in Part V. Each part's prose stays mechanism-first;
+# each part ends having added a working component through a declarative
+# worked example, recorded per part under build_deliverable. The artifact is
 # written in Go — the language C2.2 argues for and the language of the
-# evidence base. It is pedagogical and usable, distinct from cobbler-scaffold
-# and go-unix-utils, which remain the production evidence.
+# evidence base. declarative-agents (the profile-driven runtime, the agent
+# catalog, and applications/coding-agent) is the reference implementation
+# the examples cite; the reader builds their own runtime rather than
+# installing it (GH-114, decision 2). The artifact is pedagogical and
+# usable, distinct from cobbler-scaffold and go-unix-utils, which remain
+# the production evidence.
 build_thread: >
-  Part I: the harness skeleton — state machine, tool table, edit application,
-  one verification gate. Part II: the spec loader (context assembly from a
-  PRD) and the constitution as an enforced policy gate. Part III: a
-  differential test harness, built standalone. Part IV: the verification
-  stack wired into the loop as gates, and an inspector sub-agent. Part V: a
-  planner and a generator coordinated through a blackboard, assembled into
-  the orchestrator. Part VI: instrumentation of the reader's own harness.
+  Part I: one executor agent as a YAML profile — the state machine and tool
+  table as data — plus the minimal runtime that interprets it: profile
+  loading, edit application, one verification gate as a state transition.
+  Part II: the spec loader (context assembly from a PRD into the profile)
+  and the constitution as an enforced policy gate. Part III: a differential
+  test harness as a declared tool, driven by a critic-style agent, built
+  standalone. Part IV: the verification stack wired into the loop as gates,
+  and an inspector — a critic-family agent — reviewing generated output.
+  Part V: a planner and a generator coordinated through a blackboard,
+  sub-agents constructed as profiles, assembled into the orchestrator.
+  Part VI: monitor and collector agents instrumenting the reader's own
+  composition.
 
 parts:
   - id: part-i
@@ -65,18 +77,22 @@ parts:
       into context, because the model cannot grade its own output, because
       memory has to live somewhere the harness can reach.
 
-      Build deliverable: the harness skeleton — a state machine, a tool
-      table, edit application, and one verification gate. Planned as
-      end-of-chapter Build sections added in a later pass; the drafted
-      prose is untouched until that pass amends the chapters and their SRDs.
+      Build deliverable: one executor agent as a YAML profile — the state
+      machine and tool table as data — and the minimal runtime that
+      interprets it: profile loading, edit application, and one
+      verification gate as a state transition. Planned as end-of-chapter
+      Build sections added in a later pass; the drafted prose is untouched
+      until that pass amends the chapters and their SRDs.
     chapters:
       - title: "What is an agent?"
         status: outline
         description: >
-          The clean model: a state machine plus a set of tools. Declarative
-          agents as the reference lens — the version where the skeleton is
-          still visible. Cross-references the Agentic Applications volume,
-          which builds agents this way rather than borrowing the model.
+          The clean model: a state machine plus a set of tools. The
+          declarative agent — profile as data, runtime as interpreter — is
+          the book's working model, the form the reader builds in across
+          every part, not a borrowed lens (GH-114). Cross-references the
+          Agentic Applications volume, which owns every application of
+          agents that is not a coding harness.
       - title: "The agents you already use"
         status: outline
         description: >
@@ -149,9 +165,10 @@ parts:
       requirements in their head while they coded. That doesn't work when
       someone (something) else is doing the coding.
 
-      Build deliverable: the spec loader — context assembly from a PRD —
-      and the constitution as an enforced policy gate in the reader's
-      harness.
+      Build deliverable: the spec loader — context assembly from a PRD
+      into the agent's profile — and the constitution as an enforced
+      policy gate (reference: the constitution-enforcement agent in the
+      declarative-agents catalog).
     chapters:
       - title: "Layered construction"
         status: drafted  # relocated from Part I; file move tracked in #12
@@ -211,8 +228,9 @@ parts:
       how do you verify the tests themselves? This part works through the
       options.
 
-      Build deliverable: a differential test harness, built standalone here;
-      Part IV wires it into the loop as a gate.
+      Build deliverable: a differential test harness as a declared tool,
+      driven by a critic-style agent, built standalone here; Part IV wires
+      it into the loop as a gate.
     chapters:
       - title: "Differential testing"
         description: >
@@ -262,8 +280,9 @@ parts:
       agents.
 
       Build deliverable: the verification stack wired into the reader's
-      harness loop as gates, and an inspector sub-agent that reviews
-      generated output.
+      harness loop as gates, and an inspector — a critic-family agent the
+      reader constructs as a profile — that reviews generated output
+      (reference: the critic agents in the declarative-agents catalog).
     chapters:
       - title: "The trust problem"
         description: >
@@ -320,7 +339,10 @@ parts:
       Build deliverable: a planner and a generator coordinated through a
       blackboard the reader implements — first as a YAML file, then as a
       Dolt database — assembled into the orchestrator with a sub-agent
-      lifecycle manager.
+      lifecycle manager. The sub-agents themselves are constructed as
+      profiles: per-role prompt, tools, and constraints (reference:
+      applications/coding-agent in declarative-agents, a planner,
+      executor, and critic composed from catalog blocks).
     chapters:
       - title: "Why orchestrate"
         description: >
@@ -357,9 +379,10 @@ parts:
           take.
       - title: "The sub-agent lifecycle"
         description: >
-          The orchestrator spawns, configures, monitors, collects, and
-          kills sub-agents. Worktree isolation, one task per worktree.
-          Agent configurations: per-role prompt, tools, and constraints.
+          Constructing sub-agents as profiles — per-role prompt, tools,
+          and constraints — then the lifecycle: the orchestrator spawns,
+          configures, monitors, collects, and kills them. Worktree
+          isolation, one task per worktree.
       - title: "State management and recovery"
         description: >
           requirements.yaml, road-map.yaml, the consistency problem. What
@@ -403,9 +426,9 @@ parts:
       happening and make informed decisions about what to optimize. This part
       teaches that skill.
 
-      Build deliverable: instrumentation of the reader's own harness — turn
-      counts, cost per task, tool usage, failure modes — so the receipts
-      they learn to read are their own.
+      Build deliverable: monitor and collector agents instrumenting the
+      reader's own composition — turn counts, cost per task, tool usage,
+      failure modes — so the receipts they learn to read are their own.
     chapters:
       - title: "The black box problem"
         description: >

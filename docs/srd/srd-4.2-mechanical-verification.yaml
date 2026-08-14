@@ -29,7 +29,7 @@ chain:
       can establish rather than by when they run.
 constitutions:
   - file: ../constitutions/voice.yaml
-    rules: [V-S1, V-S3, V-S5, V-S6, V-V1]
+    rules: [V-S1, V-S3, V-S5, V-S6, V-S7, V-V1]
     note: "V-S3: the stack is six layers, and the decomposition is stated before any layer is treated."
   - file: ../constitutions/argument.yaml
     rules: [A-C1, A-C4, A-X1]
@@ -47,6 +47,11 @@ objective: >
   harness from C3.3 into the loop so a failing layer stops the work instead of
   annotating it.
 prior_material:
+  - path: declarative-agents
+    offers: >
+      the build-thread reference (GH-114): gates as state transitions in a
+      profile -- the runtime stops on a failing layer because the machine
+      says so
   - path: unplaced-intent-autonomy-and-verification.md
     offers: >
       The six-layer stack -- compilation, linting, tests, coverage,

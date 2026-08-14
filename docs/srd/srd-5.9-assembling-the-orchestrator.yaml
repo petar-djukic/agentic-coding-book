@@ -28,7 +28,7 @@ chain:
       what distinguishes this part's claim from an architecture diagram.
 constitutions:
   - file: ../constitutions/voice.yaml
-    rules: [V-S1, V-S4, V-S5, V-S6, V-P1, V-P2]
+    rules: [V-S1, V-S4, V-S5, V-S6, V-S7, V-P1, V-P2]
     note: >
       V-S5 governs a build chapter. V-P2: the iteration history is reported
       without triumph -- most of what it shows is failure, and a chapter that
@@ -55,6 +55,11 @@ objective: >
   the reason to build one anyway is that the parts are where the judgement
   lives.
 prior_material:
+  - path: declarative-agents
+    offers: >
+      applications/coding-agent (GH-114): the assembled composition the
+      reader's orchestrator mirrors -- planner, executor, and critic
+      composed from catalog blocks
   - path: cobbler-scaffold
     offers: >
       The assembled orchestrator, including the part this chapter names:

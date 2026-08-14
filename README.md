@@ -1,12 +1,15 @@
 # Agentic Coding
 
-**How to build software with coding agents — and build the agents
-themselves.** A book on agentic coding, spec-driven development, and
-AI-assisted software engineering: writing requirements a coding agent
-can execute, verifying generated code you did not write, and
-orchestrating agent loops past the limits of a single context window.
-A build thread runs through every part: the reader builds a small
-declarative coding harness and grows it into an orchestrator by Part V.
+**Build a coding agent — and build software with it.** A book on
+agentic coding, spec-driven development, and AI-assisted software
+engineering. The reader builds a coding agent across the book. It
+starts as a minimal declarative runtime that interprets one YAML
+profile, grows part by part into a harness composed of several
+agents, and becomes an orchestrator by Part V. The practice
+taught along the way — writing requirements a coding agent can
+execute, verifying generated code you did not write, orchestrating
+agent loops past the limits of a single context window — is what the
+agent under construction demands of its builder.
 
 The material comes from production runs rather than demos — 45,789 lines
 of production Go at peak across 60 pipeline runs, and 107 Unix utilities
@@ -32,7 +35,7 @@ mechanism, so that every prescription in Parts II–VI has a fact behind it.
 
 | Chapter | State | Subject |
 |---|---|---|
-| [What Is an Agent?](03-what-is-an-agent.md) | drafted | A state machine plus tools; declarative agents as the lens where the skeleton is still visible |
+| [What Is an Agent?](03-what-is-an-agent.md) | drafted | A state machine plus tools; the declarative agent — profile as data, runtime as interpreter — as the book's working model |
 | [The Agents You Already Use](04-the-agents-you-already-use.md) | drafted | Claude Code, OpenCode, and Crush inspected directly against that model; packaging vs capability |
 | [What Is a Harness?](05-what-is-a-harness.md) | drafted | The software around the model: tool execution, file-system access, loop control, policy |
 | [How a Harness Touches Your Code](06-how-a-harness-touches-your-code.md) | drafted | The harness ↔ file system ↔ compiler sequence; generate → verify → feed-back as the heartbeat |
@@ -75,7 +78,14 @@ utilities generated from specification, verified against GNU binaries),
 [cobbler-scaffold](https://github.com/petar-djukic/cobbler-scaffold)
 (the specifications and constitutions governing generation), and
 [coding-skills](https://github.com/petar-djukic/coding-skills) (the
-four-command GitHub loop Part V describes).
+four-command GitHub loop Part V describes). A fourth repository plays a
+different role:
+[declarative-agents](https://github.com/Nokia-Bell-Labs/declarative-agents)
+is the reference implementation for the build thread — the
+profile-driven runtime, the agent catalog, and a planner–executor–critic
+coding agent composed from it. The reader builds their own minimal
+runtime rather than installing it; the framework is where they check
+their work against a grown version of the same design.
 
 ## Sources and research notes
 
@@ -141,9 +151,11 @@ blanket exemption.
 Petar Djukic — Principal AI Architect, 20+ years of production systems,
 69 US patents, PhD in Computer Engineering. Designed
 [Declarative Agents](https://github.com/Nokia-Bell-Labs/declarative-agents),
-open-sourced by Nokia Bell Labs. A companion volume,
+open-sourced by Nokia Bell Labs and the reference implementation for
+this book's build thread. A companion volume,
 [Agentic Applications](https://github.com/petar-djukic/agentic-applications-book),
-covers building applications out of agents.
+covers building applications out of agents; this book owns the coding
+agent, and the two cross-reference rather than repeat each other.
 
 ## License
 

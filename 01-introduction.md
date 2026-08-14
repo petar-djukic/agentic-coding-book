@@ -5,10 +5,14 @@ month. More code is not the point. The point is that the relationship
 between a programmer and their code has changed: you are no longer the
 one typing, you are the one specifying, verifying, and orchestrating.
 
-This book teaches experienced programmers how to work across the full
-range of that shift — from a single interactive session to autonomous
-pipelines running hundreds of tasks. The material draws on production
-runs rather than demos: 60 pipeline runs producing 2,706 tasks and, at
+This book teaches experienced programmers to build a coding agent. The
+reader who follows the build thread finishes with one: a small
+declarative runtime grown, part by part, into a planner, a generator,
+and an inspector coordinated through shared state. The practice along
+the way — specifying, verifying, orchestrating, from a single
+interactive session to autonomous pipelines running hundreds of tasks
+— is what that agent needs in order to work. The material draws on
+production runs rather than demos: 60 pipeline runs producing 2,706 tasks and, at
 their peak, 45,789 lines of production Go, with 107 Unix utilities
 regenerated from specification and verified against the GNU reference
 binaries by differential testing. Those figures are a snapshot of the
@@ -83,7 +87,15 @@ with agent orchestration.
 ## How the book is arranged
 
 Part I is mechanism; the rest is practice derived from it. Each of the
-later parts covers one thing the mechanism makes necessary.
+later parts covers one thing the mechanism makes necessary. A build
+thread runs alongside: each part ends with the reader adding a piece of
+their own agent — the profile and the runtime that interprets it in
+Part I, the spec loader and constitution gate in Part II, the
+differential harness in Part III, the verification gates and inspector
+in Part IV, the orchestrator in Part V, and its instrumentation in
+Part VI. The pieces check their work against
+[declarative-agents](https://github.com/Nokia-Bell-Labs/declarative-agents),
+the reference implementation the build thread mirrors.
 
 | Part | Subject |
 |---|---|

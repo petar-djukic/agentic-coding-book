@@ -18,7 +18,7 @@ goals:
   - id: G4.18
     goal: The reader can end a sub-agent that is not going to finish, distinguishing a slow task from a stalled one.
   - id: G6.10
-    goal: "The reader has built a lifecycle manager: it spawns a sub-agent into its own worktree under a named configuration, watches it, collects its result, and kills it on timeout."
+    goal: "The reader has built a lifecycle manager: it spawns a sub-agent into its own worktree under a profile the reader wrote -- per-role prompt, tools, and constraints -- watches it, collects its result, and kills it on timeout (declarative form at GH-114)."
 chain:
   - id: Q7
     owns: partial
@@ -29,7 +29,7 @@ chain:
       the process can fail without saying so.
 constitutions:
   - file: ../constitutions/voice.yaml
-    rules: [V-S1, V-S3, V-S4, V-S5, V-S6, V-P1]
+    rules: [V-S1, V-S3, V-S4, V-S5, V-S6, V-S7, V-P1]
     note: >
       V-S3: the five stages are named before any is treated. V-S4: both terms
       this chapter owns are defined at first appearance, since C5.7 and C5.9
@@ -55,6 +55,11 @@ objective: >
   the stage that gets built last and needed first, and it distinguishes the
   two timeouts that matter -- total elapsed, and silence.
 prior_material:
+  - path: declarative-agents
+    offers: >
+      the agent catalog (GH-114): sub-agents constructed as profiles -- per-
+      role prompt, tools, constraints -- the form the reader's lifecycle
+      manager spawns
   - path: cobbler-scaffold
     offers: >
       The lifecycle implemented as named seams in the stitch loop --

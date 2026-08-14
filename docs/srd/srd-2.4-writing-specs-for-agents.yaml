@@ -30,7 +30,7 @@ chain:
       why it has that shape.
 constitutions:
   - file: ../constitutions/voice.yaml
-    rules: [V-S1, V-S2, V-S4, V-S5, V-S6]
+    rules: [V-S1, V-S2, V-S4, V-S5, V-S6, V-S7]
     note: "V-S5 binds: no part of the anatomy stands as theory without a specification fragment showing it."
   - file: ../constitutions/argument.yaml
     rules: [A-C1, A-C4, A-X1]
@@ -48,6 +48,12 @@ objective: >
   chapter also shows the half of intent that usually goes unwritten, using the
   worked example currently parked outside the numbered sequence.
 prior_material:
+  - path: declarative-agents
+    offers: >
+      the build-thread reference (GH-114): profiles declare what the runtime
+      assembles into a request, which is the form the reader's spec loader
+      feeds -- the worked example builds the loader into the agent's
+      profile, not around it
   - path: go-unix-utils
     offers: >
       docs/specs/software-requirements/, the PRD corpus 107 utilities were
