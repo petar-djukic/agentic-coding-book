@@ -168,31 +168,6 @@ structure:
         - id: C5.9
           title: Assembling the orchestrator
           srd: docs/srd/srd-5.9-assembling-the-orchestrator.yaml
-    - id: P6
-      title: Instrumentation
-      role: "Making the loop observable, so the pipeline changes on evidence rather than guesswork."
-      chapters:
-        - id: C6.1
-          title: The black box problem
-          srd: docs/srd/srd-6.1-the-black-box-problem.yaml
-        - id: C6.2
-          title: What to log
-          srd: docs/srd/srd-6.2-what-to-log.yaml
-        - id: C6.3
-          title: Reading the logs
-          srd: docs/srd/srd-6.3-reading-the-logs.yaml
-        - id: C6.4
-          title: The economics
-          srd: docs/srd/srd-6.4-the-economics.yaml
-        - id: C6.5
-          title: Building intuition
-          srd: docs/srd/srd-6.5-building-intuition.yaml
-        - id: C6.6
-          title: Non-determinism
-          srd: docs/srd/srd-6.6-non-determinism.yaml
-        - id: C6.7
-          title: Stats and post-run analysis
-          srd: docs/srd/srd-6.7-stats-and-post-run-analysis.yaml
 
 # Where the book's material comes from. Every SRD lists its own sources in a
 # prior_material field; this map states each corpus once with the parts it
@@ -200,29 +175,29 @@ structure:
 material_sources:
   - path: go-unix-utils
     offers: "Unix utilities generated from specification and verified against GNU binaries; the PRD structure and its defects; per-task turn and cost data"
-    feeds: [P2, P3, P4, P6]
+    feeds: [P2, P3, P4]
   - path: cobbler-scaffold
     offers: "the orchestrator: agent roles, GitHub as coordination substrate, execution units, the generation runs and their logs"
-    feeds: [P5, P6]
+    feeds: [P5]
   - path: coding-skills
     offers: "the GitHub issue loop and the skills that drive it"
     feeds: [P5]
   - path: meshintelligence.substack.com
     offers: "the author's published articles -- loop engineering, GitHub as long-term memory, worktree isolation, the three-command orchestrator, and running a cheaper model on OpenCode. Field material to quarry, not literature to cite: the figures in them are the author's own reporting and name their run before they enter a chapter (A-C2)"
-    feeds: [P5, P6]
+    feeds: [P5]
   - path: declarative-agents
     offers: "the reference implementation for the build thread (GH-114): the profile-driven runtime, the agent catalog, and applications/coding-agent -- a planner, executor, and critic composed from catalog blocks. The agent model in the form where the state machine and tools are still visible"
-    feeds: [P1, P2, P3, P4, P5, P6]
+    feeds: [P1, P2, P3, P4, P5]
   - path: agentic-applications-book
     offers: "the companion volume; owns every application of agents that is not a coding harness (GH-114, decision 1)"
     feeds: [P1]
   - path: references.yaml
     offers: "the bibliography behind every cited claim"
-    feeds: [P1, P2, P3, P4, P5, P6]
+    feeds: [P1, P2, P3, P4, P5]
 
 traceability:
-  - "Vision goals map onto parts: G1 (orient) is Part I; G2 (specify) is Part II; G3 (verify) is Parts III and IV; G4 (orchestrate) is Part V; G5 (instrument) is Part VI; G6 (build the agent) is the organizing goal (GH-114): it runs across every part through the build thread (outline.yaml: build_thread) and culminates in Parts V and VI; it is not a part of its own, and G1-G5 name the capabilities the agent under construction needs."
-  - "Vision goals map onto constitution rules: G1 links to voice.yaml chapter apparatus and definitions-before-use; G2-G5 link to argument.yaml claim discipline; G6 links to argument.yaml observation-over-advocacy, since the tooling argument is the one most likely to slide into advocacy."
+  - "Vision goals map onto parts: G1 (orient) is Part I; G2 (specify) is Part II; G3 (verify) is Parts III and IV; G4 (orchestrate) is Part V; G6 (build the agent) is the organizing goal (GH-114): it runs across every part through the build thread (outline.yaml: build_thread) and culminates in Part V; it is not a part of its own, and G1-G4 name the capabilities the agent under construction needs. G5 removed at GH-127 with Part VI."
+  - "Vision goals map onto constitution rules: G1 links to voice.yaml chapter apparatus and definitions-before-use; G2-G4 link to argument.yaml claim discipline; G6 links to argument.yaml observation-over-advocacy, since the tooling argument is the one most likely to slide into advocacy."
   - "Constitution rules bind chapters through the SRDs: each SRD names the rule sets its section is checked against, and mage audit reports findings by rule id."
   - "Chapters feed the corpus: every citation resolves to references.yaml, and every term to docs/definitions.yaml."
   - "outline.yaml and this file are two views of one structure. Any structural change updates both; the outline carries descriptions for a human reader, this file carries ids, SRD paths, and dependencies for the tooling."

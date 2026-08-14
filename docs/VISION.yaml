@@ -22,7 +22,7 @@ purpose: |
   curriculum. The book is mechanism-first. Part I establishes what an
   agent is, what a harness is, how a harness manipulates the file system,
   where the model fails, and where state lives between sessions; every
-  prescription in Parts II-VI then rests on a fact established there, and
+  prescription in Parts II-V then rests on a fact established there, and
   every part ends with the reader having built the piece of their agent
   that the part described. The reader-outcome test: a programmer finishes
   a chapter and applies the technique to their own project without
@@ -47,9 +47,9 @@ thesis: |
   This relocates the programmer's job. The work is no longer typing the code
   and reviewing it by eye, because neither scales past the volume an agent
   produces; the work is shaping what the harness does -- externalizing
-  intent as specifications the agent executes, building the verification
-  infrastructure that catches what the model gets wrong, and instrumenting
-  the loop so its failures are visible rather than inferred. The mechanism
+  intent as specifications the agent executes, and building the
+  verification infrastructure that catches what the model gets wrong. The
+  mechanism
   determines the practice: because the harness reads whole files into
   context, specifications must be self-contained; because the model cannot
   grade its own output, verification must be mechanical; because memory has
@@ -83,7 +83,7 @@ goals:
   # G<n>.<m> under the book goal G<n> they serve (see docs/srd/).
   #
   # G6 is the organizing goal (GH-114): the reader builds a coding agent,
-  # and G1-G5 name the capabilities that agent needs and the skills its
+  # and G1-G4 name the capabilities that agent needs and the skills its
   # builder acquires along the way. The ids are load-bearing -- SRD subgoals
   # reference G<n>.<m> -- so the reframe changes text, never numbering.
   - id: G1
@@ -94,10 +94,11 @@ goals:
     goal: "Verify: the reader can build the verification stack -- differential tests, generated tests, property-based tests, mechanical gates -- for code they did not write and cannot read in full."
   - id: G4
     goal: "Orchestrate: the reader can run agent work past a single context window, coordinating multiple agents through shared state, and can recognize the distributed-systems failure modes that follow."
-  - id: G5
-    goal: "Instrument: the reader can measure what their agents did -- turn counts, cost, tool usage, failure modes -- and change the pipeline on evidence rather than on guesswork."
+  # G5 (instrument) removed at GH-127: teaching instrumentation moved to
+  # agentic-applications-book. The book still cites its instrumented runs
+  # as evidence (A-C2); ids are stable, so G6 keeps its number.
   - id: G6
-    goal: "Build the agent: the organizing goal the other five serve -- the reader finishes with a coding agent they built themselves: a minimal declarative runtime (state machine, tool table, verification gates) from Parts I-II, grown into a composition of agents -- a planner and a generator coordinated through a blackboard they implemented, an inspector gating the output -- with the sub-agent lifecycle under their orchestrator's control."
+    goal: "Build the agent: the organizing goal the other four serve -- the reader finishes with a coding agent they built themselves: a minimal declarative runtime (state machine, tool table, verification gates) from Parts I-II, grown into a composition of agents -- a planner and a generator coordinated through a blackboard they implemented, an inspector gating the output -- with the sub-agent lifecycle under their orchestrator's control."
 
 non_goals:
   - "A book that teaches programming, or that assumes none."
@@ -126,7 +127,10 @@ inputs:
     the production evidence, not on the teaching artifact.
   companion: |
     agentic-applications-book covers building applications out of agents;
-    this book owns the coding agent (GH-114, decision 1). The declarative
+    this book owns the coding agent (GH-114, decision 1) and, from GH-127,
+    adopts the instrumentation material this book retired -- this book
+    cites its instrumented runs as evidence and points there for the
+    teaching. The declarative
     agent model is this book's working model, not a borrowed lens: the
     agent under construction is specified as profiles and grown into a
     composition of agents. Every application of agents that is not a

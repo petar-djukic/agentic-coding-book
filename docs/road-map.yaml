@@ -12,7 +12,7 @@
 
 meta:
   artifact: "Book: Build a Coding Agent"
-  ordering: "Part I first (mechanism before practice), then Parts II-VI in reading order"
+  ordering: "Part I first (mechanism before practice), then Parts II-V in reading order"
   gates: >
     A drafting release opens once its SRDs exist under docs/srd/ and the
     constitutions it is checked against are in place. Each drafted chapter
@@ -20,15 +20,16 @@ meta:
     against constitutions/voice.yaml -- and every claim resolves to a
     citation in references.yaml.
   specification: >
-    The specification program closed at GH-71. All 39 chapters carry a
-    drafting contract under docs/srd/, every derivation-chain link Q1-Q9 is
-    owned, and the six relNN.srd releases are complete. Every drafting release
+    The specification program closed at GH-71 with a drafting contract for
+    all 39 chapters and every derivation-chain link owned. Part VI's seven
+    contracts retired to agentic-applications-book at GH-127; 32 remain
+    under docs/srd/, and Q8 retired with them. Every drafting release
     below now gates on a real SRD rather than on background material the
     outline recorded as missing.
 
     Two things the program produced that are worth knowing before drafting.
     The contracts are not uniform in depth: the Part I objectives run around
-    290 characters and the Part VI ones around 930, because the format matured
+    290 characters and the later ones around 930, because the format matured
     across the five epics that wrote them. That is recorded rather than
     corrected -- padding the early ones would add words and no contract -- and
     a drafter reading the outline end to end should expect Part I to say less
@@ -219,41 +220,13 @@ releases:
     units: [C6.1, C6.2, C6.3, C6.4, C6.5, C6.6, C6.7]
     gate: "rel05.srd complete."
     completed: >
-      Seven SRDs written under EPIC GH-70, 2026-08-14, completing the
-      specification for all six parts. `monitor` assigned to C6.2 and
-      `analyst` to C6.7, both having sat at part level with no owning chapter;
-      GH-94's remaining three orphaned roles still stand.
-
-      This part has the strongest evidence base in the book, and the contracts
-      are written against named dataset files rather than against the
-      outline's summaries. Two findings carry chapters on their own: retrying
-      is worth about two points, with pass@1 at 0.7743 rising only to 0.795 by
-      pass@18 across 678 task ids; and tasks carry a floor of roughly $1.32
-      before any work, against about a penny per requirement, which deflates
-      cost per line without any help from the argument.
-
-      Three outline promises could not be met as written. The economics
-      figures do not reproduce -- "$139.24 for 44,628 lines" appears in no
-      dataset and implies $3.12 per kLOC against a corpus median of $9.78, so
-      the two numbers are not from one scope (GH-92). C6.5's promise of
-      predicting expensive tasks before they run is unsupported: the corpus's
-      fitted model predicts tool calls rather than cost, nine of its thirteen
-      features are outcomes, and it does worse than the mean on failed builds.
-      And the turn-level figures throughout cover 659 task ids against 2,706
-      tasks, which every chapter using them must state.
-
-  - id: rel06.0
-    name: "Part VI -- Instrumentation"
-    status: pending
-    units: [C6.1, C6.2, C6.3, C6.4, C6.5, C6.6, C6.7]
-    gate: >
-      rel05.0 complete (instrumentation observes the loop the previous part
-      builds) and rel06.srd complete. Two measurements are worth making before
-      drafting rather than after: whether GH-7's single-turn fix removed the
-      input-token variance it was written to remove, which would turn C6.6's
-      strongest section from a proposal into a result; and a model refitted on
-      pre-run features alone, which would give C6.5 the number the outline
-      assumed it already had.
+      Seven SRDs written under EPIC GH-70, 2026-08-14. Retired at GH-127:
+      Part VI moved to agentic-applications-book, and the contracts live at
+      this repository's pre-removal commit. The program's findings that
+      outlived the part -- the GH-92 economics-figure discrepancy, the
+      retry ceiling, the $1.32 task floor, and the 659-of-2,706
+      instrumented-subset caveat -- are recorded on their issues and remain
+      citable wherever the surviving chapters use the run data.
 
 # Every part and chapter with its status. Chapter ids match
 # ARCHITECTURE.yaml; issue numbers are given where a chapter has one.
@@ -401,32 +374,6 @@ parts:
         status: outline
       - id: C5.9
         title: Assembling the orchestrator
-        status: outline
-
-  - id: P6
-    title: Instrumentation
-    status: outline
-    chapters:
-      - id: C6.1
-        title: The black box problem
-        status: outline
-      - id: C6.2
-        title: What to log
-        status: outline
-      - id: C6.3
-        title: Reading the logs
-        status: outline
-      - id: C6.4
-        title: The economics
-        status: outline
-      - id: C6.5
-        title: Building intuition
-        status: outline
-      - id: C6.6
-        title: Non-determinism
-        status: outline
-      - id: C6.7
-        title: Stats and post-run analysis
         status: outline
 
 # Drafted prose with no chapter in the current structure. Recorded here so it

@@ -736,7 +736,8 @@ monitor:
     compiler output, test results, token costs, turn counts, context
     utilization. Supplies the data the analyst interprets.
   coding_analogue: "logging, metrics collection"
-  introduced: C6.2
+  introduced: P5
+  status: reference  # role in the cited corpus; its owning chapter left with Part VI (GH-127)
   see_also: [analyst]
 
 analyst:
@@ -744,7 +745,8 @@ analyst:
     The agent role that interprets observations: diagnoses errors, identifies
     failure patterns, recognizes recurring issues.
   coding_analogue: "cobbler pattern, error diagnosis"
-  introduced: C6.7
+  introduced: P5
+  status: reference  # role in the cited corpus; its owning chapter left with Part VI (GH-127)
   see_also: [monitor, improve]
 
 coordinator:
