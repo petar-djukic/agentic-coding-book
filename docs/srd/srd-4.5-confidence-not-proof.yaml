@@ -54,6 +54,17 @@ prior_material:
       discussion in a real run.
   - path: cobbler-scaffold
     offers: the gate results per increment, so a hold decision can be traced to the layer that produced it
+  - path: unplaced-intent-autonomy-and-verification.md
+    offers: >
+      The bottleneck-by-level table, claimed here at GH-43. It maps each
+      autonomy level to what limits it and what has to change to advance --
+      execution speed at L1-L2, specification quality at L3, machine-readable
+      architectural constraints at L4, and verification trust at L5. The last
+      row is this chapter's subject arriving from the other direction: what
+      stops a system managing its own evolution is not capability but the
+      absence of verification anyone would stake a decision on. The chapter
+      takes the L5 row as its closing argument and the rest as the context
+      that makes it land.
 citations:
   - id: barr2015
     role: anchor
