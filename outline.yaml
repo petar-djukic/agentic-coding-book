@@ -80,9 +80,9 @@ parts:
       Build deliverable: one executor agent as a YAML profile — the state
       machine and tool table as data — and the minimal runtime that
       interprets it: profile loading, edit application, and one
-      verification gate as a state transition. Planned as end-of-chapter
-      Build sections added in a later pass; the drafted prose is untouched
-      until that pass amends the chapters and their SRDs.
+      verification gate as a state transition. Landed as end-of-chapter
+      Build sections in C1.1, C1.4, and C1.6 (GH-63), restated in the
+      declarative form at GH-120.
     chapters:
       - title: "What is an agent?"
         status: outline
