@@ -95,7 +95,15 @@ This is the fact that the verification half of this book rests on. Parts III and
 
 ## 4.6 Build: The Write and the Gate
 
-The skeleton built in the first chapter executes whatever the model proposes and checks nothing afterwards — its `Verifying` state passes straight through. Those are the two gaps this chapter traced, and this section closes both: a write that sits behind policy, and a gate whose output re-enters the transcript. The agent gains one field for the work — the repository root it is given at construction, shared with its tools — and `WriteFile` enters the table in `NewAgent` beside `read_file`.
+The runtime built in the first chapter executes whatever the model proposes and checks nothing afterwards — its `verifying` state emits `pass` unconditionally. Those are the two gaps this chapter traced, and this section closes both: a write that sits behind policy, and a gate whose verdict re-enters the transcript and is routed by the profile. The runtime gains one field for the work — the repository root it is given at construction, shared with the tools it builds from the profile's declarations — and the profile's tools list gains one line:
+
+```yaml
+tools:
+  - name: read_file
+    root: "."
+  - name: write_file
+    root: "."
+```
 
 Listing 4.1 writes out the stage section 4.3 described.
 
@@ -121,36 +129,45 @@ func (t WriteFile) Run(args map[string]string) (string, error) {
 
 *The refusal happens in the harness's code path, not in the model's context. A call that fails the check never reaches the file system, whatever the request contained.*
 
-The check is four lines, and its placement is the point. Section 4.3 called removing a tool arithmetic, against an instruction that competes with everything else in the context; the same arithmetic is available inside a tool. The path test does not compete with anything, because the model never sees it — the model sees the refusal string afterwards, appended to the transcript as one more consequence. Listing 1.2's `ReadFile` needs the same test; the write carries it here because the write is what this chapter traced.
+The check is four lines, and its placement is the point. Section 4.3 called removing a tool arithmetic, against an instruction that competes with everything else in the context; the same arithmetic is available inside a tool. The path test does not compete with anything, because the model never sees it — the model sees the refusal string afterwards, appended to the transcript as one more consequence. Note what the profile did and did not do: declaring `write_file` granted the capability, and the check lives in the tool's Go, in the runtime's library. The read tool needs the same test; the write carries it here because the write is what this chapter traced.
 
 Listing 4.2 fills the empty state.
 
-**Listing 4.2** The gate: the compiler's opinion becomes the next request's evidence.
+**Listing 4.2** The gate: the compiler's opinion becomes a signal the profile routes, and evidence the next request reads.
 
 ```go
-func (a *Agent) verify() string {
+func (r *Runtime) verify() (string, bool) {
 	cmd := exec.Command("go", "build", "./...")
-	cmd.Dir = a.root
+	cmd.Dir = r.root
 	out, err := cmd.CombinedOutput()
 	if err != nil {
-		return "build failed:\n" + string(out)
+		return "build failed:\n" + string(out), false
 	}
-	return "build ok"
+	return "build ok", true
 }
 
-// In Run's switch, the empty state from Listing 1.1 becomes:
-		case Verifying:
-			a.transcript = append(a.transcript, a.verify())
-			a.state = Deciding
+// In Run's loop, the pass-through case becomes:
+		case "verifying":
+			out, ok := r.verify()
+			r.transcript = append(r.transcript, out)
+			if ok {
+				r.next("pass")
+			} else {
+				r.next("fail")
+			}
+
+// And the profile declares where each verdict goes:
+//   - {from: verifying, on: pass, to: deciding}
+//   - {from: verifying, on: fail, to: deciding}
 ```
 
-*One append is the whole mechanism: the compiler's verdict lands in the transcript, and the next `Decide` is conditioned on it.*
+*One append is the whole mechanism: the compiler's verdict lands in the transcript, and the next `Decide` is conditioned on it. Both verdicts route to `deciding` — the difference travels in the transcript — and rerouting `fail` somewhere stricter is a one-line profile edit.*
 
-The two-line case is the heartbeat of section 4.4, reduced to its mechanism: the harness converts consequences into context by appending them. Section 4.5's verifier-absent loop is now reachable from working code: deleting the `a.verify()` call leaves a loop that runs every stage, reports completion, and cannot tell a working change from a broken one. The skeleton still forgets — the transcript dies with the process. The chapter that closes this part takes that up, in prose and in its Build section.
+The case is the heartbeat of section 4.4, reduced to its mechanism: the harness converts consequences into context by appending them. Section 4.5's verifier-absent loop is now reachable from working code: deleting the `r.verify()` call leaves a loop that runs every stage, reports completion, and cannot tell a working change from a broken one. Part IV returns to the wiring the profile has made visible, when there is more than one gate to route. The skeleton still forgets — the transcript dies with the process. The chapter that closes this part takes that up, in prose and in its Build section.
 
 ## Summary
 
-A language model produces text and touches nothing. Every operation that reaches a codebase — reading a file, writing an edit, running a compiler — is performed by the harness, which assembles a request, sends it, applies what comes back, and verifies the result. Context assembly is lossy and positional: the harness copies a chosen subset of the repository into a fixed window, and what is not in the window does not exist for that request, which is why a specification that cross-references another document conveys nothing an agent can act on. Between the model's proposal and the file system sits validation and policy, where a removed tool is a different kind of constraint than an instruction not to use one. After the write comes the verifier, whose output re-enters the context as the next input; that cycle is the loop's heartbeat, and it is the mechanism by which consequences become context. Remove the verifier and every stage still executes, producing confident output that nothing has checked — which is the reason verification occupies a third of this book. The Build section adds both stages to the running skeleton: a write tool that checks its path against policy before touching disk, and a verify step that appends the compiler's output to the transcript.
+A language model produces text and touches nothing. Every operation that reaches a codebase — reading a file, writing an edit, running a compiler — is performed by the harness, which assembles a request, sends it, applies what comes back, and verifies the result. Context assembly is lossy and positional: the harness copies a chosen subset of the repository into a fixed window, and what is not in the window does not exist for that request, which is why a specification that cross-references another document conveys nothing an agent can act on. Between the model's proposal and the file system sits validation and policy, where a removed tool is a different kind of constraint than an instruction not to use one. After the write comes the verifier, whose output re-enters the context as the next input; that cycle is the loop's heartbeat, and it is the mechanism by which consequences become context. Remove the verifier and every stage still executes, producing confident output that nothing has checked — which is the reason verification occupies a third of this book. The Build section adds both stages to the running runtime: a write tool declared in the profile whose path check runs before the disk is touched, and a verify step whose compiler verdict re-enters the transcript as a signal the profile's own transitions route.
 
 ## Key Terms
 

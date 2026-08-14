@@ -75,7 +75,7 @@ apparatus:
     - Define an agent as a state machine plus tools, and apply the definition to a system you have used.
     - Identify the loop, the state, and the tool boundary in a system presented as an agent.
     - Explain why the model alone is not an agent.
-    - Implement the skeleton in Go -- the states, the transitions, and a tool table.
+    - Implement the skeleton as one executor agent -- states, transitions, and tool table declared as a profile, and a minimal Go runtime that interprets it.
   sidebars:
     - type: Common Error
       about: treating the model as the agent, and therefore attributing the loop's behavior to the model

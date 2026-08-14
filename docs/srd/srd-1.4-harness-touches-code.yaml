@@ -14,7 +14,7 @@ goals:
   - id: G1.9
     goal: The reader can describe the generate-verify-feed-back loop as the harness's heartbeat and say what happens when the verifier is absent.
   - id: G6.2
-    goal: The reader can extend the build-thread skeleton with edit application behind policy and a verification gate whose output re-enters context (added at GH-63).
+    goal: The reader can extend the build-thread runtime with edit application behind policy and a verification gate whose verdict re-enters context as a signal the profile routes (added at GH-63; declarative form at GH-114).
 chain:
   - id: Q3
     owns: full
@@ -55,7 +55,7 @@ content:
     cites: []
   - say: "Without the verify step the loop still runs; it just has no way to notice it is wrong, and fluent incorrect output persists."
     cites: [wang2024]
-  - say: "The Build section adds both mechanisms to the build-thread skeleton: a write tool whose policy check runs in the harness's code path rather than in the model's context, and a verify step that appends compiler output to the transcript. Evidence type is mechanism; the deletable a.verify() call makes the verifier-absent case concrete."
+  - say: "The Build section adds both mechanisms to the profile-driven runtime: a write tool declared in the profile whose policy check runs in the harness's code path rather than in the model's context, and a verify step whose compiler verdict re-enters the transcript as a signal the profile's transitions route. Evidence type is mechanism; the deletable r.verify() call makes the verifier-absent case concrete, and rerouting the fail signal is a one-line profile edit."
     cites: []
 apparatus:
   objectives:
