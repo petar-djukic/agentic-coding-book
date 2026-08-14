@@ -159,6 +159,26 @@ sidebars:
         identity; the skill-tracing trailers do (GH-46). Last-touch rather
         than first-write is deliberate -- an agent editing the author's
         sidebar needs the same review as one inventing a sidebar.
+      check_timing: >
+        The check is silent on uncommitted changes, because blame reports an
+        all-zero sha for a line that is not yet committed and there is no
+        commit to judge. So a fix reads green before it is committed and the
+        finding appears afterwards. Verify a V-B4 fix after committing, not
+        before. GH-107 reached main exactly this way (GH-112).
+      revert_note: >
+        Reverting an agent's edit restores the prose and not the authorship.
+        The revert is itself the last commit to touch those lines, so the
+        finding survives with the author's own words in place. What clears it
+        is a commit from the author touching the paragraph; GH-107 is the
+        standing example, where the prose is the author's byte for byte and
+        the blame is not.
+      absent_trailer: >
+        A commit with no `Skill:` trailer produces no finding, which is how a
+        human commit passes and is the design working. It also means the check
+        can be defeated by omitting the trailer, so that is recorded here as a
+        known property: dropping the trailer to clear a V-B4 finding is
+        suppression rather than a fix, and it costs the provenance the
+        skill-tracing trailers exist to carry.
   renaming_note: >
     The first two labels drop "Clauding" per GH-12, which retires the term
     throughout. The labels above are canonical; GH-12 applies the rename to
