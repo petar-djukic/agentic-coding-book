@@ -5,7 +5,7 @@
 
 meta:
   name: agentic-coding-book
-  artifact: "Book: Agentic Coding -- How to Build Software with Coding Agents, and Build the Agents Themselves"
+  artifact: "Book: Build a Coding Agent"
   venue: "Practitioner book, written in the open; chapters run as articles at Mesh Intelligence"
   started: 2026-08-10
   supersedes: "The private drafting tree (literature surveys and notes, retained privately); Part I drafts migrated in GH-3"
