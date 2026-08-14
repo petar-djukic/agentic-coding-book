@@ -11,7 +11,7 @@
 # opens before its SRD exists.
 
 meta:
-  artifact: "Book: Agentic Coding"
+  artifact: "Book: Build a Coding Agent"
   ordering: "Part I first (mechanism before practice), then Parts II-VI in reading order"
   gates: >
     A drafting release opens once its SRDs exist under docs/srd/ and the

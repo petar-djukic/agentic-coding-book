@@ -1,8 +1,7 @@
-# Agentic Coding — Document Outline
+# Build a Coding Agent — Document Outline
 # This is the single source of truth for the book structure.
 
-title: "Agentic Coding"
-subtitle: "How to Build Software with Coding Agents — and Build the Agents Themselves"
+title: "Build a Coding Agent"
 author: "Petar Djukic"
 
 # Figures in this book are pinned to a snapshot, not refreshed against a

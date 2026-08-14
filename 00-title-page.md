@@ -1,6 +1,5 @@
 ---
-title: Agentic Coding
-subtitle: How to Build Software with Coding Agents — and Build the Agents Themselves
+title: Build a Coding Agent
 author: Petar Djukic
 date: Work in progress
 titlepage: true

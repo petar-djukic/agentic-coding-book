@@ -1,8 +1,8 @@
-# Agentic Coding
+# Build a Coding Agent
 
-**Build a coding agent — and build software with it.** A book on
-agentic coding, spec-driven development, and AI-assisted software
-engineering. The reader builds a coding agent across the book. It
+**A book on agentic coding, spec-driven development, and AI-assisted
+software engineering.** The reader builds a coding agent across the
+book — and builds software with it. It
 starts as a minimal declarative runtime that interprets one YAML
 profile, grows part by part into a harness composed of several
 agents, and becomes an orchestrator by Part V. The practice
