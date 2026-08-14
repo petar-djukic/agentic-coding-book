@@ -11,18 +11,22 @@ meta:
   supersedes: "The private drafting tree (literature surveys and notes, retained privately); Part I drafts migrated in GH-3"
 
 purpose: |
-  We teach a working programmer to build software with coding agents: to
-  write requirements an agent can execute without guessing, to verify code
-  no human wrote, and to run agent loops past the limit of a single context
-  window. The book is mechanism-first. Part I establishes what an agent is,
-  what a harness is, how a harness manipulates the file system, where the
-  model fails, and where state lives between sessions; every prescription in
-  Parts II-VI then rests on a fact established there. The book also builds:
-  a build thread (outline.yaml: build_thread) runs through every part, and
-  the reader who follows it finishes with a small working harness grown
-  into an orchestrator, not only with technique. The reader-outcome
-  test: a programmer finishes a chapter and applies the technique to their
-  own project without re-reading it.
+  We teach a working programmer to build a coding agent. The reader who
+  finishes the book has built one: a minimal declarative runtime of their
+  own, grown part by part into a harness that is a composition of agents,
+  and assembled into an orchestrator by Part V (outline.yaml:
+  build_thread). The practice taught along the way -- writing requirements
+  an agent can execute without guessing, verifying code no human wrote,
+  running agent loops past the limit of a single context window -- is what
+  the agent under construction needs in order to work, not a separate
+  curriculum. The book is mechanism-first. Part I establishes what an
+  agent is, what a harness is, how a harness manipulates the file system,
+  where the model fails, and where state lives between sessions; every
+  prescription in Parts II-VI then rests on a fact established there, and
+  every part ends with the reader having built the piece of their agent
+  that the part described. The reader-outcome test: a programmer finishes
+  a chapter and applies the technique to their own project without
+  re-reading it.
 
 audience: |
   The reader is two-sided, and the sides are unevenly served by existing
@@ -54,7 +58,11 @@ thesis: |
   the advantage, since the agents generate the tools too. The book takes its
   own argument literally: each part ends with the reader having built the
   component the part described, and by Part V the components assemble into
-  an orchestrator of their own.
+  an orchestrator of their own. The harness the reader builds is itself a
+  composition of agents -- a planner, a generator, and an inspector
+  coordinated over shared state -- so "build a coding agent" means
+  building several small agents and the machinery that runs them, not one
+  monolith.
 
 exemplar: |
   Deitel & Deitel supply the chapter apparatus: learning objectives that
@@ -73,6 +81,11 @@ goals:
   # Reader outcomes for the finished book. Process rules live in the
   # constitutions, not here. Each section carries its own subgoals, numbered
   # G<n>.<m> under the book goal G<n> they serve (see docs/srd/).
+  #
+  # G6 is the organizing goal (GH-114): the reader builds a coding agent,
+  # and G1-G5 name the capabilities that agent needs and the skills its
+  # builder acquires along the way. The ids are load-bearing -- SRD subgoals
+  # reference G<n>.<m> -- so the reframe changes text, never numbering.
   - id: G1
     goal: "Orient: the reader can state what an agent is, what a harness is, and which of the two touches their files -- the mechanism that the rest of the book's practice is derived from."
   - id: G2
@@ -84,7 +97,7 @@ goals:
   - id: G5
     goal: "Instrument: the reader can measure what their agents did -- turn counts, cost, tool usage, failure modes -- and change the pipeline on evidence rather than on guesswork."
   - id: G6
-    goal: "Build the tools: the reader treats the harness as something they shape and extend, not a product they consume -- and by Part V has built one: a planner and a generator coordinated through a blackboard they implemented themselves, with the sub-agent lifecycle under their orchestrator's control."
+    goal: "Build the agent: the organizing goal the other five serve -- the reader finishes with a coding agent they built themselves: a minimal declarative runtime (state machine, tool table, verification gates) from Parts I-II, grown into a composition of agents -- a planner and a generator coordinated through a blackboard they implemented, an inspector gating the output -- with the sub-agent lifecycle under their orchestrator's control."
 
 non_goals:
   - "A book that teaches programming, or that assumes none."
@@ -101,14 +114,24 @@ inputs:
     against the GNU reference binaries by differential testing),
     cobbler-scaffold (the orchestrator, its specifications and constitutions,
     and the instrumented generation runs), and coding-skills (the GitHub
-    issue loop Part V describes). The harness the reader builds along the
-    build thread is pedagogical and separate from this evidence base: the
-    claims rest on the production repositories, not on the teaching artifact.
+    issue loop Part V describes). declarative-agents is the fourth source
+    and plays a different role: the reference implementation for the build
+    thread -- the agent model as YAML profiles interpreted by one runtime,
+    an agent catalog, and applications/coding-agent, a planner, executor,
+    and critic composed from that catalog. The reader does not install it;
+    they build their own minimal declarative runtime in Parts I-II, and the
+    framework is where they check their work against a grown version of the
+    same design (GH-114, decision 2). The agent the reader builds is
+    pedagogical and separate from all four repositories: the claims rest on
+    the production evidence, not on the teaching artifact.
   companion: |
-    agentic-applications-book covers building applications out of agents.
-    This book borrows the declarative-agents model as a lens for one Part I
-    chapter and pivots to how real coding harnesses differ; the two
-    cross-reference and neither repeats the other.
+    agentic-applications-book covers building applications out of agents;
+    this book owns the coding agent (GH-114, decision 1). The declarative
+    agent model is this book's working model, not a borrowed lens: the
+    agent under construction is specified as profiles and grown into a
+    composition of agents. Every application of agents that is not a
+    coding harness stays with the companion; the two cross-reference and
+    neither repeats the other.
   corpus: "references.yaml is the single bibliography, resolved by the pandoc build; dictionary.yaml holds the term definitions, superseded by docs/definitions.yaml at GH-15."
   drafting_notes: |
     Literature surveys and drafting notes are kept in a private working tree:
