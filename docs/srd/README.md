@@ -145,7 +145,6 @@ GH-67 through GH-70, all before drafting:
 | P3 — Testing | C3.1–C3.5 | written (GH-67) |
 | P4 — Correctness | C4.1–C4.5 | written (GH-68) |
 | P5 — Agent Orchestration | C5.1–C5.9 | written (GH-69); C5.4 and C5.5 carry background dependencies in their `gaps` fields, and `road-map.yaml` gates `rel05.0` on them |
-| P6 — Instrumentation | C6.1–C6.7 | written (GH-70) |
 
 The Parts II–VI SRDs wait on those parts stabilizing rather than on effort:
 writing a contract against a chapter list that is still moving produces a

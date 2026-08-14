@@ -53,8 +53,6 @@ build_thread: >
   and an inspector — a critic-family agent — reviewing generated output.
   Part V: a planner and a generator coordinated through a blackboard,
   sub-agents constructed as profiles, assembled into the orchestrator.
-  Part VI: monitor and collector agents instrumenting the reader's own
-  composition.
 
 parts:
   - id: part-i
@@ -408,67 +406,3 @@ parts:
       - cobbler-scaffold architecture diagram or walkthrough
       - Examples of coordination failures and their fixes
 
-  - id: part-vi
-    title: "Instrumentation"
-    directory: part-vi-instrumentation
-    status: outline
-    description: >
-      Claude is a black box until you instrument it. This part covers how to
-      observe, measure, and diagnose what agents are doing — and how
-      instrumentation changes your relationship with the tools from guessing
-      to understanding.
-
-      The turning point in cobbler-scaffold wasn't a prompt fix or a
-      redesign — it was adding logging. Before that, you'd kick off a run,
-      come back, and either it worked or it didn't. After logging turn counts,
-      cost per task, tool usage, and failure modes, you could see what was
-      happening and make informed decisions about what to optimize. This part
-      teaches that skill.
-
-      Build deliverable: monitor and collector agents instrumenting the
-      reader's own composition — turn counts, cost per task, tool usage,
-      failure modes — so the receipts they learn to read are their own.
-    chapters:
-      - title: "The black box problem"
-        description: >
-          Before instrumentation: no visibility into what Claude is doing,
-          why tasks fail, or where the money goes.
-      - title: "What to log"
-        description: >
-          Turn counts, cost per task, tool usage patterns, failure modes,
-          rate limit events, context size, token counts. What each metric
-          tells you.
-      - title: "Reading the logs"
-        description: >
-          Spotting thrashing as a tail of your own turn distribution
-          rather than at a borrowed threshold, the waste patterns behind
-          it (edit-match-fail loops, compile-fix cycles), and context
-          degradation. (#1453)
-      - title: "The economics"
-        description: >
-          Reading the receipt at task granularity. Where the money goes,
-          cost trends across runs, and the floor -- no measured property
-          of a specification predicts what its task will cost. What cost
-          per line means and doesn't mean.
-      - title: "Building intuition"
-        description: >
-          After enough instrumented runs you develop a sense for which
-          work goes badly -- compound scope, behavior interactions, byte-
-          level matching -- and the corpus's own attempt to formalise that
-          sense shows why it stays a human skill. This intuition feeds
-          back into how you write requirements.
-      - title: "Non-determinism"
-        description: >
-          Same prompt, different results. Thinking token variance cascading
-          through pipeline stages. Why reproducibility is hard and what you
-          can do about it. (#5, #7)
-      - title: "Stats and post-run analysis"
-        description: >
-          The generation report. Stats inaccuracies and how to fix them
-          (#1445, #1449, #1450). The cleanup checklist (#2627). Treating
-          generation as a manufacturing process with quality control.
-    background_needed:
-      - cobbler-scaffold logging output examples
-      - Generation run reports (run 28, run 31)
-      - Examples of stats before/after instrumentation improvements
-      - A turn-by-turn analysis of one long-running task as a debugging walkthrough (the sort R4 case named here does not resolve; see GH-92)
