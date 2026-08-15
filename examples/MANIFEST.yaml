@@ -117,38 +117,67 @@ examples:
 
   - id: executor
     kind: catalog-family
-    status: planned
+    status: implemented
     path: catalog/agents/executor
     consumers: [C1.1, C1.5]
     summary: >
       The grown version of what Part I builds: the same states, transitions,
       and tool table, hardened and parameterized. C1.1's Build section tells
-      the reader to check their runtime against it.
+      the reader to check their runtime against it, and the shape is
+      recognizable -- profile.yaml names a machine and a tool list exactly as
+      Listing 1.1 does, and machine.yaml is Listing 1.1's states and
+      transitions with a purpose, invariants, and a budget attached.
     provenance:
       upstream: Nokia-Bell-Labs/declarative-agents
       path: applications/catalog/agents/executor
       release: v0.20260814.4
       license: BSD-3-Clause
       holder: Nokia
-      simplified: "pending -- GH-137 records what it drops when it makes the copy"
+      simplified: >
+        Dropped nine of the ten per-model declarations under llm/, keeping
+        default.yaml, which is the one profile.yaml references; dropped the
+        qwen and deepseek profile variants (profile-qwen27b.yaml,
+        profile-qwen35b.yaml, deepseek-coding-agent.yaml). Kept profile.yaml,
+        machine.yaml, tools.yaml, llm/default.yaml. No file was edited: every
+        retained file is byte-identical to the tag, and the simplification is
+        deletion of whole files only.
 
-  - id: applier
-    kind: catalog-family
-    status: planned
-    path: catalog/agents/applier
+  - id: filesystem-tools
+    kind: catalog-tools
+    status: implemented
+    path: catalog/tools/filesystem
     consumers: [C1.4]
     summary: >
-      Edit application as its own agent family. C1.4 builds the one-tool
-      version; this is the same boundary with declarations, undo, and a
-      machine of its own.
+      The grown version of Listing 4.1. One tool declaration per vocabulary
+      word, each stating its parameters, the signals it emits, its side
+      effects, whether it is reversible, and how to undo it. Listing 4.1
+      writes a file and refuses a path; write.yaml declares what writing a
+      file means and what restores it, which is the distance between the
+      book's tool and a production one.
     provenance:
       upstream: Nokia-Bell-Labs/declarative-agents
-      path: applications/catalog/agents/applier
+      path: agent-core/tools/builtin
       release: v0.20260814.4
       license: BSD-3-Clause
       holder: Nokia
-      simplified: "pending -- GH-137 records what it drops when it makes the copy"
+      simplified: >
+        Copied the five file words the executor's tools.yaml names -- write,
+        read, edit, list-files, find. Left behind the rest of
+        agent-core/tools/builtin/, which is the llm, lifecycle, bench, critic,
+        dolt, otlp and evaluation vocabulary, none of which has a book
+        consumer. No file was edited.
 
+# Not copied, and why.
+#
+# applier was named for C1.4 in GH-132 on the assumption that it is edit
+# application as an agent family. At v0.20260814.4 it is not: it is a
+# deployment actuation boundary that starts REST request, control, and
+# monitor listeners and waits for a lifecycle exit, with invariants about
+# chart, release, namespace, and credential authority. A reader sent from
+# C1.4 to check their write tool against it would find a Helm-flavored
+# service. The filesystem tool declarations above are the real counterpart
+# (GH-137).
+#
 # Families with no book consumer stay upstream and are deliberately absent:
 # bench, mock, monitor, chatbot, knowledge-manager, assembler, jurist. The
 # rest arrive with the parts that need them -- critic with Part III,

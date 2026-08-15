@@ -72,14 +72,20 @@ parts:
 catalog:
 
   - id: executor
-    status: planned
+    status: implemented
     tracking: "GH-137"
     consumers: [C1.1, C1.5]
 
-  - id: applier
-    status: planned
+  - id: filesystem-tools
+    status: implemented
     tracking: "GH-137"
     consumers: [C1.4]
+    note: >
+      Replaced applier, which GH-132 named for C1.4 on the assumption that it
+      is edit application as an agent family. At the pinned release it is a
+      deployment actuation boundary with REST listeners and Helm authority,
+      so it is not what §4.6 sends a reader to compare against. The
+      filesystem tool declarations are.
 
   - id: critic
     status: deferred

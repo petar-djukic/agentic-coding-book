@@ -25,11 +25,19 @@ const (
 	statusImplemented = "implemented"
 )
 
-// Kinds an entry takes.
+// Kinds an entry takes. A catalog-family is an agent copied whole from
+// upstream; catalog-tools is a set of tool declarations, which the upstream
+// catalog treats as first-class assets in their own right. Both are copied
+// material and both owe provenance and headers.
 const (
 	kindPart    = "part"
 	kindCatalog = "catalog-family"
+	kindTools   = "catalog-tools"
 )
+
+// copiedKinds are the entry kinds whose files came from upstream, and so are
+// the ones the provenance and header checks apply to.
+var copiedKinds = []string{kindCatalog, kindTools}
 
 type manifest struct {
 	SchemaVersion int        `yaml:"schema_version"`

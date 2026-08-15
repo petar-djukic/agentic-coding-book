@@ -50,8 +50,38 @@ func TestLoadManifestReadsTheRealFile(t *testing.T) {
 	if listings != 5 {
 		t.Errorf("%d listings registered, want 5", listings)
 	}
-	if families := m.entries(kindCatalog); len(families) != 2 {
-		t.Errorf("catalog families = %d, want executor and applier", len(families))
+	families := m.entries(kindCatalog)
+	if len(families) != 1 || families[0].ID != "executor" {
+		t.Errorf("catalog families = %+v, want executor alone", families)
+	}
+	tools := m.entries(kindTools)
+	if len(tools) != 1 || tools[0].ID != "filesystem-tools" {
+		t.Errorf("catalog tool sets = %+v, want filesystem-tools alone", tools)
+	}
+}
+
+func TestEveryCopiedEntryIsPinned(t *testing.T) {
+	m, err := loadManifest(repoRoot)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, kind := range copiedKinds {
+		for _, e := range m.entries(kind) {
+			p := e.Provenance
+			if p == nil {
+				t.Errorf("%s carries no provenance", e.ID)
+				continue
+			}
+			if p.Upstream == "" || p.Path == "" || p.Release == "" {
+				t.Errorf("%s provenance = %+v, want upstream, path, and a release", e.ID, p)
+			}
+			if p.Simplified == "" {
+				t.Errorf("%s does not say what the copy dropped", e.ID)
+			}
+			if p.License != "BSD-3-Clause" || p.Holder != "Nokia" {
+				t.Errorf("%s license = %q holder = %q", e.ID, p.License, p.Holder)
+			}
+		}
 	}
 }
 

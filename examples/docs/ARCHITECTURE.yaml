@@ -23,8 +23,8 @@ components:
     path: parts/
     role: "The runtime the reader builds. One Go module per book part, holding one snapshot package per Build section (see snapshots below). Standard library only: no requirement on declarative-agents, and none on this repository's own modules."
   catalog:
-    path: catalog/agents/<family>/
-    role: "Canonical agent families copied from declarative-agents at a pinned release, simplified by deletion, with upstream copyright headers intact. Read by the reader, never compiled, never quoted in the book."
+    path: "catalog/agents/<family>/, catalog/tools/<group>/"
+    role: "Material copied from declarative-agents at a pinned release, simplified by deletion of whole files, with upstream copyright headers intact. Two kinds: agent families, which are the grown version of the machine the reader builds, and tool declarations, which are the grown version of a single tool -- upstream treats tool blocks as first-class catalog assets and so does this. Read by the reader, never compiled, never quoted in the book."
   build:
     path: magefiles/
     role: "mage -d examples test runs each part module's Go tests; mage demo drives each snapshot end to end on a canned fixture; mage audit enforces the constraints below. The book's root mage audit shells in here and reports the result as one finding -- the checking code lives here, not there."

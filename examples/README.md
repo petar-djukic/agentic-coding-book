@@ -23,7 +23,7 @@ artifact, and it is small on purpose.
 | [`docs/road-map.yaml`](docs/road-map.yaml) | per-part status |
 | [`docs/srd/`](docs/srd/) | one software requirements document per part |
 | `parts/` | the runtime, one Go module per book part |
-| `catalog/` | agent families copied from declarative-agents |
+| `catalog/` | agent families and tool declarations copied from declarative-agents |
 | `magefiles/` | `test`, `demo`, `audit` |
 
 ## Three directions of authority
@@ -152,6 +152,12 @@ Per-copy provenance — upstream path, pinned release tag, and what each copy
 drops — is recorded in the `provenance:` block of each catalog entry in
 [`MANIFEST.yaml`](MANIFEST.yaml). An unpinned copy is a finding: it cannot be
 diffed against its source, so it drifts without anyone being able to tell.
+
+Copies are reduced by deleting whole files, never by editing one. Every file
+under `catalog/` is byte-identical to its counterpart at the pinned release,
+so a diff against a later tag shows upstream change rather than local drift —
+which is what makes re-syncing a review rather than an archaeology exercise.
+[`catalog/README.md`](catalog/README.md) has the command.
 
 ## Status
 

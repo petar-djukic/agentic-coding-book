@@ -1,0 +1,12 @@
+# Copyright (c) 2026 Nokia
+# SPDX-License-Identifier: BSD-3-Clause
+name: executor
+machine: machine.yaml
+tools:
+  - tools.yaml
+tool_config_dirs:
+  - /opt/agent-core/tools/builtin/filesystem
+  - /opt/agent-core/tools/builtin/llm
+  - /opt/agent-core/tools/exec/go
+tool_declarations:
+  - llm/default.yaml
