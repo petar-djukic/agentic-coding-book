@@ -1,0 +1,205 @@
+# SRD Part I -- the executor runtime as Part I leaves it.
+# Implementation contract per docs/srd/README.md (GH-133).
+# Written after the Build sections were drafted, so contract rule 1 applies:
+# the disagreements between the printed listings and compilable source are
+# recorded in gaps rather than silently resolved.
+
+meta:
+  part: part-i
+  title: "Agents and Harnesses -- the executor and its runtime"
+  module: github.com/petar-djukic/agentic-coding-book/examples/parts/part-i
+  manifest_entry: part-i
+
+realizes: [srd-1.1, srd-1.4, srd-1.6]
+
+goal: >
+  A reader who has followed Part I's three Build sections has one executor
+  agent declared as a profile and a runtime that interprets it: a state
+  machine driven by data, a tool boundary that is the only path out of the
+  process, a policy check that refuses a write before it happens, a gate that
+  turns the compiler's verdict into a signal the profile routes, and a notes
+  file that survives the process.
+
+constraints: [E-C1, E-C2, E-C3, E-C7, E-C8, E-C9]
+
+dependencies:
+  imports: "Go standard library, plus gopkg.in/yaml.v3 -- the decoder the book's own build already depends on."
+  profile_loading: >
+    The profile is loaded, not reconstructed in Go. yaml.v3 matches keys to
+    struct fields by lowercasing the field name, so Listing 1.2's Profile
+    decodes Listing 1.1's file with no struct tags and nothing in between.
+    That is what makes section 1.5's claim true in the artifact as well as on
+    the page -- a workflow change is an edit to the profile and a recompile of
+    nothing. The decoder is imported by profile.go, which no listing quotes,
+    so Listing 1.2 stays exactly as printed: no imports at all.
+  upstream: "None. No require on the declarative-agents module, at any snapshot (E-C1)."
+  embedding: >
+    Each snapshot embeds its own profile.yaml with go:embed, so a test or a
+    demo reaches the profile without knowing which directory it was run from.
+    Load(path) is still the API the book's reader uses; Declared() is the same
+    parser over the embedded bytes.
+
+snapshots:
+
+  - chapter: C1.1
+    package: c1.1
+    leaves: >
+      The skeleton. The profile declares states, transitions, and one tool;
+      the runtime interprets it. Nothing writes, nothing verifies, nothing is
+      remembered.
+    adds: "everything -- this is the first snapshot"
+    exports:
+      types:
+        - name: Profile
+          note: "Agent, States, Start, Transitions, Tools. Printed in Listing 1.2 as anonymous structs for the last two fields; the source keeps them that way so the listing extracts."
+        - name: Tool
+          note: "interface: Name() string, Run(map[string]string) (string, error). The only path from the process to anything outside it."
+        - name: Model
+          note: "interface: Decide([]string) (Call, bool). The one non-ordinary element, quarantined behind an interface so a canned table and a vendor API are interchangeable."
+        - name: Call
+          note: "Tool, Args"
+        - name: Runtime
+          note: "profile, state, transcript, pending, tools, model -- all unexported, as printed."
+      functions:
+        - name: (*Runtime).Run
+          note: "task string -> []string. The loop: deciding, executing, verifying, done."
+      unexported:
+        - name: (*Runtime).next
+          note: "consults the profile, not a switch; an undeclared signal stops the machine rather than guessing."
+        - name: (*Runtime).execute
+          note: "tool lookup failure becomes a string in the transcript, not an error return."
+      seams:
+        - name: ReadFile
+          note: >
+            The profile declares read_file and the prose says the runtime
+            turns each declaration into a Tool from its library. The library
+            has to have one, and the listing never shows it. Narrated but not
+            printed, so the SRD names it.
+        - name: "a constructor"
+          note: >
+            Listing 1.2 shows no way to build a Runtime -- the fields are
+            unexported and the profile's tool declarations have to become
+            Tool values somewhere. New(profile, model, root) supplies it and
+            is outside every listing region.
+    listings: [c1.1-1, c1.1-2]
+
+  - chapter: C1.4
+    package: c1.4
+    leaves: >
+      The write and the gate. write_file sits behind a path check, and the
+      verifying state runs the compiler and routes its verdict.
+    adds:
+      - "profile.yaml: a write_file tool declaration, and a fail transition out of verifying."
+      - "runtime.go: the root field, shared with the tools built from the profile's declarations; verify(); the verifying case doing real work instead of falling through."
+      - "tools.go: WriteFile."
+    exports:
+      types:
+        - name: WriteFile
+          note: "struct{ root string }, with Name and Run. The path check refuses an absolute path, a bare .., and anything under ../ before the write happens."
+      unexported:
+        - name: (*Runtime).verify
+          note: "() (string, bool). Runs go build ./... in root; returns the combined output and whether it passed."
+      seams:
+        - name: Runtime.root
+          note: >
+            The repository root, given at construction and shared with every
+            tool the runtime builds. Section 4.6 narrates it in a sentence and
+            no listing prints it.
+    listings: [c1.4-1, c1.4-2, c1.4-3]
+
+  - chapter: C1.6
+    package: c1.6
+    leaves: >
+      The machine Part I described: tool boundary, policy check, gate, and a
+      memory that survives the process.
+    adds:
+      - "profile.yaml: a memory block naming the notes file."
+      - "runtime.go: the Profile.Memory field."
+      - "memory.go: Start and End."
+    exports:
+      types:
+        - name: Memory
+          note: "struct{ Notes string }, reached as Profile.Memory. Narrated in section 6.6 and printed only as the YAML block."
+      functions:
+        - name: (*Runtime).Start
+          note: "runs before Run; a missing notes file is not an error, which is the first session's whole experience of the file not existing yet."
+        - name: (*Runtime).End
+          note: "decision string -> error. Everything that crosses the gap passes through here."
+    listings: [c1.6-1]
+
+test_contract:
+  - proves: "next follows the profile rather than a switch: rewiring a transition in the Profile value changes where the machine goes, with no change to the runtime."
+    snapshot: c1.1
+  - proves: "a signal with no declared transition stops the machine rather than guessing."
+    snapshot: c1.1
+  - proves: "an unknown tool name becomes a string in the transcript and the loop continues."
+    snapshot: c1.1
+  - proves: "Run returns a transcript beginning with the task and ending in the done state, driven by a canned Model."
+    snapshot: c1.1
+  - proves: "WriteFile refuses an absolute path, a bare .., and a path under ../, and in each case nothing is written to disk."
+    snapshot: c1.4
+  - proves: "WriteFile writes a file under root when the path is clean, and reports what it wrote."
+    snapshot: c1.4
+  - proves: "a failing verify appends the build output to the transcript and routes fail; a passing one appends and routes pass. Both reach deciding, and the difference travels in the transcript."
+    snapshot: c1.4
+  - proves: "Start on a missing notes file leaves the transcript untouched and returns no error."
+    snapshot: c1.6
+  - proves: "Start reads an existing notes file into the transcript before the task, so the notes precede it."
+    snapshot: c1.6
+  - proves: "End appends a line and creates the file if it is absent; a second End appends rather than truncating."
+    snapshot: c1.6
+
+demo_contract:
+  target: "mage -d examples demo"
+  fixture: >
+    parts/part-i/testdata/ holds a small Go repository -- one package that
+    does not compile until a named file is written -- and a canned Model: a
+    table of Call values returned in order, ending in done. Copied to a
+    temporary directory before each run, so a demo that writes leaves the
+    fixture unchanged (E-C9).
+  runs: "each snapshot in reading order, c1.1 then c1.4 then c1.6, so the demo output shows the runtime gaining the write, the gate, and the memory."
+  produces: >
+    The transcript of each run, printed. c1.1 reaches done having read a
+    file; c1.4 writes the missing file, fails the gate once, writes again and
+    passes; c1.6 does the same and leaves a NOTES.md whose contents the next
+    run reads back.
+  determinism: "Two consecutive runs are byte-identical. No wall clock, no map iteration order in the output, no network, no credentials (E-C9)."
+
+acceptance:
+  - "cd examples/parts/part-i && go build ./... succeeds."
+  - "go test ./... passes, and every claim in test_contract has a test."
+  - "go vet ./... is clean."
+  - "go.mod names the module path above, declares no require on declarative-agents, and requires nothing outside the standard library."
+  - "Every listing id in the manifest's part-i entry resolves to a marked region in this module, and each region is a contiguous span of one file."
+  - "Consecutive snapshots differ only in the files named in adds."
+  - "mage -d examples demo runs all three snapshots and produces identical output on a second run."
+
+gaps:
+  - >
+    Closed at GH-138, recorded because the resolution changed the book. As
+    drafted, Listing 4.2 was three fragments joined by commentary the source
+    cannot carry: a verify method, a case block introduced by "In Run's loop,
+    the pass-through case becomes:", and two profile transitions shown as Go
+    comments. It is now two listings -- 4.2 is verify, 4.3 is the state that
+    routes its verdict -- and the transitions moved into the YAML the section
+    already showed for the tools list. So C1.4 carries three listings where it
+    carried two, and Part I six where it planned five.
+  - >
+    The demo's canned Model is fixture code, not book code. No listing prints
+    it, and section 1.4's claim that the interface works identically for a
+    table of canned responses and a vendor API is the only place the book
+    mentions such a thing. The SRD names it here so it does not get written
+    as though it were a listing.
+  - >
+    Sections 4.6 and 6.6 each print an unnumbered YAML snippet -- the tools
+    list gaining write_file, and the memory block -- outside any Listing N.M
+    label. The c1.4 and c1.6 profiles agree with both, but the extraction
+    check keys on the listing label and so covers neither. Tracked as
+    follow-up rather than fixed here: numbering them would change the book's
+    apparatus, which is a voice decision rather than a tooling one.
+  - >
+    Snapshots duplicate. c1.4 and c1.6 each carry a full copy of the runtime,
+    differing from their predecessor by what adds names. That is the cost of
+    byte-for-byte extraction across a runtime that changes mid-part, and E-C2
+    is what keeps the duplication honest -- a copy that drifts in a file the
+    prose never mentions is a finding.

@@ -1,0 +1,181 @@
+# MANIFEST.yaml -- the binding table for examples/ (GH-132).
+#
+# Every part, snapshot, listing, and copied catalog family is registered here.
+# Directory names bind nothing: the build discovers parts from this file, the
+# audit resolves listings through it, and a chapter renumbering is an edit to
+# this file alone (docs/ARCHITECTURE.yaml: dependency).
+#
+# Chapter ids are the ids chapters carry in their `<!-- chapter: -->` marker
+# and that ../docs/ARCHITECTURE.yaml defines. E-C6 checks they resolve.
+#
+# `status` here is the build's gate and nothing more: planned means there is
+# no artifact to run, implemented means the artifact exists, compiles, and
+# passes its own tests. It says nothing about whether the book's prose has
+# been converted to extract from it -- that is a property of a chapter, not
+# of a module, and docs/road-map.yaml carries it on a three-value scale that
+# distinguishes the two. A part can be implemented here and partial there.
+
+schema_version: 1
+
+# What a copied file owes its origin, stated once. Per-copy pins live in each
+# catalog-family entry's provenance block.
+third_party:
+  upstream: Nokia-Bell-Labs/declarative-agents
+  license: BSD-3-Clause
+  holder: Nokia
+  obligation: |
+    BSD-3 clause 1 is discharged by the copyright header staying in each
+    copied file, which E-C5 checks. Clause 2 -- reproduce the notice in the
+    documentation and other materials -- binds binary redistribution, and
+    examples/ never redistributes a binary: parts/ compiles standalone from
+    original source, catalog/ files are YAML programs, and nothing here
+    ships built. A hand-maintained NOTICE would add a file that drifts
+    without adding compliance, so there is none.
+  boundary: |
+    The obligation stays discharged only while no listing quotes catalog
+    source. A BSD-3-covered file reproduced verbatim in the built PDF would
+    pull clause 2 onto the book itself. E-C3 enforces the boundary; it is
+    not a style rule.
+  attribution: "examples/README.md, section Third-party material."
+
+examples:
+
+  # ------------------------------------------------------------------ parts
+
+  - id: part-i
+    kind: part
+    status: implemented
+    path: parts/part-i
+    module: github.com/petar-djukic/agentic-coding-book/examples/parts/part-i
+    srd: docs/srd/srd-part-i.yaml
+    book_part: P1
+    summary: >
+      One executor agent as a profile -- the state machine and tool table as
+      data -- and the minimal runtime that interprets it: profile loading,
+      edit application behind a policy check, one verification gate as a
+      state transition, and a notes file that survives the process. Six
+      listings across three Build sections, every one extracted.
+    snapshots:
+      - chapter: C1.1
+        path: c1.1
+        leaves: "The skeleton: profile, runtime, tool boundary, model behind an interface. Nothing writes, nothing verifies, nothing is remembered."
+        listings:
+          - id: c1.1-1
+            label: "Listing 1.1"
+            language: yaml
+            regions:
+              - {file: c1.1/profile.yaml, marker: c1.1-1}
+          - id: c1.1-2
+            label: "Listing 1.2"
+            language: go
+            regions:
+              - {file: c1.1/runtime.go, marker: c1.1-2}
+
+      - chapter: C1.4
+        path: c1.4
+        leaves: "The write and the gate: write_file behind a path check, and a verifying state whose verdict re-enters the transcript and is routed by the profile."
+        adds:
+          - "profile.yaml: the write_file tool declaration and the fail transition out of verifying."
+          - "runtime.go: the root field, and verify() replacing the placeholder verifying case."
+          - "tools.go: the WriteFile tool."
+        listings:
+          - id: c1.4-1
+            label: "Listing 4.1"
+            language: go
+            regions:
+              - {file: c1.4/tools.go, marker: c1.4-1}
+          - id: c1.4-2
+            label: "Listing 4.2"
+            language: go
+            regions:
+              - {file: c1.4/runtime.go, marker: c1.4-2}
+          - id: c1.4-3
+            label: "Listing 4.3"
+            language: go
+            regions:
+              - {file: c1.4/runtime.go, marker: c1.4-3}
+
+      - chapter: C1.6
+        path: c1.6
+        leaves: "The machine Part I described: a tool boundary, a policy check on writes, a gate feeding consequences back, and a memory that survives the process."
+        adds:
+          - "profile.yaml: the memory block naming the notes file."
+          - "runtime.go: the Profile.Memory field."
+          - "memory.go: Start and End."
+        listings:
+          - id: c1.6-1
+            label: "Listing 6.1"
+            language: go
+            regions:
+              - {file: c1.6/memory.go, marker: c1.6-1}
+
+  # ------------------------------------------------------- catalog families
+
+  - id: executor
+    kind: catalog-family
+    status: implemented
+    path: catalog/agents/executor
+    consumers: [C1.1, C1.5]
+    summary: >
+      The grown version of what Part I builds: the same states, transitions,
+      and tool table, hardened and parameterized. C1.1's Build section tells
+      the reader to check their runtime against it, and the shape is
+      recognizable -- profile.yaml names a machine and a tool list exactly as
+      Listing 1.1 does, and machine.yaml is Listing 1.1's states and
+      transitions with a purpose, invariants, and a budget attached.
+    provenance:
+      upstream: Nokia-Bell-Labs/declarative-agents
+      path: applications/catalog/agents/executor
+      release: v0.20260814.4
+      license: BSD-3-Clause
+      holder: Nokia
+      simplified: >
+        Dropped nine of the ten per-model declarations under llm/, keeping
+        default.yaml, which is the one profile.yaml references; dropped the
+        qwen and deepseek profile variants (profile-qwen27b.yaml,
+        profile-qwen35b.yaml, deepseek-coding-agent.yaml). Kept profile.yaml,
+        machine.yaml, tools.yaml, llm/default.yaml. No file was edited: every
+        retained file is byte-identical to the tag, and the simplification is
+        deletion of whole files only.
+
+  - id: filesystem-tools
+    kind: catalog-tools
+    status: implemented
+    path: catalog/tools/filesystem
+    consumers: [C1.4]
+    summary: >
+      The grown version of Listing 4.1. One tool declaration per vocabulary
+      word, each stating its parameters, the signals it emits, its side
+      effects, whether it is reversible, and how to undo it. Listing 4.1
+      writes a file and refuses a path; write.yaml declares what writing a
+      file means and what restores it, which is the distance between the
+      book's tool and a production one.
+    provenance:
+      upstream: Nokia-Bell-Labs/declarative-agents
+      path: agent-core/tools/builtin
+      release: v0.20260814.4
+      license: BSD-3-Clause
+      holder: Nokia
+      simplified: >
+        Copied the five file words the executor's tools.yaml names -- write,
+        read, edit, list-files, find. Left behind the rest of
+        agent-core/tools/builtin/, which is the llm, lifecycle, bench, critic,
+        dolt, otlp and evaluation vocabulary, none of which has a book
+        consumer. No file was edited.
+
+# Not copied, and why.
+#
+# applier was named for C1.4 in GH-132 on the assumption that it is edit
+# application as an agent family. At v0.20260814.4 it is not: it is a
+# deployment actuation boundary that starts REST request, control, and
+# monitor listeners and waits for a lifecycle exit, with invariants about
+# chart, release, namespace, and credential authority. A reader sent from
+# C1.4 to check their write tool against it would find a Helm-flavored
+# service. The filesystem tool declarations above are the real counterpart
+# (GH-137).
+#
+# Families with no book consumer stay upstream and are deliberately absent:
+# bench, mock, monitor, chatbot, knowledge-manager, assembler, jurist. The
+# rest arrive with the parts that need them -- critic with Part III,
+# specification-critic and lifecycle-exit with Part IV, planner and collector
+# with Part V (GH-132).

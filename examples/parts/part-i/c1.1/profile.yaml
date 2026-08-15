@@ -1,0 +1,19 @@
+# Copyright (c) 2026 Petar Djukic. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+# The executor profile as section 1.5 leaves it. Listing 1.1 extracts the
+# region below; the field names are the Profile struct's, lowercased, which
+# is what a YAML decoder does by default and why the struct carries no tags.
+# example:begin c1.1-1
+agent: executor
+states: [deciding, executing, verifying, done]
+start: deciding
+transitions:
+  - {from: deciding,  on: tool_call, to: executing}
+  - {from: deciding,  on: done,      to: done}
+  - {from: executing, on: result,    to: verifying}
+  - {from: verifying, on: pass,      to: deciding}
+tools:
+  - name: read_file
+    root: "."
+# example:end c1.1-1
