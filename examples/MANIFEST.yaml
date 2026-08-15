@@ -7,6 +7,13 @@
 #
 # Chapter ids are the ids chapters carry in their `<!-- chapter: -->` marker
 # and that ../docs/ARCHITECTURE.yaml defines. E-C6 checks they resolve.
+#
+# `status` here is the build's gate and nothing more: planned means there is
+# no artifact to run, implemented means the artifact exists, compiles, and
+# passes its own tests. It says nothing about whether the book's prose has
+# been converted to extract from it -- that is a property of a chapter, not
+# of a module, and docs/road-map.yaml carries it on a three-value scale that
+# distinguishes the two. A part can be implemented here and partial there.
 
 schema_version: 1
 
@@ -37,7 +44,7 @@ examples:
 
   - id: part-i
     kind: part
-    status: planned
+    status: implemented
     path: parts/part-i
     module: github.com/petar-djukic/agentic-coding-book/examples/parts/part-i
     srd: docs/srd/srd-part-i.yaml

@@ -98,12 +98,25 @@ mage -d examples demo    # run each snapshot end to end on its fixture
 mage -d examples audit   # the nine constraints
 ```
 
+Both targets discover parts from `MANIFEST.yaml` rather than from the
+directory tree, so a part registered before its chapters are drafted is
+skipped with a printed note instead of failing the build — and a directory no
+manifest entry claims is not quietly picked up. `test` runs `go vet` and
+`go test ./...` in each part module; `demo` runs the `cmd/demo` entry point
+each part ships.
+
 Demos run canned. Each drives the runtime against a fixture repository with a
 deterministic `Model` behind the Listing 1.2 interface — no model, no
-credentials, no network, and two runs produce identical output. That is the
-same contract the book's root audit holds itself to, and it is what lets
-anyone execute the book's own artifact. Live-model variants are future opt-in
-targets and gate nothing.
+credentials, no network — in a temporary directory the part creates and
+removes, so a run that writes leaves the repository untouched and two runs
+produce identical output. That is the same contract the book's root audit
+holds itself to, and it is what lets anyone execute the book's own artifact.
+Live-model variants are future opt-in targets and gate nothing.
+
+Part I's demo is worth running once for its own sake. It shows the c1.4
+runtime writing a wrong answer, being told so by the compiler, having a write
+outside the root refused, and converging — the whole argument of §4.6 in nine
+transcript lines.
 
 The book's root `mage audit` shells in here and reports the result as one
 finding. The checking code lives in `magefiles/`; the one exception is the

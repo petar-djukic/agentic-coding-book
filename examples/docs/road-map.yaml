@@ -24,15 +24,18 @@ parts:
 
   - id: part-i
     title: "Agents and Harnesses"
-    status: planned
+    status: partial
     book_status: drafted
     build_sections: [C1.1, C1.4, C1.6]
     tracking: "GH-134 (module), GH-135 (test and demo), GH-138 (listing extraction)"
     note: >
       The only part whose Build sections are drafted, so the only part whose
-      snapshots can be written. Listing 4.2 is the known obstacle: as drafted
-      it is a fragment the source cannot reproduce, and it holds part-i short
-      of implemented until GH-138 converts the section.
+      snapshots can be written. The module is done: it compiles, its tests
+      pass, and mage demo runs all three snapshots, which is why MANIFEST.yaml
+      calls it implemented -- that field gates the build. Partial here because
+      one listing does not extract: Listing 4.2 as drafted is three fragments
+      joined by commentary the source cannot carry, and GH-138 converts the
+      section. Four of the five listings already match byte for byte.
 
   - id: part-ii
     title: "Construction and Requirements"
