@@ -23,15 +23,21 @@ goal: >
 constraints: [E-C1, E-C2, E-C3, E-C7, E-C8, E-C9]
 
 dependencies:
-  imports: "Go standard library only -- os, os/exec, path/filepath, strings, fmt, and a YAML decoder is explicitly not among them."
+  imports: "Go standard library, plus gopkg.in/yaml.v3 -- the decoder the book's own build already depends on."
   profile_loading: >
-    The profile is data the runtime reads, and Listing 1.2 shows Profile as a
-    plain struct with no tags. The snapshots keep it that way: profile.yaml is
-    the artifact the prose prints and the reader edits, and the test fixture
-    constructs the equivalent Profile value directly. Adding a YAML dependency
-    would put an import in a listing the book does not print and would make
-    Listing 1.2 wrong.
+    The profile is loaded, not reconstructed in Go. yaml.v3 matches keys to
+    struct fields by lowercasing the field name, so Listing 1.2's Profile
+    decodes Listing 1.1's file with no struct tags and nothing in between.
+    That is what makes section 1.5's claim true in the artifact as well as on
+    the page -- a workflow change is an edit to the profile and a recompile of
+    nothing. The decoder is imported by profile.go, which no listing quotes,
+    so Listing 1.2 stays exactly as printed: no imports at all.
   upstream: "None. No require on the declarative-agents module, at any snapshot (E-C1)."
+  embedding: >
+    Each snapshot embeds its own profile.yaml with go:embed, so a test or a
+    demo reaches the profile without knowing which directory it was run from.
+    Load(path) is still the API the book's reader uses; Declared() is the same
+    parser over the embedded bytes.
 
 snapshots:
 
@@ -178,18 +184,18 @@ gaps:
     third fragment becomes prose outside the fence or a third region; until
     then part-i is status planned in road-map.yaml, not implemented.
   - >
-    Listing 1.2's Profile prints Transitions and Tools as slices of anonymous
-    structs. That is what the chapter shows and what the source must keep, but
-    it makes the c1.4 and c1.6 snapshots awkward where they extend Profile --
-    Memory is a named type while its siblings are not. Deliberate: matching
-    the printed listing wins over internal symmetry, and the asymmetry is
-    visible only to someone reading the source rather than the book.
-  - >
     The demo's canned Model is fixture code, not book code. No listing prints
     it, and section 1.4's claim that the interface works identically for a
     table of canned responses and a vendor API is the only place the book
     mentions such a thing. The SRD names it here so it does not get written
     as though it were a listing.
+  - >
+    Sections 4.6 and 6.6 each print an unnumbered YAML snippet -- the tools
+    list gaining write_file, and the memory block -- outside any Listing N.M
+    label. The c1.4 and c1.6 profiles agree with both, but the extraction
+    check keys on the listing label and so covers neither. Tracked as
+    follow-up rather than fixed here: numbering them would change the book's
+    apparatus, which is a voice decision rather than a tooling one.
   - >
     Snapshots duplicate. c1.4 and c1.6 each carry a full copy of the runtime,
     differing from their predecessor by what adds names. That is the cost of

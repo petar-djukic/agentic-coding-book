@@ -96,7 +96,14 @@ constraints:
     reason: "The reader builds their own runtime (GH-114, decision 2). A part that needs upstream code has quietly abandoned the premise, and nothing but a check would notice."
   - id: E-C2
     name: snapshot-diff-declared
-    rule: "Every file differing between consecutive snapshots is inside a listing region or declared in MANIFEST.yaml with a reason."
+    rule: "Every book-source file differing between consecutive snapshots is named in that snapshot's adds: list in MANIFEST.yaml."
+    scope: |
+      Book source is what a reader is building: the profile and the runtime.
+      Support files are excluded by name -- *_test.go, demo.go, and anything
+      under fixture/ -- because they differ between every pair of snapshots
+      by construction and no listing quotes them. Including them would make
+      the check fire on every snapshot and be turned off, which is worse than
+      not having it.
     reason: "A snapshot claims the runtime changed exactly as the prose says it did. Undeclared drift makes that claim false silently."
   - id: E-C3
     name: listing-boundary

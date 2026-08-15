@@ -1,0 +1,21 @@
+# Copyright (c) 2026 Petar Djukic. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+# The executor profile as section 4.6 leaves it: the c1.1 profile plus the
+# write_file declaration and the fail transition out of verifying. Both
+# verdicts route to deciding -- the difference travels in the transcript --
+# and rerouting fail somewhere stricter is an edit to this file.
+agent: executor
+states: [deciding, executing, verifying, done]
+start: deciding
+transitions:
+  - {from: deciding,  on: tool_call, to: executing}
+  - {from: deciding,  on: done,      to: done}
+  - {from: executing, on: result,    to: verifying}
+  - {from: verifying, on: pass,      to: deciding}
+  - {from: verifying, on: fail,      to: deciding}
+tools:
+  - name: read_file
+    root: "."
+  - name: write_file
+    root: "."

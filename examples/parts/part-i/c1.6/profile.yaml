@@ -1,0 +1,21 @@
+# Copyright (c) 2026 Petar Djukic. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+# The executor profile as section 6.6 leaves it, and as Part I ends: the c1.4
+# profile plus one line naming the file that survives the process.
+agent: executor
+states: [deciding, executing, verifying, done]
+start: deciding
+transitions:
+  - {from: deciding,  on: tool_call, to: executing}
+  - {from: deciding,  on: done,      to: done}
+  - {from: executing, on: result,    to: verifying}
+  - {from: verifying, on: pass,      to: deciding}
+  - {from: verifying, on: fail,      to: deciding}
+tools:
+  - name: read_file
+    root: "."
+  - name: write_file
+    root: "."
+memory:
+  notes: NOTES.md
