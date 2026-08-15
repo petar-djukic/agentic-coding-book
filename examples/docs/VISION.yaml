@@ -49,11 +49,11 @@ authority:
     name: upstream-to-catalog
     direction: "declarative-agents governs examples/catalog/."
     statement: >
-      catalog/ copies canonical agent families from declarative-agents,
-      pinned by release tag in the manifest. Copies are simplified by
-      deletion and never forked: a diff against the pinned tag is removals
-      and nothing else. An improvement that belongs in the catalog belongs
-      upstream first.
+      catalog/ copies canonical agent families and tool declarations from
+      declarative-agents, pinned by release tag in the manifest. Copies are
+      simplified by deletion of whole files and never forked, so every
+      retained file is byte-identical to the tag. An improvement that belongs
+      in the catalog belongs upstream first.
     consequence: "The copies stay checkable against a real tag, and the book's claim that the reader can check their work against a grown version stays true rather than aspirational."
   - id: A3
     name: book-srds-to-part-srds

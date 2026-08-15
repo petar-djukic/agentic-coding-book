@@ -113,18 +113,22 @@ catalog:
 
 tooling:
   - id: manifest-and-contract
-    status: in_progress
+    status: implemented
     tracking: "GH-133"
     covers: "README, MANIFEST, the three steering documents, the SRD contract, and srd-part-i.yaml."
   - id: test-and-demo
-    status: planned
+    status: implemented
     tracking: "GH-135"
     covers: "mage -d examples test and mage -d examples demo."
   - id: audit
-    status: planned
+    status: implemented
     tracking: "GH-136"
-    covers: "the nine constraints in ARCHITECTURE.yaml, less the extraction check."
+    covers: >
+      E-C1 through E-C8 in ARCHITECTURE.yaml, and docs/audit-baseline.yaml.
+      E-C9, demo determinism, is asserted by the tests instead: checking it
+      means running the demos twice, which is a test's work and not an
+      audit's.
   - id: listing-extraction
-    status: planned
+    status: implemented
     tracking: "GH-138"
-    covers: "the root-side extraction check, root audit dispatch, and converting the three Part I Build sections."
+    covers: "the root-side extraction check, root audit dispatch, and the three Part I Build sections converted to extracted regions."

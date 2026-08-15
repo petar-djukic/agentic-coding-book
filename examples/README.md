@@ -55,16 +55,18 @@ realizes and restates none of them.
 
 The duplication is the point. A single evolving tree cannot produce every
 listing byte for byte — Listing 1.2 prints a `verifying` case whose body is a
-placeholder that Listing 4.2 replaces, and Listing 1.1 prints a profile that
+placeholder that Listing 4.3 replaces, and Listing 1.1 prints a profile that
 does not yet declare `write_file`. At the end of Part I, neither is what the
 source says. So the unit of correspondence is the Build section, which is
 exactly where the runtime changes, and which is also what the reader has in
 front of them at that point in the book.
 
 What keeps three near-copies from rotting into three different programs is a
-check: every file differing between consecutive snapshots is either inside a
-listing region or declared in the manifest with a reason. Drift nobody
-declared is a finding.
+check: every book-source file differing between consecutive snapshots is named
+in that snapshot's `adds:` list, and an `adds:` entry naming a file that did
+not change is equally a finding. Tests, demos, and fixtures are outside the
+rule — they differ between every pair by construction, and a check that fires
+always is a check that gets switched off.
 
 Module per part, package per chapter — so `go build ./...` and `go test ./...`
 cover a whole part at once, and the parts stay independently buildable.
