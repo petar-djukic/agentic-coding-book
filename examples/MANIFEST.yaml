@@ -53,7 +53,8 @@ examples:
       One executor agent as a profile -- the state machine and tool table as
       data -- and the minimal runtime that interprets it: profile loading,
       edit application behind a policy check, one verification gate as a
-      state transition, and a notes file that survives the process.
+      state transition, and a notes file that survives the process. Six
+      listings across three Build sections, every one extracted.
     snapshots:
       - chapter: C1.1
         path: c1.1
@@ -87,17 +88,12 @@ examples:
             label: "Listing 4.2"
             language: go
             regions:
-              - {file: c1.4/runtime.go, marker: c1.4-2a}
-              - {file: c1.4/runtime.go, marker: c1.4-2b}
-            note: >
-              As drafted, the fence is three fragments joined by commentary
-              the source cannot carry -- a verify method, a spliced case
-              block introduced by "In Run's loop, the pass-through case
-              becomes:", and two profile transitions shown as Go comments.
-              Two regions are registered for the code. The third fragment and
-              the connecting commentary are prose, and GH-138 resolves them
-              when it converts the section; until then this listing does not
-              extract cleanly, which is why part-i is status planned.
+              - {file: c1.4/runtime.go, marker: c1.4-2}
+          - id: c1.4-3
+            label: "Listing 4.3"
+            language: go
+            regions:
+              - {file: c1.4/runtime.go, marker: c1.4-3}
 
       - chapter: C1.6
         path: c1.6

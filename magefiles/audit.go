@@ -49,6 +49,8 @@ func audit(root string, figures, build func() error) error {
 		}
 	}
 	findings = append(findings, checkFigureReferences(root)...)
+	findings = append(findings, checkListings(root)...)
+	findings = append(findings, checkExamplesBuild(root)...)
 	if build != nil {
 		if err := build(); err != nil {
 			findings = append(findings, finding{File: "build", Rule: "build", Detail: err.Error()})

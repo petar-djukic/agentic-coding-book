@@ -24,18 +24,19 @@ parts:
 
   - id: part-i
     title: "Agents and Harnesses"
-    status: partial
+    status: implemented
     book_status: drafted
     build_sections: [C1.1, C1.4, C1.6]
-    tracking: "GH-134 (module), GH-135 (test and demo), GH-138 (listing extraction)"
+    tracking: "GH-134 (module), GH-135 (test and demo), GH-136 (audit), GH-138 (listing extraction)"
     note: >
-      The only part whose Build sections are drafted, so the only part whose
-      snapshots can be written. The module is done: it compiles, its tests
-      pass, and mage demo runs all three snapshots, which is why MANIFEST.yaml
-      calls it implemented -- that field gates the build. Partial here because
-      one listing does not extract: Listing 4.2 as drafted is three fragments
-      joined by commentary the source cannot carry, and GH-138 converts the
-      section. Four of the five listings already match byte for byte.
+      Complete. The module compiles and its tests pass, mage demo runs all
+      three snapshots deterministically, and all six listings extract byte for
+      byte from marked regions. Listing 4.2 was the obstacle: as drafted it
+      was three fragments joined by commentary the source cannot carry. GH-138
+      split it into Listing 4.2, the verify method, and Listing 4.3, the state
+      that routes its verdict, and moved the profile's transitions into the
+      YAML the section already shows -- which is why the part now carries six
+      listings rather than five.
 
   - id: part-ii
     title: "Construction and Requirements"

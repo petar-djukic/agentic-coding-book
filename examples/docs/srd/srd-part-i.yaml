@@ -105,7 +105,7 @@ snapshots:
             The repository root, given at construction and shared with every
             tool the runtime builds. Section 4.6 narrates it in a sentence and
             no listing prints it.
-    listings: [c1.4-1, c1.4-2]
+    listings: [c1.4-1, c1.4-2, c1.4-3]
 
   - chapter: C1.6
     package: c1.6
@@ -176,13 +176,14 @@ acceptance:
 
 gaps:
   - >
-    Listing 4.2 does not extract as drafted. The fence is three fragments
-    joined by commentary the source cannot carry: a verify method, a case
-    block introduced by "In Run's loop, the pass-through case becomes:", and
-    two profile transitions shown as Go comments. The manifest registers two
-    regions for the code. GH-138 converts the section and decides whether the
-    third fragment becomes prose outside the fence or a third region; until
-    then part-i is status planned in road-map.yaml, not implemented.
+    Closed at GH-138, recorded because the resolution changed the book. As
+    drafted, Listing 4.2 was three fragments joined by commentary the source
+    cannot carry: a verify method, a case block introduced by "In Run's loop,
+    the pass-through case becomes:", and two profile transitions shown as Go
+    comments. It is now two listings -- 4.2 is verify, 4.3 is the state that
+    routes its verdict -- and the transitions moved into the YAML the section
+    already showed for the tools list. So C1.4 carries three listings where it
+    carried two, and Part I six where it planned five.
   - >
     The demo's canned Model is fixture code, not book code. No listing prints
     it, and section 1.4's claim that the interface works identically for a

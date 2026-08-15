@@ -95,9 +95,12 @@ This is the fact that the verification half of this book rests on. Parts III and
 
 ## 4.6 Build: The Write and the Gate
 
-The runtime built in the first chapter executes whatever the model proposes and checks nothing afterwards — its `verifying` state emits `pass` unconditionally. Those are the two gaps this chapter traced, and this section closes both: a write that sits behind policy, and a gate whose verdict re-enters the transcript and is routed by the profile. The runtime gains one field for the work — the repository root it is given at construction, shared with the tools it builds from the profile's declarations — and the profile's tools list gains one line:
+The runtime built in the first chapter executes whatever the model proposes and checks nothing afterwards — its `verifying` state emits `pass` unconditionally. Those are the two gaps this chapter traced, and this section closes both: a write that sits behind policy, and a gate whose verdict re-enters the transcript and is routed by the profile. The runtime gains one field for the work — the repository root it is given at construction, shared with the tools it builds from the profile's declarations — and the profile gains two lines: a tool declaration, and a transition for a verdict the gate has yet to produce:
 
 ```yaml
+transitions:
+  # ... the four from Listing 1.1, plus:
+  - {from: verifying, on: fail, to: deciding}
 tools:
   - name: read_file
     root: "."
@@ -131,9 +134,9 @@ func (t WriteFile) Run(args map[string]string) (string, error) {
 
 The check is four lines, and its placement is the point. Section 4.3 called removing a tool arithmetic, against an instruction that competes with everything else in the context; the same arithmetic is available inside a tool. The path test does not compete with anything, because the model never sees it — the model sees the refusal string afterwards, appended to the transcript as one more consequence. Note what the profile did and did not do: declaring `write_file` granted the capability, and the check lives in the tool's Go, in the runtime's library. The read tool needs the same test; the write carries it here because the write is what this chapter traced.
 
-Listing 4.2 fills the empty state.
+Listing 4.2 asks the compiler.
 
-**Listing 4.2** The gate: the compiler's opinion becomes a signal the profile routes, and evidence the next request reads.
+**Listing 4.2** The gate: the compiler's opinion, captured as evidence and as a verdict.
 
 ```go
 func (r *Runtime) verify() (string, bool) {
@@ -145,8 +148,15 @@ func (r *Runtime) verify() (string, bool) {
 	}
 	return "build ok", true
 }
+```
 
-// In Run's loop, the pass-through case becomes:
+*The model reads the string; the machine routes on the boolean, which is why one call returns both. The compiler's output passes through unedited, so the next request sees exactly what the build printed.*
+
+Listing 4.3 spends both return values in the state that was falling through.
+
+**Listing 4.3** The state that routes it: the verdict enters the transcript, and the profile decides where the machine goes next.
+
+```go
 		case "verifying":
 			out, ok := r.verify()
 			r.transcript = append(r.transcript, out)
@@ -155,13 +165,9 @@ func (r *Runtime) verify() (string, bool) {
 			} else {
 				r.next("fail")
 			}
-
-// And the profile declares where each verdict goes:
-//   - {from: verifying, on: pass, to: deciding}
-//   - {from: verifying, on: fail, to: deciding}
 ```
 
-*One append is the whole mechanism: the compiler's verdict lands in the transcript, and the next `Decide` is conditioned on it. Both verdicts route to `deciding` — the difference travels in the transcript — and rerouting `fail` somewhere stricter is a one-line profile edit.*
+*One append is the whole mechanism: the compiler's verdict lands in the transcript, and the next `Decide` is conditioned on it. Both verdicts route to `deciding` — the difference travels in the transcript — and rerouting `fail` somewhere stricter is an edit to the profile above rather than to this case.*
 
 The case is the heartbeat of section 4.4, reduced to its mechanism: the harness converts consequences into context by appending them. Section 4.5's verifier-absent loop is now reachable from working code: deleting the `r.verify()` call leaves a loop that runs every stage, reports completion, and cannot tell a working change from a broken one. Part IV returns to the wiring the profile has made visible, when there is more than one gate to route. The skeleton still forgets — the transcript dies with the process. The chapter that closes this part takes that up, in prose and in its Build section.
 

@@ -77,7 +77,7 @@ func (r *Runtime) Run(task string) []string {
 		case "executing":
 			r.transcript = append(r.transcript, r.execute(r.pending))
 			r.next("result")
-		// example:begin c1.4-2b
+		// example:begin c1.4-3
 		case "verifying":
 			out, ok := r.verify()
 			r.transcript = append(r.transcript, out)
@@ -86,7 +86,7 @@ func (r *Runtime) Run(task string) []string {
 			} else {
 				r.next("fail")
 			}
-			// example:end c1.4-2b
+			// example:end c1.4-3
 		}
 	}
 	return r.transcript
@@ -104,7 +104,7 @@ func (r *Runtime) execute(c Call) string {
 	return result
 }
 
-// example:begin c1.4-2a
+// example:begin c1.4-2
 func (r *Runtime) verify() (string, bool) {
 	cmd := exec.Command("go", "build", "./...")
 	cmd.Dir = r.root
@@ -115,7 +115,7 @@ func (r *Runtime) verify() (string, bool) {
 	return "build ok", true
 }
 
-// example:end c1.4-2a
+// example:end c1.4-2
 
 // New builds a runtime from a profile and the repository root it works in.
 // The root is the field section 4.6 says the runtime gains: it is shared with
