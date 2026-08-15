@@ -18,6 +18,11 @@ import (
 	"path/filepath"
 )
 
+// Default is what `mage -d examples` runs with no target named. The audit is
+// the cheap check and the one the book's root build dispatches to; `mage -d
+// examples audit test` runs both.
+var Default = Audit
+
 // runIn runs a command with its working directory set, streaming output.
 // mage's sh package has no directory option and every target here works
 // inside a part module, so the build uses exec directly.

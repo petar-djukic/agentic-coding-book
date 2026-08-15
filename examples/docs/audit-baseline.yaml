@@ -1,0 +1,20 @@
+# audit-baseline.yaml -- findings mage -d examples audit reports but does not
+# fail on (GH-132). The book's own docs/audit-baseline.yaml carries the same
+# contract for the same reason; this is its counterpart for examples/.
+#
+# This is not an exemption list. Every entry is printed on each run, an entry
+# without an `issue` is itself a finding, and an entry that matches nothing is
+# reported as stale -- so the file cannot quietly outlive the defect it was
+# written for. Delete entries as they are fixed; do not add one without an
+# issue behind it.
+#
+# The `file`, `rule`, and `detail` fields must match a finding exactly. Run
+# `mage -d examples audit` and copy the reported text.
+#
+# Empty by design. examples/ was built after its constraints existed rather
+# than measured against them afterwards, so it starts with no debt. The one
+# known gap -- Listing 4.2 does not extract as drafted -- is not a finding
+# here: it is caught by the book's own extraction check, and examples/docs/
+# srd/srd-part-i.yaml records it under gaps.
+
+accepted: []

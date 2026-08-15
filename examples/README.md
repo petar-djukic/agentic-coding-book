@@ -93,10 +93,29 @@ load-bearing rather than tidy; see below.
 ## Running it
 
 ```bash
-mage -d examples test    # go test ./... in every part module
+mage -d examples audit   # the constraints (the default target)
+mage -d examples test    # go vet and go test ./... in every part module
 mage -d examples demo    # run each snapshot end to end on its fixture
-mage -d examples audit   # the nine constraints
 ```
+
+The audit enforces eight of the nine constraints in
+[`docs/ARCHITECTURE.yaml`](docs/ARCHITECTURE.yaml): chapter ids resolve
+against the book's architecture (E-C6) and a drafted Build section has a
+snapshot behind it (E-C7); every copy is pinned to a real release and says
+what it dropped (E-C4), with its upstream notice intact (E-C5); every listing
+resolves to a marked, single-span region in `parts/` and never into `catalog/`
+(E-C3); no part requires the upstream module (E-C1); consecutive snapshots
+differ only where the manifest says they do (E-C2); and every chapter SRD a
+part SRD cites resolves to exactly one file (E-C8). The ninth, demo
+determinism (E-C9), is asserted by the tests rather than by the audit, since
+checking it means running the demos twice.
+
+Findings accumulate and report together — the audit fails once, with
+everything it found, each finding naming its constraint.
+[`docs/audit-baseline.yaml`](docs/audit-baseline.yaml) records accepted debt
+the same way the book's does: entries are printed but do not fail, an entry
+with no issue is itself a finding, and an entry matching nothing is reported
+as stale, so the file cannot decay into a blanket exemption.
 
 Both targets discover parts from `MANIFEST.yaml` rather than from the
 directory tree, so a part registered before its chapters are drafted is
