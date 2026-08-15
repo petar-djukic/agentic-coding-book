@@ -1,0 +1,150 @@
+# ARCHITECTURE.yaml -- how examples/ is put together (GH-132).
+# Components, the snapshot model, the listing-extraction mechanism, and the
+# constraints the audit enforces. Goals live in VISION.yaml. The book's own
+# component model lives in ../../docs/ARCHITECTURE.yaml and is not restated.
+
+meta:
+  name: agentic-coding-book-examples
+  governs: "examples/"
+  parent: ../../docs/ARCHITECTURE.yaml
+  version: 1
+
+components:
+  steering:
+    path: docs/
+    role: "VISION.yaml states the three authority directions; this file states the structure and the constraints; road-map.yaml carries per-part status. Together they are to examples/ what docs/ is to the book."
+  specification:
+    path: docs/srd/
+    role: "One software requirements document per part, stating what that part's module must export, what its tests must prove, and what its demo must exercise. Each cites the chapter SRDs it realizes (VISION.yaml: A3). docs/srd/README.md carries the contract and the resolution rule for realizes: ids."
+  index:
+    path: MANIFEST.yaml
+    role: "The single binding table. Every part, snapshot, listing, and catalog family is registered here with its chapter id, its status, and -- for copied material -- its provenance. Directory names bind nothing; the manifest does, so a renumbered chapter is a one-file edit."
+  parts:
+    path: parts/
+    role: "The runtime the reader builds. One Go module per book part, holding one snapshot package per Build section (see snapshots below). Standard library only: no requirement on declarative-agents, and none on this repository's own modules."
+  catalog:
+    path: catalog/agents/<family>/
+    role: "Canonical agent families copied from declarative-agents at a pinned release, simplified by deletion, with upstream copyright headers intact. Read by the reader, never compiled, never quoted in the book."
+  build:
+    path: magefiles/
+    role: "mage -d examples test runs each part module's Go tests; mage demo drives each snapshot end to end on a canned fixture; mage audit enforces the constraints below. The book's root mage audit shells in here and reports the result as one finding -- the checking code lives here, not there."
+
+# The unit of correspondence is the Build section, not the part. A part's
+# module holds one package per Build section, named for the chapter, in the
+# state that section leaves the runtime.
+snapshots:
+  rule: "One package per Build section, named for its chapter id, holding the tree as that section leaves it."
+  reason: |
+    A single evolving tree cannot yield every listing byte for byte. Listing
+    1.2 prints a verifying case whose body is a placeholder that Listing 4.2
+    replaces, and Listing 1.1 prints a profile that does not yet declare
+    write_file; at the end of Part I neither is what the source says. The
+    same argument that separates parts separates the Build sections inside a
+    part, because a Build section is exactly where the runtime changes.
+  granularity: |
+    One Go module per part, one package per snapshot. The module boundary is
+    the part because a part is what the reader finishes; the package boundary
+    is the chapter because a chapter is what changes the code. One go.mod
+    means go build ./... and go test ./... cover every snapshot in the part
+    at once.
+  naming: "Package directories are chapter ids in lower case -- c1.1, c1.4, c1.6 -- matching the ids chapters carry in their `<!-- chapter: -->` marker. Part directories are part ids: part-i through part-v."
+  naming_note: |
+    parts/ rather than stages/ or checkpoints/: stage reads as a pipeline
+    stage or a deployment tier, and in a book about AI agents checkpoint
+    means model weights to too many readers. Part is the book's own
+    organizing unit and it is frozen.
+  diff: |
+    Consecutive snapshots differ only by what the prose narrates. Every file
+    differing between one snapshot and the next is either inside a listing
+    region or declared in the manifest with a reason. Undeclared drift is a
+    finding (E-C2) -- that check is what makes a snapshot a claim about the
+    book rather than a copy of a directory.
+
+# How a fence in a chapter resolves to bytes in a file.
+listing_extraction:
+  marker: |
+    A region is delimited by two comment lines carrying `example:begin <id>`
+    and `example:end <id>`. The comment prefix is the host language's:
+    `//` in Go, `#` in YAML. Marker lines are delimiters and are not part of
+    the extracted text.
+  example: |
+    // example:begin c1.1-2
+    type Profile struct {
+    ...
+    }
+    // example:end c1.1-2
+  registration: "Every listing is registered in MANIFEST.yaml with its label as printed (`Listing 1.2`), the language of its fence, and one or more regions naming file and marker id."
+  multi_region: |
+    A listing may name several regions, concatenated in the order given. This
+    is for a listing the prose assembles from more than one place in the
+    source; Listing 4.2 is the case that forced it. A listing whose fence is
+    not the concatenation of its regions is a finding.
+  boundary: |
+    Regions resolve into parts/ only, never into catalog/ (E-C3). The
+    licensing reason is in MANIFEST.yaml's third_party block: a BSD-3-covered
+    file reproduced verbatim in the built PDF would pull clause 2's notice
+    obligation onto the book, and this boundary is what keeps that from ever
+    being true.
+  owner: "The extraction check itself lives in the book's root magefiles, because it is the one check that must read both the chapters and the part source. Every other check lives in examples/magefiles."
+
+# Constraints the audit enforces. Findings cite these ids, so the ids are
+# permanent and are never renumbered.
+constraints:
+  - id: E-C1
+    name: upstream-independence
+    rule: "No parts/*/go.mod may require the declarative-agents module."
+    reason: "The reader builds their own runtime (GH-114, decision 2). A part that needs upstream code has quietly abandoned the premise, and nothing but a check would notice."
+  - id: E-C2
+    name: snapshot-diff-declared
+    rule: "Every file differing between consecutive snapshots is inside a listing region or declared in MANIFEST.yaml with a reason."
+    reason: "A snapshot claims the runtime changed exactly as the prose says it did. Undeclared drift makes that claim false silently."
+  - id: E-C3
+    name: listing-boundary
+    rule: "No listing region resolves into catalog/."
+    reason: "Listings are reproduced in the built book. Reproducing BSD-3-covered source there would engage clause 2's notice obligation; keeping the boundary is cheaper and checkable."
+  - id: E-C4
+    name: provenance-pinned
+    rule: "Every catalog-family entry carries upstream, path, and a release tag that names a real upstream tag, plus what was simplified away."
+    reason: "An unpinned copy cannot be diffed against its source, so it drifts without anyone being able to tell."
+  - id: E-C5
+    name: header-retention
+    rule: "Every file under catalog/ retains a header naming the upstream copyright holder and BSD-3-Clause."
+    reason: "This is what discharges BSD-3 clause 1. It is also why the repository needs no NOTICE file -- the notice lives in the files, where it cannot drift out of sync with them."
+  - id: E-C6
+    name: manifest-architecture-agreement
+    rule: "Every chapter id in MANIFEST.yaml resolves to a chapter id in ../../docs/ARCHITECTURE.yaml."
+    reason: "The manifest is the binding table; a binding to a chapter that does not exist binds nothing."
+  - id: E-C7
+    name: build-section-coverage
+    rule: "A chapter whose markdown carries a `Build:` section has a snapshot entry in MANIFEST.yaml."
+    reason: "Otherwise a Build section drafted later inherits no artifact and no check, and the omission looks like a decision."
+  - id: E-C8
+    name: realizes-resolution
+    rule: "Every id in a part SRD's realizes: list resolves to exactly one file under ../../docs/srd/."
+    reason: "Same two-hop binding the chapter marker uses: the reference survives a renumber, and a dangling id is a finding rather than silent rot."
+  - id: E-C9
+    name: demo-determinism
+    rule: "Two consecutive demo runs produce byte-identical output, and a demo run leaves the working tree clean."
+    reason: "A demo that mutates its fixture passes once. A demo whose output varies cannot be compared, which makes it evidence of nothing."
+
+dependency:
+  rule: "The manifest is read; nothing reads the directory tree."
+  direction: |
+    Part discovery, snapshot discovery, and listing resolution all go through
+    MANIFEST.yaml. A directory present on disk but absent from the manifest
+    is not exercised, and its absence is a finding under E-C7 rather than a
+    silent pass. The alternative -- globbing parts/ -- makes an unregistered
+    directory look supported.
+
+traceability:
+  - "Authority directions map onto constraints: A1 (code to prose) is E-C2 and E-C3 plus the root extraction check; A2 (upstream to catalog) is E-C4 and E-C5; A3 (book SRDs to part SRDs) is E-C8."
+  - "Book goals map onto parts: G6 is the build thread, and parts/part-N realizes the Build sections of book part N (../../outline.yaml: build_thread)."
+  - "Part SRDs bind to chapter SRDs through realizes:, and chapters bind to their SRDs through ../../docs/ARCHITECTURE.yaml. Two hops, both explicit."
+  - "MANIFEST.yaml and this file are two views of one structure: this file carries the rules, the manifest carries the instances."
+
+workflow: |
+  Contract first. The manifest entry and the part SRD exist before the
+  snapshot does; the snapshot is written against the SRD; the audit reports
+  findings by constraint id. A listing changes by changing the source and
+  re-extracting, never by editing the fence -- a fence edited in place is
+  exactly the drift E-C2 and the root extraction check exist to catch.

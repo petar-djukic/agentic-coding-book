@@ -1,0 +1,149 @@
+# MANIFEST.yaml -- the binding table for examples/ (GH-132).
+#
+# Every part, snapshot, listing, and copied catalog family is registered here.
+# Directory names bind nothing: the build discovers parts from this file, the
+# audit resolves listings through it, and a chapter renumbering is an edit to
+# this file alone (docs/ARCHITECTURE.yaml: dependency).
+#
+# Chapter ids are the ids chapters carry in their `<!-- chapter: -->` marker
+# and that ../docs/ARCHITECTURE.yaml defines. E-C6 checks they resolve.
+
+schema_version: 1
+
+# What a copied file owes its origin, stated once. Per-copy pins live in each
+# catalog-family entry's provenance block.
+third_party:
+  upstream: Nokia-Bell-Labs/declarative-agents
+  license: BSD-3-Clause
+  holder: Nokia
+  obligation: |
+    BSD-3 clause 1 is discharged by the copyright header staying in each
+    copied file, which E-C5 checks. Clause 2 -- reproduce the notice in the
+    documentation and other materials -- binds binary redistribution, and
+    examples/ never redistributes a binary: parts/ compiles standalone from
+    original source, catalog/ files are YAML programs, and nothing here
+    ships built. A hand-maintained NOTICE would add a file that drifts
+    without adding compliance, so there is none.
+  boundary: |
+    The obligation stays discharged only while no listing quotes catalog
+    source. A BSD-3-covered file reproduced verbatim in the built PDF would
+    pull clause 2 onto the book itself. E-C3 enforces the boundary; it is
+    not a style rule.
+  attribution: "examples/README.md, section Third-party material."
+
+examples:
+
+  # ------------------------------------------------------------------ parts
+
+  - id: part-i
+    kind: part
+    status: planned
+    path: parts/part-i
+    module: github.com/petar-djukic/agentic-coding-book/examples/parts/part-i
+    srd: docs/srd/srd-part-i.yaml
+    book_part: P1
+    summary: >
+      One executor agent as a profile -- the state machine and tool table as
+      data -- and the minimal runtime that interprets it: profile loading,
+      edit application behind a policy check, one verification gate as a
+      state transition, and a notes file that survives the process.
+    snapshots:
+      - chapter: C1.1
+        path: c1.1
+        leaves: "The skeleton: profile, runtime, tool boundary, model behind an interface. Nothing writes, nothing verifies, nothing is remembered."
+        listings:
+          - id: c1.1-1
+            label: "Listing 1.1"
+            language: yaml
+            regions:
+              - {file: c1.1/profile.yaml, marker: c1.1-1}
+          - id: c1.1-2
+            label: "Listing 1.2"
+            language: go
+            regions:
+              - {file: c1.1/runtime.go, marker: c1.1-2}
+
+      - chapter: C1.4
+        path: c1.4
+        leaves: "The write and the gate: write_file behind a path check, and a verifying state whose verdict re-enters the transcript and is routed by the profile."
+        adds:
+          - "profile.yaml: the write_file tool declaration and the fail transition out of verifying."
+          - "runtime.go: the root field, and verify() replacing the placeholder verifying case."
+          - "tools.go: the WriteFile tool."
+        listings:
+          - id: c1.4-1
+            label: "Listing 4.1"
+            language: go
+            regions:
+              - {file: c1.4/tools.go, marker: c1.4-1}
+          - id: c1.4-2
+            label: "Listing 4.2"
+            language: go
+            regions:
+              - {file: c1.4/runtime.go, marker: c1.4-2a}
+              - {file: c1.4/runtime.go, marker: c1.4-2b}
+            note: >
+              As drafted, the fence is three fragments joined by commentary
+              the source cannot carry -- a verify method, a spliced case
+              block introduced by "In Run's loop, the pass-through case
+              becomes:", and two profile transitions shown as Go comments.
+              Two regions are registered for the code. The third fragment and
+              the connecting commentary are prose, and GH-138 resolves them
+              when it converts the section; until then this listing does not
+              extract cleanly, which is why part-i is status planned.
+
+      - chapter: C1.6
+        path: c1.6
+        leaves: "The machine Part I described: a tool boundary, a policy check on writes, a gate feeding consequences back, and a memory that survives the process."
+        adds:
+          - "profile.yaml: the memory block naming the notes file."
+          - "runtime.go: the Profile.Memory field."
+          - "memory.go: Start and End."
+        listings:
+          - id: c1.6-1
+            label: "Listing 6.1"
+            language: go
+            regions:
+              - {file: c1.6/memory.go, marker: c1.6-1}
+
+  # ------------------------------------------------------- catalog families
+
+  - id: executor
+    kind: catalog-family
+    status: planned
+    path: catalog/agents/executor
+    consumers: [C1.1, C1.5]
+    summary: >
+      The grown version of what Part I builds: the same states, transitions,
+      and tool table, hardened and parameterized. C1.1's Build section tells
+      the reader to check their runtime against it.
+    provenance:
+      upstream: Nokia-Bell-Labs/declarative-agents
+      path: applications/catalog/agents/executor
+      release: v0.20260814.4
+      license: BSD-3-Clause
+      holder: Nokia
+      simplified: "pending -- GH-137 records what it drops when it makes the copy"
+
+  - id: applier
+    kind: catalog-family
+    status: planned
+    path: catalog/agents/applier
+    consumers: [C1.4]
+    summary: >
+      Edit application as its own agent family. C1.4 builds the one-tool
+      version; this is the same boundary with declarations, undo, and a
+      machine of its own.
+    provenance:
+      upstream: Nokia-Bell-Labs/declarative-agents
+      path: applications/catalog/agents/applier
+      release: v0.20260814.4
+      license: BSD-3-Clause
+      holder: Nokia
+      simplified: "pending -- GH-137 records what it drops when it makes the copy"
+
+# Families with no book consumer stay upstream and are deliberately absent:
+# bench, mock, monitor, chatbot, knowledge-manager, assembler, jurist. The
+# rest arrive with the parts that need them -- critic with Part III,
+# specification-critic and lifecycle-exit with Part IV, planner and collector
+# with Part V (GH-132).

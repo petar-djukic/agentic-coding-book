@@ -1,0 +1,84 @@
+# VISION.yaml -- what examples/ is for (GH-132).
+# The book's goals live in ../../docs/VISION.yaml and are not restated here.
+# This file states what the directory of artifacts is for, and the three
+# authority directions that decide every question about it. Structure lives
+# in ARCHITECTURE.yaml.
+
+meta:
+  name: agentic-coding-book-examples
+  governs: "examples/"
+  parent: ../../docs/VISION.yaml
+  started: 2026-08-14
+
+purpose: |
+  The book claims a coding agent can be built from a state machine and a set
+  of tools, and it tests that claim by construction: each part closes with a
+  Build section, and the reader who follows them has a working runtime.
+  examples/ holds the artifacts on both sides of that claim. parts/ is the
+  runtime the reader constructs, snapshot by snapshot, in the state each Build
+  section leaves it. catalog/ is the grown version of the same design, copied
+  from declarative-agents, that C1.1 tells the reader to check their work
+  against. Between them sits the machinery -- a manifest, software SRDs, and
+  an audit -- that keeps the code in this directory and the code printed in
+  the book from drifting apart.
+
+problem: |
+  Code in a book rots in a way prose does not. Prose that contradicts itself
+  is caught by a reader; a listing that no longer compiles is caught by
+  nobody, because nothing in the build ever runs it. Every listing in Part I
+  was typed into a markdown fence and has never been compiled. Two of them
+  omit lines the surrounding prose narrates -- the runtime's root field, the
+  Profile.Memory field -- because a printed listing can leave out what a
+  compiler cannot. That gap is the defect this directory closes.
+
+authority:
+  # Three directions, each naming which side wins when two artifacts disagree.
+  # Every rule in ARCHITECTURE.yaml is one of these made checkable.
+  - id: A1
+    name: code-to-prose
+    direction: "examples/parts/ governs the listings printed in the chapters."
+    statement: >
+      Each Build section's listing is an extracted region of part source,
+      never retyped. mage audit compares the fence to its region byte for
+      byte and reports drift as a finding. Where the compiled source and the
+      printed draft disagree, the prose is corrected -- the code is the
+      authority, in the same way references.yaml is the authority for a
+      citation.
+    consequence: "A listing that cannot be extracted is a listing the book cannot check. Every listing names its region in MANIFEST.yaml, and a listing with no region is a finding rather than an exemption."
+  - id: A2
+    name: upstream-to-catalog
+    direction: "declarative-agents governs examples/catalog/."
+    statement: >
+      catalog/ copies canonical agent families from declarative-agents,
+      pinned by release tag in the manifest. Copies are simplified by
+      deletion and never forked: a diff against the pinned tag is removals
+      and nothing else. An improvement that belongs in the catalog belongs
+      upstream first.
+    consequence: "The copies stay checkable against a real tag, and the book's claim that the reader can check their work against a grown version stays true rather than aspirational."
+  - id: A3
+    name: book-srds-to-part-srds
+    direction: "../../docs/srd/ governs what the prose must say; docs/srd/ governs what the code must be."
+    statement: >
+      A chapter SRD is a writing contract: goals, content spine, apparatus,
+      citations. A part SRD is a software contract: types, exports, what the
+      tests must prove, what the demo must exercise. Neither is a layer of
+      the other. A part SRD cites the chapter SRDs it realizes and restates
+      none of their content.
+    consequence: "Two subjects, one binding. The realizes: field is a citation, so a renumbered chapter breaks it loudly and a dangling id is a finding."
+
+goals:
+  - id: E1
+    goal: "Every listing in a drafted Build section is extracted from source that compiles and is tested, so a listing that stops compiling stops the build."
+  - id: E2
+    goal: "A reader who follows a part's Build sections can diff their tree against the corresponding snapshot and find only the differences they chose."
+  - id: E3
+    goal: "The runtime runs end to end without a model, credentials, or a network, so anyone can execute the book's own artifact."
+  - id: E4
+    goal: "Third-party material carries its provenance and its license in place, checkably, without a hand-maintained notice file that drifts."
+
+non_goals:
+  - "A framework. parts/ is a teaching artifact; the production evidence stays with the repositories ../../docs/VISION.yaml names."
+  - "A fork of declarative-agents. catalog/ is a pinned copy, simplified by deletion, and improvements go upstream."
+  - "A deployment surface. The upstream applications/ tree carries Helm charts, kind clusters, packaging closure, REST serving, and capability classes; none of it has a book consumer and none of it is copied."
+  - "A dependency. parts/ compiles standalone against the standard library; a part that needs upstream code has broken the build thread's premise."
+  - "A live-model harness. Demos run against canned responses behind the Model interface; live variants are opt-in future targets, not part of any gate."

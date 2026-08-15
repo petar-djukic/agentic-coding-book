@@ -27,6 +27,9 @@ components:
   build:
     path: "magefiles/, templates/"
     role: "mage figures renders figures/*.puml to PNG; mage pdf runs pandoc over the numbered chapters through templates/eisvogel.latex with xelatex, emitting into generated-files/; mage all chains the two. mage outline renders the SRDs to an outline PDF; mage audit checks specification consistency, prose conformance, and the build together (GH-27)."
+  examples:
+    path: examples/
+    role: "The build thread's artifacts (GH-132). examples/parts/ holds the runtime the reader constructs, one Go module per book part and one package per Build section, in the state that section leaves it; examples/catalog/ holds agent families copied from declarative-agents at a pinned release, which is the grown version C1.1 tells the reader to check their work against. The directory governs the chapters in one direction: every listing in a Build section is an extracted region of part source, compared byte-for-byte, and drift is a finding -- the same discipline that makes references.yaml the authority for a citation. It carries its own VISION, ARCHITECTURE, road-map, and one software SRD per part under examples/docs/, which specify what the code must be and cite the chapter SRDs they realize rather than restating them. mage audit shells into examples/ and reports the result as one finding; the listing-extraction check is the exception and stays in magefiles/, because it alone reads both the chapters and the part source."
   corpus_interface:
     path: references.yaml
     role: "Single CSL-YAML bibliography, resolved by the pandoc build and shared with the reference-maintenance skills. No private or per-chapter bibliography."

@@ -149,6 +149,16 @@ audit; anything else does. An entry with no issue, or one that no longer
 matches a finding, is itself a finding — so the file cannot decay into a
 blanket exemption.
 
+`examples/` holds the code the Build sections print. Each listing is an
+extracted region of a real Go module rather than text typed into a fence, and
+`mage audit` compares the two byte for byte, so a listing that stops compiling
+stops the build. `examples/parts/` carries the runtime in the state each Build
+section leaves it — one module per part, one package per chapter — and
+`examples/catalog/` carries the agent families copied from declarative-agents
+that the book tells you to check your work against. `mage -d examples demo`
+runs the whole thing on canned responses: no model, no credentials, no
+network. See [examples/README.md](examples/README.md).
+
 ## Author
 
 Petar Djukic — Principal AI Architect, 20+ years of production systems,

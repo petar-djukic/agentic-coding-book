@@ -1,0 +1,120 @@
+# road-map.yaml -- per-part status for examples/ (GH-132).
+#
+# The book's drafting order lives in ../../docs/road-map.yaml and governs this
+# one: a part's artifacts are built once its Build sections are drafted, not
+# before. Writing a snapshot against a Build section that does not exist
+# produces a snapshot that has to be rewritten.
+
+meta:
+  governs: "examples/"
+  parent: ../../docs/road-map.yaml
+  ordering: "Part I first, then Parts II-V as their Build sections are drafted."
+  gate: >
+    A part's artifacts land once every Build section in that part is drafted
+    and its chapter SRDs are written. The part is complete when its module
+    compiles, its tests pass, mage demo runs it end to end, and every listing
+    in its Build sections extracts byte for byte from its snapshots.
+
+status_values:
+  planned: "registered in MANIFEST.yaml; no code"
+  partial: "some snapshots exist; at least one listing does not yet extract"
+  implemented: "module compiles, tests pass, demo runs, every listing extracts"
+
+parts:
+
+  - id: part-i
+    title: "Agents and Harnesses"
+    status: planned
+    book_status: drafted
+    build_sections: [C1.1, C1.4, C1.6]
+    tracking: "GH-134 (module), GH-135 (test and demo), GH-138 (listing extraction)"
+    note: >
+      The only part whose Build sections are drafted, so the only part whose
+      snapshots can be written. Listing 4.2 is the known obstacle: as drafted
+      it is a fragment the source cannot reproduce, and it holds part-i short
+      of implemented until GH-138 converts the section.
+
+  - id: part-ii
+    title: "Construction and Requirements"
+    status: planned
+    book_status: outline
+    build_sections: [C2.4, C2.5]
+    note: >
+      Waits on the Build sections being drafted. C2.1 and C2.2 are drafted
+      and carry no Build section; the spec loader and the constitution gate
+      are the deliverables, and the split between them is an open seam the
+      Part II SRDs record.
+
+  - id: part-iii
+    title: "Testing"
+    status: planned
+    book_status: outline
+    build_sections: []
+    note: "A differential test harness as a declared tool, driven by a critic-style agent, built standalone (../../outline.yaml: build_thread). No chapter drafted."
+
+  - id: part-iv
+    title: "How Do You Know Your Code Is Correct?"
+    status: planned
+    book_status: outline
+    build_sections: []
+    note: "The verification stack wired into the loop as gates, and an inspector reviewing generated output. No chapter drafted."
+
+  - id: part-v
+    title: "Agent Orchestration"
+    status: planned
+    book_status: outline
+    build_sections: []
+    note: "A planner and a generator coordinated through a blackboard, sub-agents constructed as profiles, assembled into the orchestrator. No chapter drafted."
+
+catalog:
+
+  - id: executor
+    status: planned
+    tracking: "GH-137"
+    consumers: [C1.1, C1.5]
+
+  - id: applier
+    status: planned
+    tracking: "GH-137"
+    consumers: [C1.4]
+
+  - id: critic
+    status: deferred
+    consumers: [P3]
+    note: "Lands with Part III."
+
+  - id: specification-critic
+    status: deferred
+    consumers: [P4]
+    note: "Lands with Part IV, alongside lifecycle-exit."
+
+  - id: lifecycle-exit
+    status: deferred
+    consumers: [P4]
+
+  - id: planner
+    status: deferred
+    consumers: [P5]
+    note: "Lands with Part V, alongside collector."
+
+  - id: collector
+    status: deferred
+    consumers: [P5]
+
+tooling:
+  - id: manifest-and-contract
+    status: in_progress
+    tracking: "GH-133"
+    covers: "README, MANIFEST, the three steering documents, the SRD contract, and srd-part-i.yaml."
+  - id: test-and-demo
+    status: planned
+    tracking: "GH-135"
+    covers: "mage -d examples test and mage -d examples demo."
+  - id: audit
+    status: planned
+    tracking: "GH-136"
+    covers: "the nine constraints in ARCHITECTURE.yaml, less the extraction check."
+  - id: listing-extraction
+    status: planned
+    tracking: "GH-138"
+    covers: "the root-side extraction check, root audit dispatch, and converting the three Part I Build sections."
