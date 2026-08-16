@@ -43,12 +43,25 @@ func TestLoadManifestReadsTheRealFile(t *testing.T) {
 	if n := len(parts[0].Snapshots); n != 3 {
 		t.Errorf("part-i has %d snapshots, want one per Build section", n)
 	}
-	var listings int
+	// Six listings: C1.1 prints two, C1.4 three since GH-138 split the gate
+	// from the state that routes it, C1.6 one. Two snippets: the section 4.6
+	// profile abridgement, declared prose, and the section 6.6 memory block,
+	// which extracts (GH-139).
+	var listings, snippets, prose int
 	for _, s := range parts[0].Snapshots {
 		listings += len(s.Listings)
+		snippets += len(s.Snippets)
+		for _, sn := range s.Snippets {
+			if sn.Prose != "" {
+				prose++
+			}
+		}
 	}
-	if listings != 5 {
-		t.Errorf("%d listings registered, want 5", listings)
+	if listings != 6 {
+		t.Errorf("%d listings registered, want 6", listings)
+	}
+	if snippets != 2 || prose != 1 {
+		t.Errorf("%d snippets registered (%d declared prose), want 2 and 1", snippets, prose)
 	}
 	families := m.entries(kindCatalog)
 	if len(families) != 1 || families[0].ID != "executor" {

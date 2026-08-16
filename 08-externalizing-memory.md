@@ -89,6 +89,8 @@ That is the hinge this part has been building toward. The mechanism is establish
 
 The runtime assembled across this part holds everything it knows in one slice: the transcript. The process exits, the slice is garbage-collected, and the next run starts empty — section 6.1's gap, reproduced in a single variable. Closing it takes less code than any earlier Build section: one line in the profile naming the file, and a read at the start with an append at the end in the runtime.
 
+<!-- snippet: c1.6-p1 -->
+
 ```yaml
 memory:
   notes: NOTES.md

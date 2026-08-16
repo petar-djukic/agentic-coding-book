@@ -26,10 +26,84 @@ import (
 
 const examplesDir = "examples"
 
-// listingRe finds a listing and the fenced block beneath it: the bold label
-// the voice constitution requires (V-S7), then the fence with its language
-// tag. The label is what binds the fence to a manifest entry.
-var listingRe = regexp.MustCompile("(?s)\\*\\*(Listing [0-9]+\\.[0-9]+)\\*\\*.*?\n```[a-z]*\n(.*?)\n```")
+// How a fence in a Build section announces itself. Every fence carries one of
+// the two, and a fence carrying neither is the hole GH-139 closed: a code
+// block nobody registered, printed in a book whose whole claim is that its
+// code is checked.
+var (
+	// listingLabelRe is the bold label the voice constitution requires above a
+	// numbered listing (V-S7).
+	listingLabelRe = regexp.MustCompile(`^\*\*(Listing [0-9]+\.[0-9]+)\*\*`)
+
+	// snippetMarkerRe is how an unnumbered fence names itself. An HTML comment
+	// rather than a visible label, for the reason the chapter marker is one:
+	// it renders to nothing in every output format, so a fence the book shows
+	// without a listing number stays unnumbered on the page while still being
+	// something the audit can resolve.
+	snippetMarkerRe = regexp.MustCompile(`^<!--\s*snippet:\s*(\S+)\s*-->`)
+
+	// buildHeadingRe opens a Build section and sectionHeadingRe closes it.
+	buildHeadingRe = regexp.MustCompile(`^## [0-9.]+ Build:`)
+	anySectionRe   = regexp.MustCompile(`^## `)
+
+	fenceLineRe = regexp.MustCompile("^```([a-z]*)\\s*$")
+)
+
+// fence is one fenced code block inside a Build section, with whatever
+// announced it. Exactly one of label and snippet is set on a well-formed
+// fence; neither being set is what the check reports.
+type fence struct {
+	label   string
+	snippet string
+	body    string
+	line    int
+}
+
+// buildSectionFences returns every fenced block inside a Build section, in
+// document order. Fences elsewhere in the chapter are not the build thread's
+// business and are left alone.
+func buildSectionFences(data string) []fence {
+	var out []fence
+	var pendingLabel, pendingSnippet string
+	inBuild, inFence := false, false
+	var body []string
+	fenceLine := 0
+
+	for i, line := range strings.Split(data, "\n") {
+		switch {
+		case inFence:
+			if fenceLineRe.MatchString(line) {
+				out = append(out, fence{
+					label:   pendingLabel,
+					snippet: pendingSnippet,
+					body:    strings.Join(body, "\n"),
+					line:    fenceLine,
+				})
+				pendingLabel, pendingSnippet = "", ""
+				inFence, body = false, nil
+				continue
+			}
+			body = append(body, line)
+		case buildHeadingRe.MatchString(line):
+			inBuild = true
+			pendingLabel, pendingSnippet = "", ""
+		case anySectionRe.MatchString(line):
+			inBuild = false
+		case !inBuild:
+			// nothing to track outside a Build section
+		case fenceLineRe.MatchString(line):
+			inFence, fenceLine = true, i+1
+		default:
+			if m := listingLabelRe.FindStringSubmatch(line); m != nil {
+				pendingLabel, pendingSnippet = m[1], ""
+			}
+			if m := snippetMarkerRe.FindStringSubmatch(line); m != nil {
+				pendingSnippet, pendingLabel = m[1], ""
+			}
+		}
+	}
+	return out
+}
 
 // exampleManifest is the part of examples/MANIFEST.yaml this check reads.
 // examples/magefiles owns the full schema; duplicating four structs beats a
@@ -43,32 +117,48 @@ type exampleManifest struct {
 		Snapshots []struct {
 			Chapter  string `yaml:"chapter"`
 			Listings []struct {
-				ID      string `yaml:"id"`
-				Label   string `yaml:"label"`
-				Regions []struct {
-					File   string `yaml:"file"`
-					Marker string `yaml:"marker"`
-				} `yaml:"regions"`
+				ID      string          `yaml:"id"`
+				Label   string          `yaml:"label"`
+				Regions []exampleRegion `yaml:"regions"`
 			} `yaml:"listings"`
+			Snippets []struct {
+				ID      string          `yaml:"id"`
+				Prose   string          `yaml:"prose"`
+				Regions []exampleRegion `yaml:"regions"`
+			} `yaml:"snippets"`
 		} `yaml:"snapshots"`
 	} `yaml:"examples"`
 }
 
-// registeredListing is one label's resolved source, keyed by chapter id so a
+type exampleRegion struct {
+	File   string `yaml:"file"`
+	Marker string `yaml:"marker"`
+}
+
+// registeredListing is one fence's resolved source, keyed by chapter id so a
 // label repeated across chapters -- "Listing 4.1" exists once per part in a
 // book numbered by section -- stays distinct.
+//
+// prose is set for a snippet the manifest declares as prose rather than as an
+// extract. That fence is not compared against anything, and the reason it
+// cannot be is written down where a reader of the manifest will find it. It
+// is a declared exception, which is the difference between an unchecked fence
+// and an unnoticed one.
 type registeredListing struct {
 	id      string
 	chapter string
 	label   string
 	source  string
 	origin  string
+	prose   string
 }
 
-// checkListings compares every listing printed in a drafted Build section
-// against the region it is registered to extract from. A mismatch, an
-// unregistered listing, and a registered listing no chapter prints are each
-// findings: the manifest and the chapters must agree in both directions.
+// checkListings compares every fenced code block in a drafted Build section
+// against the region it is registered to extract from. Four things are
+// findings: a fence that announces itself as neither a listing nor a snippet,
+// a fence whose registration is missing, a fence that does not match its
+// source, and a registration no chapter prints. The manifest and the chapters
+// must agree in both directions, and no fence may sit outside the agreement.
 func checkListings(root string) []finding {
 	registered, findings := loadRegisteredListings(root)
 	if registered == nil {
@@ -86,22 +176,33 @@ func checkListings(root string) []finding {
 		if m := chapterMarkerRe.FindSubmatch(data); m != nil {
 			chapter = string(m[1])
 		}
-		for _, match := range listingRe.FindAllStringSubmatch(string(data), -1) {
-			label, fence := match[1], match[2]
-			key := chapter + "|" + label
+		for _, f := range buildSectionFences(string(data)) {
+			what, key := f.label, chapter+"|"+f.label
+			if f.label == "" {
+				what, key = "snippet "+f.snippet, chapter+"|snippet:"+f.snippet
+			}
+			if f.label == "" && f.snippet == "" {
+				findings = append(findings, finding{File: name, Rule: "listing extraction",
+					Detail: fmt.Sprintf("the fenced block at line %d carries no **Listing N.M** label and no "+
+						"<!-- snippet: id --> marker, so nothing binds it to %s/MANIFEST.yaml", f.line, examplesDir)})
+				continue
+			}
 			printed[key] = true
 
 			reg, ok := registered[key]
 			if !ok {
 				findings = append(findings, finding{File: name, Rule: "listing extraction",
 					Detail: fmt.Sprintf("%s (%s) is not registered in %s/MANIFEST.yaml, so nothing checks it",
-						label, chapter, examplesDir)})
+						what, chapter, examplesDir)})
 				continue
 			}
-			if fence != reg.source {
+			if reg.prose != "" {
+				continue // declared prose: unchecked on purpose, and the manifest says why
+			}
+			if f.body != reg.source {
 				findings = append(findings, finding{File: name, Rule: "listing extraction",
 					Detail: fmt.Sprintf("%s does not match %s; the code is the authority, so correct the prose%s",
-						label, reg.origin, firstDifference(reg.source, fence))})
+						what, reg.origin, firstDifference(reg.source, f.body))})
 			}
 		}
 	}
@@ -142,35 +243,64 @@ func loadRegisteredListings(root string) (map[string]registeredListing, []findin
 		}
 		for _, s := range e.Snapshots {
 			for _, l := range s.Listings {
-				var parts []string
-				var origins []string
-				failed := false
-				for _, r := range l.Regions {
-					file := filepath.Join(root, examplesDir, e.Path, r.File)
-					body, err := extractRegion(file, r.Marker)
-					if err != nil {
-						findings = append(findings, finding{File: rel(root, file), Rule: "listing extraction",
-							Detail: fmt.Sprintf("%s: %v", l.ID, err)})
-						failed = true
-						break
-					}
-					parts = append(parts, body)
-					origins = append(origins, filepath.Join(e.Path, r.File)+":"+r.Marker)
-				}
-				if failed {
+				reg, fs := resolveRegions(root, e.Path, l.ID, l.Label, l.Regions)
+				findings = append(findings, fs...)
+				if reg == nil {
 					continue
 				}
-				out[s.Chapter+"|"+l.Label] = registeredListing{
-					id:      l.ID,
-					chapter: s.Chapter,
-					label:   l.Label,
-					source:  strings.Join(parts, "\n"),
-					origin:  strings.Join(origins, " + "),
+				reg.chapter = s.Chapter
+				out[s.Chapter+"|"+l.Label] = *reg
+			}
+			for _, sn := range s.Snippets {
+				key := s.Chapter + "|snippet:" + sn.ID
+				if sn.Prose != "" {
+					if len(sn.Regions) > 0 {
+						findings = append(findings, finding{File: examplesDir + "/MANIFEST.yaml", Rule: "listing extraction",
+							Detail: fmt.Sprintf("snippet %s declares prose and names regions; it is one or the other", sn.ID)})
+						continue
+					}
+					out[key] = registeredListing{id: sn.ID, chapter: s.Chapter, label: "snippet " + sn.ID, prose: sn.Prose}
+					continue
 				}
+				if len(sn.Regions) == 0 {
+					findings = append(findings, finding{File: examplesDir + "/MANIFEST.yaml", Rule: "listing extraction",
+						Detail: fmt.Sprintf("snippet %s names no regions and declares no prose reason", sn.ID)})
+					continue
+				}
+				reg, fs := resolveRegions(root, e.Path, sn.ID, "snippet "+sn.ID, sn.Regions)
+				findings = append(findings, fs...)
+				if reg == nil {
+					continue
+				}
+				reg.chapter = s.Chapter
+				out[key] = *reg
 			}
 		}
 	}
 	return out, findings
+}
+
+// resolveRegions reads a fence's regions and concatenates them in the order
+// given. A region that cannot be read yields a finding and no registration,
+// so the fence is reported once rather than twice.
+func resolveRegions(root, partPath, id, label string, regions []exampleRegion) (*registeredListing, []finding) {
+	var parts, origins []string
+	for _, r := range regions {
+		file := filepath.Join(root, examplesDir, partPath, r.File)
+		body, err := extractRegion(file, r.Marker)
+		if err != nil {
+			return nil, []finding{{File: rel(root, file), Rule: "listing extraction",
+				Detail: fmt.Sprintf("%s: %v", id, err)}}
+		}
+		parts = append(parts, body)
+		origins = append(origins, filepath.Join(partPath, r.File)+":"+r.Marker)
+	}
+	return &registeredListing{
+		id:     id,
+		label:  label,
+		source: strings.Join(parts, "\n"),
+		origin: strings.Join(origins, " + "),
+	}, nil
 }
 
 // extractRegion returns the bytes between a region's markers, delimiters
