@@ -97,6 +97,8 @@ This is the fact that the verification half of this book rests on. Parts III and
 
 The runtime built in the first chapter executes whatever the model proposes and checks nothing afterwards — its `verifying` state emits `pass` unconditionally. Those are the two gaps this chapter traced, and this section closes both: a write that sits behind policy, and a gate whose verdict re-enters the transcript and is routed by the profile. The runtime gains one field for the work — the repository root it is given at construction, shared with the tools it builds from the profile's declarations — and the profile gains two lines: a tool declaration, and a transition for a verdict the gate has yet to produce:
 
+<!-- snippet: c1.4-p1 -->
+
 ```yaml
 transitions:
   # ... the four from Listing 1.1, plus:

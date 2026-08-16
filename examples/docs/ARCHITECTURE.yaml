@@ -74,6 +74,31 @@ listing_extraction:
     }
     // example:end c1.1-2
   registration: "Every listing is registered in MANIFEST.yaml with its label as printed (`Listing 1.2`), the language of its fence, and one or more regions naming file and marker id."
+  coverage: |
+    Every fenced block inside a Build section is accounted for, not only the
+    numbered ones. A fence carries either a `**Listing N.M**` label or a
+    `<!-- snippet: <id> -->` comment, and the manifest registers whichever it
+    carries. A fence carrying neither is a finding (GH-139): before that rule
+    existed an unnumbered fence was invisible to the check and looked exactly
+    like a checked one on the page.
+
+    The snippet marker is an HTML comment for the reason the chapter marker is
+    one -- it renders to nothing in every output format, so a fence the book
+    shows without a listing number stays unnumbered on the page while still
+    being something the audit can resolve. Fences outside a Build section are
+    not the build thread's business and are not governed.
+  prose_snippets: |
+    A snippet registers either regions, exactly as a listing does, or a
+    `prose:` string giving the reason no region can reproduce it. Declaring
+    both is a finding; declaring neither is a finding.
+
+    Declared prose is for an abridgement the source cannot hold. Section 4.6's
+    profile fence elides the four transitions Listing 1.1 already printed and
+    says so in a comment no file carries. Printing the whole profile instead
+    would extract cleanly and cost the section the sentence it is making,
+    which is that two lines are new. So the fence stays, unchecked, with the
+    reason written where a reader of the manifest will find it -- which is the
+    difference between a fence nobody checks and a fence nobody noticed.
   multi_region: |
     A listing may name several regions, concatenated in the order given. This
     is for a listing the prose assembles from more than one place in the

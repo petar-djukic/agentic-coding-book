@@ -65,6 +65,19 @@ type snapshot struct {
 	Leaves   string    `yaml:"leaves"`
 	Adds     []string  `yaml:"adds"`
 	Listings []listing `yaml:"listings"`
+	Snippets []snippet `yaml:"snippets"`
+}
+
+// snippet is a fenced block a Build section prints without a listing number.
+// It either names regions, exactly as a listing does, or declares itself
+// prose with the reason no region can reproduce it (GH-139). Exactly one of
+// the two: the point of registering it at all is that no fence in a Build
+// section goes unaccounted for.
+type snippet struct {
+	ID       string   `yaml:"id"`
+	Language string   `yaml:"language"`
+	Prose    string   `yaml:"prose"`
+	Regions  []region `yaml:"regions"`
 }
 
 type listing struct {

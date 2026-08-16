@@ -17,5 +17,7 @@ tools:
     root: "."
   - name: write_file
     root: "."
+# example:begin c1.6-p1
 memory:
   notes: NOTES.md
+# example:end c1.6-p1

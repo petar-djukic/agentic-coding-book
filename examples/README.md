@@ -19,7 +19,7 @@ artifact, and it is small on purpose.
 |---|---|
 | [`MANIFEST.yaml`](MANIFEST.yaml) | the binding table: every part, snapshot, listing, and copied family |
 | [`docs/VISION.yaml`](docs/VISION.yaml) | why the directory exists, and the three authority directions |
-| [`docs/ARCHITECTURE.yaml`](docs/ARCHITECTURE.yaml) | the structure, the marker syntax, and the nine constraints the audit enforces |
+| [`docs/ARCHITECTURE.yaml`](docs/ARCHITECTURE.yaml) | the structure, the marker syntax, and the nine constraints |
 | [`docs/road-map.yaml`](docs/road-map.yaml) | per-part status |
 | [`docs/srd/`](docs/srd/) | one software requirements document per part |
 | `parts/` | the runtime, one Go module per book part |
@@ -91,6 +91,26 @@ places in the source.
 
 Regions resolve into `parts/` only, never into `catalog/`. That boundary is
 load-bearing rather than tidy; see below.
+
+**Every fence in a Build section is accounted for, not only the numbered
+ones.** A fence carries either a `**Listing N.M**` label or an HTML comment
+naming it:
+
+```markdown
+<!-- snippet: c1.6-p1 -->
+```
+
+and the manifest registers whichever it carries. A fence carrying neither is a
+finding — which is the whole point, because an unnumbered fence used to be
+invisible to the check while looking exactly like a checked one on the page.
+The comment renders to nothing, so the fence stays unnumbered for the reader.
+
+A snippet registers either regions, exactly as a listing does, or a `prose:`
+reason why no region can reproduce it. §4.6's profile fence is the second
+case. It elides four transitions Listing 1.1 already printed and says so in a
+comment no source file carries, so it is declared prose and left uncompared.
+The reason sits in the manifest where anyone auditing the directory will read
+it, which is what makes the exception reviewable.
 
 ## Running it
 

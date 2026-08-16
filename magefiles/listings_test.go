@@ -196,6 +196,149 @@ func TestMarkerDirectiveStripsTheHostComment(t *testing.T) {
 	}
 }
 
+// ------------------------------------------------------ unnumbered fences
+
+// buildTree writes a chapter whose Build section holds whatever fences the
+// test supplies, plus a manifest snapshot body, and returns the root.
+func buildTree(t *testing.T, sectionBody, manifestSnapshot string) string {
+	t.Helper()
+	root := t.TempDir()
+	writeFile(t, filepath.Join(root, "06-chapter.md"),
+		"<!-- chapter: C1.4 -->\n\n# Chapter\n\n## 4.6 Build: The Write and the Gate\n\n"+
+			sectionBody+"\n## Summary\n\nAfterwards.\n")
+	writeFile(t, filepath.Join(root, examplesDir, "MANIFEST.yaml"),
+		"schema_version: 1\nexamples:\n  - id: part-i\n    kind: part\n    path: parts/part-i\n"+
+			"    snapshots:\n      - chapter: C1.4\n        path: c1.4\n"+manifestSnapshot)
+	return root
+}
+
+const bareFence = "```yaml\nmemory:\n  notes: NOTES.md\n```\n"
+
+func TestAFenceWithNoLabelAndNoMarkerIsAFinding(t *testing.T) {
+	root := buildTree(t, bareFence, "        listings: []\n")
+	found := checkListings(root)
+	if len(found) != 1 || !strings.Contains(found[0].Detail, "carries no **Listing N.M** label and no") {
+		t.Fatalf("got %v, want the unannounced fence reported", found)
+	}
+}
+
+func TestAMarkedSnippetExtracts(t *testing.T) {
+	root := buildTree(t,
+		"<!-- snippet: c1.4-p1 -->\n\n"+bareFence,
+		"        snippets:\n          - id: c1.4-p1\n            regions:\n"+
+			"              - {file: c1.4/profile.yaml, marker: c1.4-p1}\n")
+	writeFile(t, filepath.Join(root, examplesDir, "parts", "part-i", "c1.4", "profile.yaml"),
+		"agent: executor\n# example:begin c1.4-p1\nmemory:\n  notes: NOTES.md\n# example:end c1.4-p1\n")
+
+	if found := checkListings(root); len(found) != 0 {
+		t.Fatalf("a marked snippet matching its region must pass, got %v", found)
+	}
+}
+
+func TestAMarkedSnippetDriftsLikeAListing(t *testing.T) {
+	root := buildTree(t,
+		"<!-- snippet: c1.4-p1 -->\n\n"+bareFence,
+		"        snippets:\n          - id: c1.4-p1\n            regions:\n"+
+			"              - {file: c1.4/profile.yaml, marker: c1.4-p1}\n")
+	writeFile(t, filepath.Join(root, examplesDir, "parts", "part-i", "c1.4", "profile.yaml"),
+		"agent: executor\n# example:begin c1.4-p1\nmemory:\n  notes: MEMORY.md\n# example:end c1.4-p1\n")
+
+	found := checkListings(root)
+	if len(found) != 1 || !strings.Contains(found[0].Detail, "snippet c1.4-p1 does not match") {
+		t.Fatalf("got %v, want the snippet drift reported", found)
+	}
+}
+
+func TestADeclaredProseSnippetIsNotCompared(t *testing.T) {
+	root := buildTree(t,
+		"<!-- snippet: c1.4-p1 -->\n\n"+bareFence,
+		"        snippets:\n          - id: c1.4-p1\n            prose: \"an abridgement the source cannot carry\"\n")
+
+	if found := checkListings(root); len(found) != 0 {
+		t.Fatalf("declared prose is unchecked on purpose, got %v", found)
+	}
+}
+
+func TestAProseDeclarationMustNotAlsoNameRegions(t *testing.T) {
+	root := buildTree(t,
+		"<!-- snippet: c1.4-p1 -->\n\n"+bareFence,
+		"        snippets:\n          - id: c1.4-p1\n            prose: \"a reason\"\n            regions:\n"+
+			"              - {file: c1.4/profile.yaml, marker: c1.4-p1}\n")
+	found := checkListings(root)
+	if len(found) == 0 || !strings.Contains(found[0].Detail, "declares prose and names regions") {
+		t.Fatalf("got %v, want the contradiction reported", found)
+	}
+}
+
+func TestASnippetMustSaySomething(t *testing.T) {
+	root := buildTree(t,
+		"<!-- snippet: c1.4-p1 -->\n\n"+bareFence,
+		"        snippets:\n          - id: c1.4-p1\n            language: yaml\n")
+	found := checkListings(root)
+	if len(found) == 0 || !strings.Contains(found[0].Detail, "names no regions and declares no prose reason") {
+		t.Fatalf("got %v, want the empty registration reported", found)
+	}
+}
+
+func TestAnUnregisteredSnippetIsAFinding(t *testing.T) {
+	root := buildTree(t, "<!-- snippet: c1.4-p9 -->\n\n"+bareFence, "        listings: []\n")
+	found := checkListings(root)
+	if len(found) != 1 || !strings.Contains(found[0].Detail, "snippet c1.4-p9 (C1.4) is not registered") {
+		t.Fatalf("got %v, want the unregistered snippet reported", found)
+	}
+}
+
+func TestFencesOutsideBuildSectionsAreNotGoverned(t *testing.T) {
+	root := t.TempDir()
+	writeFile(t, filepath.Join(root, "06-chapter.md"),
+		"<!-- chapter: C1.4 -->\n\n# Chapter\n\n## 4.2 Assembling the Context\n\n"+
+			"```go\nfunc illustrative() {}\n```\n\n"+
+			"## 4.6 Build: x\n\nNo fences here.\n\n## Summary\n\nDone.\n")
+	writeFile(t, filepath.Join(root, examplesDir, "MANIFEST.yaml"), "schema_version: 1\nexamples: []\n")
+
+	if found := checkListings(root); len(found) != 0 {
+		t.Fatalf("only Build-section fences are governed, got %v", found)
+	}
+}
+
+func TestBuildSectionFencesReadsWhatAnnouncedEach(t *testing.T) {
+	doc := "<!-- chapter: C1.4 -->\n\n## 4.2 Prose\n\n```go\noutside\n```\n\n" +
+		"## 4.6 Build: x\n\n" +
+		"**Listing 4.1** Labelled.\n\n```go\nfirst\n```\n\n*Gloss.*\n\n" +
+		"<!-- snippet: p1 -->\n\n```yaml\nsecond\n```\n\n" +
+		"```yaml\nthird\n```\n\n" +
+		"## Summary\n\n```go\nafter\n```\n"
+
+	got := buildSectionFences(doc)
+	if len(got) != 3 {
+		t.Fatalf("got %d fences, want the three inside the Build section: %+v", len(got), got)
+	}
+	for i, want := range []fence{
+		{label: "Listing 4.1", body: "first"},
+		{snippet: "p1", body: "second"},
+		{body: "third"},
+	} {
+		if got[i].label != want.label || got[i].snippet != want.snippet || got[i].body != want.body {
+			t.Errorf("fence %d = %+v, want label=%q snippet=%q body=%q",
+				i, got[i], want.label, want.snippet, want.body)
+		}
+	}
+}
+
+func TestALabelIsConsumedByOneFenceOnly(t *testing.T) {
+	doc := "## 4.6 Build: x\n\n**Listing 4.1** One.\n\n```go\nfirst\n```\n\n```go\nsecond\n```\n"
+	got := buildSectionFences(doc)
+	if len(got) != 2 {
+		t.Fatalf("got %d fences, want 2", len(got))
+	}
+	if got[0].label != "Listing 4.1" {
+		t.Errorf("first fence label = %q", got[0].label)
+	}
+	if got[1].label != "" || got[1].snippet != "" {
+		t.Errorf("the label must not carry to the next fence: %+v", got[1])
+	}
+}
+
 // ------------------------------------------------- the book's own listings
 
 func TestEveryPartOneListingExtracts(t *testing.T) {

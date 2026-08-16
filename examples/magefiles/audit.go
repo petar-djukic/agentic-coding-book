@@ -339,10 +339,11 @@ func checkCatalogHeaders(root string) []finding {
 
 // ------------------------------------------------------------------ E-C3
 
-// checkListingRegions resolves every registered listing and reports one that
-// points at nothing, and one that points into catalog/. The boundary is not a
-// style rule: a BSD-3-covered file reproduced verbatim in the built PDF would
-// pull clause 2's notice obligation onto the book itself.
+// checkListingRegions resolves every registered listing and snippet and
+// reports one that points at nothing, and one that points into catalog/. The
+// boundary is not a style rule: a BSD-3-covered file reproduced verbatim in
+// the built PDF would pull clause 2's notice obligation onto the book itself,
+// and an unnumbered snippet reproduces bytes exactly as a listing does.
 func checkListingRegions(root string, m *manifest) []finding {
 	var out []finding
 	for _, e := range m.entries(kindPart) {
@@ -353,17 +354,41 @@ func checkListingRegions(root string, m *manifest) []finding {
 						Detail: fmt.Sprintf("listing %s names no region", l.ID)})
 					continue
 				}
-				for _, r := range l.Regions {
-					rel := filepath.Join(e.Path, r.File)
-					if within(rel, catalogDir) {
-						out = append(out, finding{File: manifestFile, Rule: "E-C3",
-							Detail: fmt.Sprintf("listing %s extracts from %s; listings resolve into parts/ only", l.ID, rel)})
-						continue
-					}
-					out = append(out, regionFindings(root, rel, l.ID, r.Marker)...)
+				out = append(out, resolveRegionFindings(root, e.Path, "listing "+l.ID, l.Regions)...)
+			}
+			for _, sn := range s.Snippets {
+				switch {
+				case sn.Prose != "" && len(sn.Regions) > 0:
+					out = append(out, finding{File: manifestFile, Rule: "E-C3",
+						Detail: fmt.Sprintf("snippet %s declares prose and names regions; it is one or the other", sn.ID)})
+				case sn.Prose == "" && len(sn.Regions) == 0:
+					out = append(out, finding{File: manifestFile, Rule: "E-C3",
+						Detail: fmt.Sprintf("snippet %s names no region and declares no prose reason", sn.ID)})
+				case sn.Prose != "":
+					// Declared prose. Unchecked by design, and the manifest
+					// carries the reason, which is what makes it a decision
+					// rather than an omission.
+				default:
+					out = append(out, resolveRegionFindings(root, e.Path, "snippet "+sn.ID, sn.Regions)...)
 				}
 			}
 		}
+	}
+	return out
+}
+
+// resolveRegionFindings checks every region a listing or snippet names: that
+// it stays inside parts/, and that the file delimits it exactly once.
+func resolveRegionFindings(root, partPath, what string, regions []region) []finding {
+	var out []finding
+	for _, r := range regions {
+		rel := filepath.Join(partPath, r.File)
+		if within(rel, catalogDir) {
+			out = append(out, finding{File: manifestFile, Rule: "E-C3",
+				Detail: fmt.Sprintf("%s extracts from %s; listings resolve into parts/ only", what, rel)})
+			continue
+		}
+		out = append(out, regionFindings(root, rel, what, r.Marker)...)
 	}
 	return out
 }
@@ -375,7 +400,7 @@ func regionFindings(root, rel, listingID, marker string) []finding {
 	data, err := os.ReadFile(filepath.Join(root, rel))
 	if err != nil {
 		return []finding{{File: rel, Rule: "E-C3",
-			Detail: fmt.Sprintf("listing %s names this file, which cannot be read: %v", listingID, err)}}
+			Detail: fmt.Sprintf("%s names this file, which cannot be read: %v", listingID, err)}}
 	}
 	begin, end := 0, 0
 	for _, line := range strings.Split(string(data), "\n") {
@@ -389,7 +414,7 @@ func regionFindings(root, rel, listingID, marker string) []finding {
 	switch {
 	case begin == 0 || end == 0:
 		return []finding{{File: rel, Rule: "E-C3",
-			Detail: fmt.Sprintf("listing %s names marker %q, which the file does not delimit", listingID, marker)}}
+			Detail: fmt.Sprintf("%s names marker %q, which the file does not delimit", listingID, marker)}}
 	case begin > 1 || end > 1:
 		return []finding{{File: rel, Rule: "E-C3",
 			Detail: fmt.Sprintf("marker %q is opened %d and closed %d times; a region is one span", marker, begin, end)}}
